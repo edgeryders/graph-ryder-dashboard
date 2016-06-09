@@ -9,7 +9,7 @@
 angular.module('sbAdminApp')
   .controller('GraphCtrl', function ($scope, $resource) {
 
-      $scope.apiUrl = "http://localhost:5000/"
+      $scope.apiUrl = "http://nferon.ovh:5000/"
       $scope.graphSigma = [];
       //get users
       var Users = $resource($scope.apiUrl + 'users');
