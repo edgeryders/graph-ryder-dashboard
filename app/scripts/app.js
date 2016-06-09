@@ -92,6 +92,7 @@ angular
               name:'sbAdminApp',
               files:[
               'scripts/controllers/main.js',
+              'scripts/controllers/graphController.js',
               'scripts/controllers/chartController.js',
               'scripts/directives/timeline/timeline.js',
               'scripts/directives/notifications/notifications.js',
