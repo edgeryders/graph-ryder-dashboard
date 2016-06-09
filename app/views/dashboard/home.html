@@ -1,20 +1,36 @@
-<div>
+<div ng-controller="GraphCtrl" >
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Dashboard</h1>
+            <h1 class="page-header">Dashboard </h1><h4>apiUrl : <input type="text" ng-model="apiUrl" /></h4>
         </div>
         <!-- /.col-lg-12 -->
     </div>
     <div class="row">
-        <div class="col-lg-9" ng-controller="GraphCtrl" >
+        <div class="col-lg-12" >
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Test Sigma /
+                    <i class="fa fa-clock-o fa-fw"></i> Test Sigma / completeGraph : <input type="checkbox" ng-model="complete">
                     <form ng-submit="submit()">
                         field :
-                        <input type="text" ng-model="field" />
+                        <select ng-model="field" ng-disabled="complete" >
+                            <option value="uid">User</option>
+                            <option value="pid">Post</option>
+                            <option value="cid">Comment</option>
+                        </select>
                         label :
-                        <input type="text" ng-model="value" />
+                        <select ng-model="user" ng-show="field=='uid'" ng-disabled="complete">
+                            <option ng-repeat="user in users" value="{{user.uid}}">{{user.name}}</option>
+                        </select>
+                        <select ng-model="post" ng-show="field=='pid'" ng-disabled="complete">
+                            <option ng-repeat="post in posts" value="{{post.pid}}">{{post.title}}</option>
+                        </select>
+                        <select ng-model="comment" ng-show="field=='cid'" ng-disabled="complete">
+                            <option ng-repeat="comment in comments" value="{{comment.cid}}">{{comment.subject}}</option>
+                        </select>
+                        algo
+                        <select ng-model="layoutChoice">
+                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                        </select>
                         <input type="submit" value="go" />
                     </form>
                 </div>
