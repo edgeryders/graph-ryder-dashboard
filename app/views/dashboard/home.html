@@ -6,78 +6,26 @@
         <!-- /.col-lg-12 -->
     </div>
     <div class="row">
-        <div class="col-lg-7" ng-controller="GraphCtrl" >
+        <div class="col-lg-9" ng-controller="GraphCtrl" >
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Test Sigma
+                    <i class="fa fa-clock-o fa-fw"></i> Test Sigma /
+                    <form ng-submit="submit()">
+                        field :
+                        <input type="text" ng-model="field" />
+                        label :
+                        <input type="text" ng-model="value" />
+                        <input type="submit" value="go" />
+                    </form>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <sigma-js graph="complete" width="100%" height="700px" releative-size-node="true"></sigma-js>
+                    <sigma-js graph="graphSigma" width="100%" height="700px" releative-size-node="true"></sigma-js>
                 </div>
                 <!-- /.panel-body -->
             </div>
             <!-- /.panel -->
         </div>
-        <!-- /.col-lg-7 -->
-        <div class="col-lg-5" ng-controller="ChartCtrl" >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-line-chart fa-fw"></i> Test metrics
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <canvas id="line" class="chart chart-line chart-xl" data="line.data" labels="line.labels" legend="true"
-                            click="line.onClick" series="line.series"></canvas>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-5 -->
-        <div class="col-lg-5" ng-controller="ChartCtrl" >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart fa-fw"></i> Test metrics
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <canvas id="bar" class="chart chart-bar" data="bar.data" labels="bar.labels" series="bar.series"
-                            options="bar.options"></canvas>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-5 -->
-        <div class="col-lg-5" ng-controller="ChartCtrl" >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-pie-chart fa-fw"></i> Test metrics
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <canvas id="area" class="chart chart-radar" data="radar.data" labels="radar.labels" click="onClick"></canvas>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-5 -->
-        <div class="col-lg-5" ng-controller="ChartCtrl" >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-pie-chart fa-fw"></i> Test metrics
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <canvas id="polar" class="chart chart-polar-area" data="polar.data" labels="polar.labels"></canvas>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-5 -->
     </div>
     <!-- /.row -->
 </div>

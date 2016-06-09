@@ -9,13 +9,31 @@
 angular.module('sbAdminApp')
   .controller('GraphCtrl', function ($scope, $resource) {
 
-      // // Read the complete graph from api
-      $scope.complete = [];
-      var Complete = $resource('http://localhost:5000/draw/6c4ede4f-04a3-4472-80b1-9c9700106b9f/FM%5E3%20(OGDF)');
-      var complete = Complete.query();
-      complete.$promise.then(function (result) {
-          $scope.complete = result.pop();
-          console.log("done");
-      });
+      $scope.graphSigma = [];
+      $scope.field = "uid";
+      $scope.value = "32";
+
+      $scope.submit = function () {
+          // // Read the complete graph from api
+          var CreateGraph = $resource('http://localhost:5000/createGraph/'+ $scope.field +'/'+ $scope.value);
+          var creategraph = CreateGraph.query();
+          creategraph.$promise.then(function (result) {
+              var graph_id = result.pop();
+              var graph_id_string = ""
+              angular.forEach(graph_id, function(value, key) {
+                  graph_id_string += value;
+              });
+              console.log(graph_id_string);
+              var drawGraph = $resource('http://localhost:5000/draw/'+ graph_id_string +'/FM%5E3%20(OGDF)');
+              var drawgraph = drawGraph.query();
+              drawgraph.$promise.then(function (result) {
+                  $scope.graphSigma = result.pop();
+                  console.log("done");
+              });
+          });
+          
+
+      };
+
 
 });
