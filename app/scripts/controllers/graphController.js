@@ -9,7 +9,8 @@
 angular.module('sbAdminApp')
   .controller('GraphCtrl', function ($scope, $resource) {
 
-      $scope.apiUrl = "http://nferon.ovh:5000/"
+      $scope.type = "doi"
+      $scope.apiUrl = "http://localhost:5000/"
       $scope.graphSigma = [];
       //get users
       var Users = $resource($scope.apiUrl + 'users');
@@ -50,7 +51,7 @@ angular.module('sbAdminApp')
       $scope.layoutChoice = "FM^3 (OGDF)";
       $scope.submit = function () {
           // // Read the complete graph from api
-          if($scope.complete) {
+          if($scope.type === "complete") {
               var drawGraph = $resource($scope.apiUrl + 'draw/complete/' + $scope.layoutChoice);
               var drawgraph = drawGraph.query();
               drawgraph.$promise.then(function (result) {
@@ -65,7 +66,10 @@ angular.module('sbAdminApp')
                   $scope.value = $scope.post;
               else if($scope.field == "cid")
                   $scope.value = $scope.comment;
-              var CreateGraph = $resource($scope.apiUrl + 'createGraph/'+ $scope.field +'/'+ $scope.value);
+              if($scope.type === "doi")
+                  var CreateGraph = $resource($scope.apiUrl + 'doi/'+ $scope.field +'/'+ $scope.value);
+              else
+                  var CreateGraph = $resource($scope.apiUrl + 'createGraph/'+ $scope.field +'/'+ $scope.value);
               var creategraph = CreateGraph.query();
               creategraph.$promise.then(function (result) {
                   var graph_id = result.pop();
