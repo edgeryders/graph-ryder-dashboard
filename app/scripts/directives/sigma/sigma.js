@@ -18,10 +18,15 @@ angular.module('sbAdminApp')
         link: function (scope, element, attrs) {
             // Let's first initialize sigma:
             var s = new sigma({
-                container: divId,
+                renderer: {
+                    container: divId,
+                    type: 'canvas'
+                },
                 settings: {
                     defaultNodeColor: '#ec5148',
-                    labelThreshold: 4
+                    drawEdges: true,
+                    labelThreshold: 4,
+                    minArrowSize: 5
                 }
             });
 
