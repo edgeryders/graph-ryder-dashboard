@@ -13,7 +13,7 @@ angular.module('sbAdminApp')
             graph: '=',
             width: '@',
             height: '@',
-            releativeSizeNode: '='
+            edgeLabels: '='
         },
         link: function (scope, element, attrs) {
             // Let's first initialize sigma:
@@ -23,13 +23,13 @@ angular.module('sbAdminApp')
                     type: 'canvas'
                 },
                 settings: {
-                    defaultNodeColor: '#ec5148',
-                    drawEdges: true,
-                    labelThreshold: 4,
+                    labelThreshold: 6,
+                    labelSize: "fixed",
+                    // todo add option to controle display labels
+                    drawEdgeLabels: false,
                     minArrowSize: 5
                 }
             });
-
 
             scope.$watch('graph', function(newVal,oldVal) {
                 console.log("refresh");
