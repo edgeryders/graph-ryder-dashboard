@@ -103,6 +103,28 @@ angular
           }
         }
       })
+        .state('dashboard.multiView',{
+            url:'/multiView',
+            controller: 'MainCtrl',
+            templateUrl:'views/dashboard/multi-view.html',
+            resolve: {
+                loadMyFiles:function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name:'sbAdminApp',
+                        files:[
+                            'scripts/controllers/main.js',
+                            'scripts/controllers/graphController.js',
+                            'scripts/controllers/chartController.js',
+                            'scripts/controllers/multiViewController.js',
+                            'scripts/directives/timeline/timeline.js',
+                            'scripts/directives/notifications/notifications.js',
+                            'scripts/directives/chat/chat.js',
+                            'scripts/directives/dashboard/stats/stats.js'
+                        ]
+                    })
+                }
+            }
+        })
       .state('dashboard.chart',{
         templateUrl:'views/chart.html',
         url:'/chart',
