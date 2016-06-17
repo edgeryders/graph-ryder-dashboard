@@ -14,13 +14,17 @@ angular.module('sbAdminApp')
             height: '@',
             id: '@',
             edgeLabels: '=?',
-            threshold: '@?'
+            threshold: '@?',
+            eventCatcher: '&'
         },
         link: function (scope, element, attrs) {
-            // Let's first initialize sigma:
-            if (scope.threshold == "undefined")
-                scope.threshold = 6;
-            console.log(scope.threshold);
+            // default values
+            if (scope.threshold == undefined)
+                scope.threshold = 4;
+            if (scope.edgeLabels == undefined)
+                scope.edgeLabels = false;
+
+            // Create sigma instance
             var s = new sigma({
                 renderer: {
                     container: element[0].firstChild,
@@ -34,6 +38,11 @@ angular.module('sbAdminApp')
                 }
             });
 
+            // Bind event
+            s.bind('overNode outNode clickNode doubleClickNode rightClickNode', function(e) {
+                scope.eventCatcher()(e);
+            });
+            // Watch for changement
             scope.$watch('graph', function(newVal,oldVal) {
                 s.graph.clear();
                 s.graph.read(scope.graph);
@@ -41,7 +50,6 @@ angular.module('sbAdminApp')
             });
 
             scope.$watch('edgeLabels', function(newVal,oldVal) {
-
                 console.log("refresh");
                 s.graph.clear();
                 s.settings({
