@@ -54,8 +54,42 @@ angular.module('sbAdminApp')
 
             $scope.post.labels = result[0].labels;
             $scope.post.data = result[0].data;
+            $scope.post.series = ["all"]
 
         });
+
+        var postTypeAddUser = function (uid, append) {
+            var params = {"uid": uid};
+            var Type = $resource($scope.apiUrl + 'post/getType/', params);
+            var type = Type.query();
+            type.$promise.then(function (result) {
+                if(result[0].data[1] != undefined)
+                    if(append)
+                        $scope.post.data.push(result[0].data[1]);
+                    else
+                        $scope.post.data = [result[0].data[1]];
+                console.log($scope.post.data);
+            });
+        };
+
+        /*** Event Catcher ***/
+        $scope.eventCatcher = function (e) {
+            switch(e.type) {
+                case 'overNode':
+                    break;
+                case 'outNode':
+                    break;
+                case 'clickNode':
+                    console.log(e);
+                    if(e.data.node.uid != undefined)
+                        if(e.data.captor.altKey)
+                            $scope.post.series.push(e.data.node.name);
+                        else
+                            $scope.post.series = [e.data.node.name];
+                        postTypeAddUser(e.data.node.uid, e.data.captor.altKey);
+                    break;
+            }
+        };
 
 
     });
