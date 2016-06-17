@@ -13,17 +13,21 @@ angular.module('sbAdminApp')
             width: '@',
             height: '@',
             id: '@',
-            edgeLabels: '='
+            edgeLabels: '=?',
+            threshold: '@?'
         },
         link: function (scope, element, attrs) {
             // Let's first initialize sigma:
+            if (scope.threshold == "undefined")
+                scope.threshold = 6;
+            console.log(scope.threshold);
             var s = new sigma({
                 renderer: {
                     container: element[0].firstChild,
                     type: 'canvas'
                 },
                 settings: {
-                    labelThreshold: 6,
+                    labelThreshold: scope.threshold,
                     labelSize: "fixed",
                     drawEdgeLabels: scope.edgeLabels,
                     minArrowSize: 5

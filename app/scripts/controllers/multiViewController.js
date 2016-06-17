@@ -13,7 +13,6 @@ angular.module('sbAdminApp')
         var layout = "FM^3 (OGDF)";
 
         $scope.userel  = true;
-        $scope.commentel = false;
         $scope.postel = false;
 
         $scope.usersGraphSigma = [];
@@ -36,32 +35,11 @@ angular.module('sbAdminApp')
             });
         });
 
-        $scope.commentsGraphSigma = [];
-        field = "cid";
-        value = "22292";
-
-        // todo call comments route
-        var CreateGraph = $resource($scope.apiUrl + 'doi/'+ field +'/'+ value);
-        var creategraph = CreateGraph.query();
-        creategraph.$promise.then(function (result) {
-            var graph_id = result.pop();
-            var graph_id_string = ""
-            angular.forEach(graph_id, function(value, key) {
-                graph_id_string += value;
-            });
-            var drawGraph = $resource($scope.apiUrl + 'draw/'+ graph_id_string +'/'+ layout);
-            var drawgraph = drawGraph.query();
-            drawgraph.$promise.then(function (result) {
-                $scope.commentsGraphSigma = result.pop();
-            });
-        });
-
         $scope.postsGraphSigma = [];
-        field = "pid";
-        value = "6258";
+        var params = {"uid": [34, 32]};
 
         // todo call posts routeA
-        var CreateGraph = $resource($scope.apiUrl + 'doi/'+ field +'/'+ value);
+        var CreateGraph = $resource($scope.apiUrl + 'createGraph', params);
         var creategraph = CreateGraph.query();
         creategraph.$promise.then(function (result) {
             var graph_id = result.pop();

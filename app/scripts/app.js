@@ -93,16 +93,29 @@ angular
               files:[
               'scripts/controllers/main.js',
               'scripts/controllers/graphController.js',
-              'scripts/controllers/chartController.js',
-              'scripts/directives/timeline/timeline.js',
-              'scripts/directives/notifications/notifications.js',
-              'scripts/directives/chat/chat.js',
-              'scripts/directives/dashboard/stats/stats.js'
+              'scripts/controllers/chartController.js'
               ]
             })
           }
         }
       })
+        .state('dashboard.globalView',{
+            url:'/globalView',
+            controller: 'MainCtrl',
+            templateUrl:'views/dashboard/global-view.html',
+            resolve: {
+                loadMyFiles:function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name:'sbAdminApp',
+                        files:[
+                            'scripts/controllers/main.js',
+                            'scripts/controllers/chartController.js',
+                            'scripts/controllers/globalController.js'
+                        ]
+                    })
+                }
+            }
+        })
         .state('dashboard.multiView',{
             url:'/multiView',
             controller: 'MainCtrl',
@@ -115,11 +128,7 @@ angular
                             'scripts/controllers/main.js',
                             'scripts/controllers/graphController.js',
                             'scripts/controllers/chartController.js',
-                            'scripts/controllers/multiViewController.js',
-                            'scripts/directives/timeline/timeline.js',
-                            'scripts/directives/notifications/notifications.js',
-                            'scripts/directives/chat/chat.js',
-                            'scripts/directives/dashboard/stats/stats.js'
+                            'scripts/controllers/multiViewController.js'
                         ]
                     })
                 }
