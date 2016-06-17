@@ -12,7 +12,7 @@
 angular.module('sbAdminApp')
     .controller('GlobalCtrl', function ($scope, $resource) {
 
-        $scope.apiUrl = "http://localhost:5000/";
+        $scope.apiUrl = "http://nferon.ovh:5000/";
         $scope.globalGraphSigma = [];
         $scope.layoutChoice = "FM^3 (OGDF)";
         $scope.globalel = false;

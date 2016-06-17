@@ -9,7 +9,7 @@
 angular.module('sbAdminApp')
     .controller('MultiViewCtrl', function ($scope, $resource) {
         
-        $scope.apiUrl = "http://localhost:5000/"
+        $scope.apiUrl = "http://nferon.ovh:5000/"
         var layout = "FM^3 (OGDF)";
 
         $scope.userel  = true;
