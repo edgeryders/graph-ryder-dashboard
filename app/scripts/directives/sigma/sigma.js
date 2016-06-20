@@ -44,7 +44,7 @@ angular.module('sbAdminApp')
             });
 
             // Bind event
-            s.bind('clickNode clickEdges hovers', function(e) {
+            s.bind('clickNode clickEdges', function(e) {
                 scope.eventCatcher()(e);
             });
             // Watch for changement

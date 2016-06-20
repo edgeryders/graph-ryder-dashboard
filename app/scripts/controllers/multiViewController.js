@@ -43,10 +43,10 @@ angular.module('sbAdminApp')
                 case 'clickNode':
                     console.log(e);
                     break;
-                case 'hovers':
-                    if(e.data.current.edges != undefined && e.data.current.edges.length > 0) {
+                case 'clickEdges':
+                    if(e.data.edge != undefined && e.data.edge.length > 0) {
                         $scope.comments = [];
-                        angular.forEach(e.data.current.edges, function(value, key) {
+                        angular.forEach(e.data.edge, function(value, key) {
                             var comment = {from_id : "", from_subject: "", to_id: "", to_subject: ""};
                             if (value.pid != undefined) {
                                 comment.from_id = value.cid;
