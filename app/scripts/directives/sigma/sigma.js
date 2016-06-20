@@ -34,12 +34,17 @@ angular.module('sbAdminApp')
                     labelThreshold: scope.threshold,
                     labelSize: "fixed",
                     drawEdgeLabels: scope.edgeLabels,
-                    minArrowSize: 5
+                    minArrowSize: 5,
+                    enableEdgeHovering: true,
+                    edgeHoverColor: 'edge',
+                    defaultEdgeHoverColor: '#000',
+                    edgeHoverSizeRatio: 2,
+                    edgeHoverExtremities: true
                 }
             });
 
             // Bind event
-            s.bind('overNode outNode clickNode doubleClickNode rightClickNode', function(e) {
+            s.bind('clickNode clickEdges', function(e) {
                 scope.eventCatcher()(e);
             });
             // Watch for changement

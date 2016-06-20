@@ -14,7 +14,7 @@ angular.module('sbAdminApp')
 
         $scope.apiUrl = "http://nferon.ovh:5000/";
         $scope.globalGraphSigma = [];
-        $scope.layoutChoice = "FM^3 (OGDF)";
+        $scope.layoutChoice = "GEM%20(Frick)";
         $scope.globalel = false;
 
         // get layout algo
@@ -78,10 +78,6 @@ angular.module('sbAdminApp')
         /*** Event Catcher ***/
         $scope.eventCatcher = function (e) {
             switch(e.type) {
-                case 'overNode':
-                    break;
-                case 'outNode':
-                    break;
                 case 'clickNode':
                     console.log(e);
                     if(e.data.node.uid != undefined)
