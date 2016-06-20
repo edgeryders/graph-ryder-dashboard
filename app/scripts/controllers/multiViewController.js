@@ -36,7 +36,7 @@ angular.module('sbAdminApp')
         });
 
         $scope.comments = [];
-=
+        
         /*** Event Catcher Users ***/
         $scope.eventCatcherUsers = function (e) {
             switch(e.type) {
