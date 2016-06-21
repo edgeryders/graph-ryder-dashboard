@@ -7,7 +7,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-  .controller('GraphCtrl', function ($scope, $resource) {
+  .controller('GraphCtrl', function ($scope, $resource, config) {
 
       $scope.type = "doi";
       $scope.graphSigma = [];
