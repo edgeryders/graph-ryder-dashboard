@@ -10,15 +10,14 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('GlobalCtrl', function ($scope, $resource) {
+    .controller('GlobalCtrl', function ($scope, $resource, config) {
 
-        $scope.apiUrl = "http://nferon.ovh:5000/";
         $scope.globalGraphSigma = [];
         $scope.layoutChoice = "GEM%20(Frick)";
         $scope.globalel = false;
 
         // get layout algo
-        var Layout = $resource($scope.apiUrl + 'layoutAlgorithm');
+        var Layout = $resource(config.apiUrl + 'layoutAlgorithm');
         var layout = Layout.query();
         layout.$promise.then(function (result) {
             var layout = []
@@ -36,7 +35,7 @@ angular.module('sbAdminApp')
 
         $scope.submit = function () {
             // // Read the complete graph from api
-            var drawGraph = $resource($scope.apiUrl + 'draw/complete/' + $scope.layoutChoice);
+            var drawGraph = $resource(config.apiUrl + 'draw/complete/' + $scope.layoutChoice);
             var drawgraph = drawGraph.query();
             drawgraph.$promise.then(function (result) {
                 $scope.globalGraphSigma = result.pop();
@@ -48,7 +47,7 @@ angular.module('sbAdminApp')
         /*** Radar Chart ***/
         $scope.post = {};
         // get posts type
-        var Type = $resource($scope.apiUrl + 'post/getType/');
+        var Type = $resource(config.apiUrl + 'post/getType/');
         var type = Type.query();
         type.$promise.then(function (result) {
 
@@ -60,7 +59,7 @@ angular.module('sbAdminApp')
 
         var postTypeAddUser = function (uid, name, append) {
             var params = {"uid": uid};
-            var Type = $resource($scope.apiUrl + 'post/getType/', params);
+            var Type = $resource(config.apiUrl + 'post/getType/', params);
             var type = Type.query();
             type.$promise.then(function (result) {
                 if(result[0].data[1] != undefined)

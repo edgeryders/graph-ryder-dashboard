@@ -7,9 +7,8 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('MultiViewCtrl', function ($scope, $resource) {
-        
-        $scope.apiUrl = "http://nferon.ovh:5000/"
+    .controller('MultiViewCtrl', function ($scope, $resource, config) {
+
         var layout = "FM^3 (OGDF)";
 
         $scope.userel  = true;
@@ -20,7 +19,7 @@ angular.module('sbAdminApp')
         var value = "34";
 
         // todo call users route
-        var CreateGraph = $resource($scope.apiUrl + 'users/doi/'+ field +'/'+ value);
+        var CreateGraph = $resource(config.apiUrl + 'users/doi/'+ field +'/'+ value);
         var creategraph = CreateGraph.query();
         creategraph.$promise.then(function (result) {
             var graph_id = result.pop();
@@ -28,7 +27,7 @@ angular.module('sbAdminApp')
             angular.forEach(graph_id, function(value, key) {
                 graph_id_string += value;
             });
-            var drawGraph = $resource($scope.apiUrl + 'draw/'+ graph_id_string +'/'+ layout);
+            var drawGraph = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ layout);
             var drawgraph = drawGraph.query();
             drawgraph.$promise.then(function (result) {
                 $scope.usersGraphSigma = result.pop();

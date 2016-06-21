@@ -14,6 +14,9 @@ angular
     'ui.bootstrap',
     'angular-loading-bar',
   ])
+  .constant('config', {
+        apiUrl: 'http://192.168.99.100:5000/',
+    })
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
     
     $ocLazyLoadProvider.config({
