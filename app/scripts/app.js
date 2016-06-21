@@ -12,7 +12,7 @@ angular
     'oc.lazyLoad',
     'ui.router',
     'ui.bootstrap',
-    'angular-loading-bar',
+    'angular-loading-bar'
   ])
   .constant('config', {
         apiUrl: 'http://192.168.99.100:5000/',
@@ -40,8 +40,7 @@ angular
                     'scripts/directives/header/header-notification/header-notification.js',
                     'scripts/directives/sidebar/sidebar.js',
                     'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
-                    'scripts/directives/sigma/sigma.js',
-                    'scripts/directives/notifications/modal-view.js'
+                    'scripts/directives/sigma/sigma.js'
                     ]
                 }),
                 $ocLazyLoad.load(
@@ -132,6 +131,7 @@ angular
                         'scripts/controllers/main.js',
                         'scripts/controllers/graphController.js',
                         'scripts/controllers/chartController.js',
+                        'scripts/controllers/ModalInstanceCtrl.js',
                         'scripts/controllers/multiViewController.js'
                     ]
                 })

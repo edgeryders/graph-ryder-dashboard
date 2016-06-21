@@ -39,18 +39,15 @@
                             </thead>
                             <tbody>
                             <button ng-show="false" class="btn btn-primary" id="button-34" data-toggle="modal" data-target="#34">Alberto</button>
-                            <modal-view element-type="uid" element-id="34" ></modal-view>
                             <tr ng-repeat="comment in comments" >
                                 <td>
                                     <button class="btn btn-warning" data-toggle="modal" data-target="#{{ comment.from_id }}">{{ comment.from_id }}</button>
-                                    <modal-view element-type="cid" element-id="{{ comment.from_id }}"></modal-view>
                                 </td>
                                 <td>{{ comment.from_subject }}</td>
                                 <td> --> </td>
                                 <td >
                                     <button ng-show="comment.to_type=='cid'" class="btn btn-warning" data-toggle="modal" data-target="#{{ comment.to_id }}">{{ comment.to_id }}</button>
                                     <button ng-show="comment.to_type=='pid'" class="btn btn-success" data-toggle="modal" data-target="#{{ comment.to_id }}">{{ comment.to_id }}</button>
-                                    <modal-view element-type="{{comment.to_type}}" element-id="{{ comment.to_id }}"></modal-view>
                                 <td>{{ comment.to_subject }}</td>
                             </tr>
                             </tbody>

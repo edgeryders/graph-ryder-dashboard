@@ -42,6 +42,10 @@ angular.module('sbAdminApp')
             switch(e.type) {
                 case 'clickNode':
                     console.log(e);
+                    //document.getElementById("button-34").click();
+                    $scope.elementType = "uid";
+                    $scope.elementId = e.data.node.uid;
+                    $uibModal.open(modalInstance);
                     break;
                 case 'hovers':
                     if($scope.click)
@@ -75,4 +79,22 @@ angular.module('sbAdminApp')
                     break;
             }
         };
+
+        /********* Modal test ***************/
+        var modalInstance = {
+            animation: true,
+            templateUrl: 'views/ui-elements/modal-view.html',
+            controller: 'ModalInstanceCtrl',
+            buttons: {
+                Cancel: function () {
+                    $("#modal_dialog").dialog("close");
+                }
+            },
+            resolve: {
+                scopeParent: function() {
+                    return $scope; //On passe à la fenêtre modal une référence vers le scope parent.
+                }
+            }
+        };
+
     });
