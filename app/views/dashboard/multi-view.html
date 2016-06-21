@@ -1,7 +1,7 @@
 <div ng-controller="MultiViewCtrl" >
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Dashboard </h1><h4>apiUrl : <input type="text" ng-model="apiUrl" /></h4><p>Example of interaction without api call, click on Edges to view the content</p>
+            <h1 class="page-header">Dashboard </h1><p>Example of interaction without api call, click on Edges to view the content</p>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -38,8 +38,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#34">Alberto</button>
-                            <modal-view element-type="uid" element-id="34"></modal-view>
+                            <button ng-show="false" class="btn btn-primary" id="button-34" data-toggle="modal" data-target="#34">Alberto</button>
+                            <modal-view element-type="uid" element-id="34" ></modal-view>
                             <tr ng-repeat="comment in comments" >
                                 <td>
                                     <button class="btn btn-warning" data-toggle="modal" data-target="#{{ comment.from_id }}">{{ comment.from_id }}</button>
