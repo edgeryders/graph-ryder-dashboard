@@ -36,6 +36,7 @@ angular.module('sbAdminApp')
         });
 
         $scope.comments = [];
+        $scope.click = false;
         
         /*** Event Catcher Users ***/
         $scope.eventCatcherUsers = function (e) {
@@ -43,7 +44,13 @@ angular.module('sbAdminApp')
                 case 'clickNode':
                     console.log(e);
                     break;
+                case 'hovers':
+                    if($scope.click)
+                        break;
+                    else
+                        e.data.edge = e.data.current.edges;
                 case 'clickEdges':
+                    $scope.click = (e.type != "hovers");
                     if(e.data.edge != undefined && e.data.edge.length > 0) {
                         $scope.comments = [];
                         angular.forEach(e.data.edge, function(value, key) {
