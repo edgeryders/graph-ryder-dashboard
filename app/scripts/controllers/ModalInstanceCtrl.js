@@ -2,8 +2,9 @@
  * Created by nferon on 21/06/16.
  */
 angular.module('sbAdminApp')
-    .controller('ModalInstanceCtrl', function ($scope, $resource, config, scopeParent) {
+    .controller('ModalInstanceCtrl', function ($scope, $resource, $uibModalInstance, config, scopeParent) {
 
+        console.log($uibModalInstance);
         $scope.elementId = scopeParent.elementId;
         $scope.elementType = scopeParent.elementType;
 
@@ -13,6 +14,7 @@ angular.module('sbAdminApp')
                 var user = User.query();
                 user.$promise.then(function (result) {
                     $scope.user = result.pop();
+                    console.log("done");
                 });
                 break;
             case "pid":
@@ -32,12 +34,7 @@ angular.module('sbAdminApp')
             default:
                 console.log("error with modalView directive unknow type");
         }
-        $scope.ok = function () {
-            this.close('done');
-        };
-
         $scope.cancel = function () {
-            $scope.user = {};
-            $scope.append();
+            $uibModalInstance.close();
         };
 });

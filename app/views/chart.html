@@ -5,6 +5,12 @@
     <!-- /.col-lg-12 -->
 </div>
 <div class="row">
+    <button ng-click="count = count + 1" ng-init="count=0">
+        Increment
+    </button>
+    <span>
+        count: {{count}}
+    </span>
     <div class="col-lg-6 col-sm-12" id="line-chart" ng-controller="ChartCtrl">
         <div class="panel panel-default">
             <div class="panel-heading">Line Chart</div>

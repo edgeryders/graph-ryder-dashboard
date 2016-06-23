@@ -7,7 +7,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('MultiViewCtrl', function ($scope, $resource, config) {
+    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal) {
 
         var layout = "FM^3 (OGDF)";
 
@@ -41,8 +41,6 @@ angular.module('sbAdminApp')
         $scope.eventCatcherUsers = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    console.log(e);
-                    //document.getElementById("button-34").click();
                     $scope.elementType = "uid";
                     $scope.elementId = e.data.node.uid;
                     $uibModal.open(modalInstance);
@@ -96,5 +94,8 @@ angular.module('sbAdminApp')
                 }
             }
         };
-
+        $scope.yolo = function (name) {
+            console.log(name);
+        };
+        $scope.test1 = $scope.yolo.toString();
     });
