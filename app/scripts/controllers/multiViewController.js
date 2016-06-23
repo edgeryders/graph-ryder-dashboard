@@ -42,30 +42,18 @@ angular.module('sbAdminApp')
         /*** post view ***/
         $scope.commentsGraphSigma = [];
         $scope.submit = function () {
-            var params = {'type': 'user'};
-            var CreateGraph = $resource(config.apiUrl + 'createGraphWithout', params);
-            var creategraph = CreateGraph.query();
-            creategraph.$promise.then(function (result) {
-                var graph_id = result.pop();
-                var graph_id_string = ""
-                angular.forEach(graph_id, function(value, key) {
-                    graph_id_string += value;
-                });
-                console.log(graph_id_string);
-                var drawGraph = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoiceComments);
-                var drawgraph = drawGraph.query();
-                drawgraph.$promise.then(function (result) {
-                    $scope.commentsGraphSigma = result.pop();
-                });
-            });
-
+        var drawGraph = $resource(config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments);
+        var drawgraph = drawGraph.query();
+        drawgraph.$promise.then(function (result) {
+            $scope.commentsGraphSigma = result.pop();
+        });
         };
 
         $scope.submit();
         /*** Event Catcher Users ***/
         $scope.comments = [];
         $scope.click = false;
-        $scope.locate = "Bondour ";
+        $scope.locate = [];
 
         $scope.eventCatcherUsers = function (e) {
             switch(e.type) {

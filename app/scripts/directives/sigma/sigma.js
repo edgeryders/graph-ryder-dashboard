@@ -73,10 +73,17 @@ angular.module('sbAdminApp')
                     console.log(newVal.toString());
                     if(newVal.toString() != oldVal.toString()) {
                         var nodes = s.graph.nodes().filter(function (n) {
-                            if (n.pid != undefined)
-                                return scope.locate.indexOf(n.pid) != -1;
-                            else if (n.cid != undefined)
-                                return scope.locate.indexOf(n.cid) != -1;
+                            if (n.pid != undefined && scope.locate.indexOf(n.pid) != -1) {
+                                //todo use color code
+                                n.color = "rgb(0, 255, 0)";
+                                return true;
+                            }
+                            else if (n.cid != undefined && scope.locate.indexOf(n.cid) != -1) {
+                                n.color = "rgb(255, 100, 0)";
+                                return true;
+                            }
+                            else
+                                n.color = "rgb(128, 128, 128)";
                         }).map(function (n) {
                             return n.id;
                         });
