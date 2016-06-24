@@ -31,74 +31,69 @@ angular
     .state('dashboard', {
         url:'/dashboard',
         templateUrl: 'views/dashboard/main.html',
-        resolve: {
-            loadMyDirectives:function($ocLazyLoad){
-                return $ocLazyLoad.load(
-                {
-                    name:'sbAdminApp',
-                    files:[
-                    'scripts/directives/header/header.js',
-                    'scripts/directives/header/header-notification/header-notification.js',
-                    'scripts/directives/sidebar/sidebar.js',
-                    'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
-                    'scripts/directives/sigma/sigma.js',
-                    'scripts/directives/notifications/modal-view.js'
-                    ]
-                })
-                $ocLazyLoad.load(
-                {
-                   name:'toggle-switch',
-                   files:["bower_components/angular-toggle-switch/angular-toggle-switch.min.js",
-                          "bower_components/angular-toggle-switch/angular-toggle-switch.css"
-                      ]
-                })
-                $ocLazyLoad.load(
-                {
-                  name:'ngAnimate',
-                  files:['bower_components/angular-animate/angular-animate.js']
-                })
-                $ocLazyLoad.load(
-                {
-                  name:'ngCookies',
-                  files:['bower_components/angular-cookies/angular-cookies.js']
-                })
-                $ocLazyLoad.load(
-                {
-                  name:'ngResource',
-                  files:['bower_components/angular-resource/angular-resource.js']
-                })
-                $ocLazyLoad.load(
-                {
-                  name:'ngSanitize',
-                  files:['bower_components/angular-sanitize/angular-sanitize.js']
-                })
-                $ocLazyLoad.load(
-                {
-                  name:'ngTouch',
-                  files:['bower_components/angular-touch/angular-touch.js']
-                })
-                $ocLazyLoad.load({
-                    name:'chart.js',
-                    files:[
-                        'bower_components/angular-chart.js/dist/angular-chart.min.js',
-                        'bower_components/angular-chart.js/dist/angular-chart.css'
-                    ]
-                })
-            }
+          resolve: {
+              loadMyFiles: function ($ocLazyLoad, $q) {
+              var prom1 = $ocLazyLoad.load({
+                  name: 'sbAdminApp',
+                  files: [
+                      'scripts/directives/header/header.js',
+                      'scripts/directives/header/header-notification/header-notification.js',
+                      'scripts/directives/sidebar/sidebar.js',
+                      'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
+                      'scripts/directives/sigma/sigma.js',
+                      'scripts/directives/notifications/modal-view.js'
+                  ]
+              });
+              var prom2 = $ocLazyLoad.load({
+                  name: 'toggle-switch',
+                  files: ["bower_components/angular-toggle-switch/angular-toggle-switch.min.js",
+                      "bower_components/angular-toggle-switch/angular-toggle-switch.css"
+                  ]
+              });
+              var prom3 = $ocLazyLoad.load({
+                  name: 'ngAnimate',
+                  files: ['bower_components/angular-animate/angular-animate.js']
+              });
+              var prom4 = $ocLazyLoad.load({
+                  name: 'ngCookies',
+                  files: ['bower_components/angular-cookies/angular-cookies.js']
+              });
+              var prom5 = $ocLazyLoad.load({
+                  name: 'ngResource',
+                  files: ['bower_components/angular-resource/angular-resource.js']
+              });
+              var prom6 = $ocLazyLoad.load({
+                  name: 'ngSanitize',
+                  files: ['bower_components/angular-sanitize/angular-sanitize.js']
+              });
+              var prom7 = $ocLazyLoad.load({
+                  name: 'ngTouch',
+                  files: ['bower_components/angular-touch/angular-touch.js']
+              });
+              var prom8 = $ocLazyLoad.load({
+                  name: 'chart.js',
+                  files: [
+                      'bower_components/angular-chart.js/dist/angular-chart.min.js',
+                      'bower_components/angular-chart.js/dist/angular-chart.css'
+                  ]
+              });
+
+              var promArray = [prom1, prom2, prom3, prom4, prom5, prom6, prom7, prom8];
+              return $q.all(promArray);
+          }
         }
     })
-    .state('dashboard.home',{
-        url:'/home',
+    .state('dashboard.doi',{
+        url:'/doi',
         controller: 'MainCtrl',
-        templateUrl:'views/dashboard/home.html',
+        templateUrl:'views/dashboard/doi.html',
         resolve: {
           loadMyFiles:function($ocLazyLoad) {
             return $ocLazyLoad.load({
               name:'sbAdminApp',
               files:[
               'scripts/controllers/main.js',
-              'scripts/controllers/graphController.js',
-              'scripts/controllers/chartController.js'
+              'scripts/controllers/doiController.js'
               ]
             })
           }
@@ -114,7 +109,6 @@ angular
                     name:'sbAdminApp',
                     files:[
                         'scripts/controllers/main.js',
-                        'scripts/controllers/chartController.js',
                         'scripts/controllers/globalController.js'
                     ]
                 })
@@ -131,32 +125,10 @@ angular
                     name:'sbAdminApp',
                     files:[
                         'scripts/controllers/main.js',
-                        'scripts/controllers/graphController.js',
-                        'scripts/controllers/chartController.js',
                         'scripts/controllers/multiViewController.js'
                     ]
                 })
             }
-        }
-    })
-    .state('dashboard.chart',{
-        templateUrl:'views/chart.html',
-        url:'/chart',
-        controller:'ChartCtrl',
-        resolve: {
-          loadMyFile:function($ocLazyLoad) {
-            return $ocLazyLoad.load({
-              name:'chart.js',
-              files:[
-                'bower_components/angular-chart.js/dist/angular-chart.min.js',
-                'bower_components/angular-chart.js/dist/angular-chart.css'
-              ]
-            }),
-            $ocLazyLoad.load({
-                name:'sbAdminApp',
-                files:['scripts/controllers/chartController.js']
-            })
-          }
         }
     })
   }]);
