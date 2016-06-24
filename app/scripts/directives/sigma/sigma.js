@@ -69,8 +69,6 @@ angular.module('sbAdminApp')
                     left: 10
                 });
                 scope.$watch('locate', function (newVal, oldVal) {
-                    console.log(oldVal.toString());
-                    console.log(newVal.toString());
                     if(newVal.toString() != oldVal.toString()) {
                         var nodes = s.graph.nodes().filter(function (n) {
                             if (n.pid != undefined && scope.locate.indexOf(n.pid) != -1) {

@@ -12,8 +12,7 @@ angular
     'oc.lazyLoad',
     'ui.router',
     'ui.bootstrap',
-    'angular-loading-bar',
-    'ngResource'
+    'angular-loading-bar'
   ])
   .constant('config', {
         apiUrl: 'http://192.168.99.100:5000/',
@@ -22,7 +21,7 @@ angular
     
     $ocLazyLoadProvider.config({
       debug:false,
-      events:true,
+      events:true
     });
 
     $urlRouterProvider.otherwise('/dashboard/globalView');
@@ -66,10 +65,6 @@ angular
                   files: ['bower_components/angular-sanitize/angular-sanitize.js']
               });
               var prom7 = $ocLazyLoad.load({
-                  name: 'ngTouch',
-                  files: ['bower_components/angular-touch/angular-touch.js']
-              });
-              var prom8 = $ocLazyLoad.load({
                   name: 'chart.js',
                   files: [
                       'bower_components/angular-chart.js/dist/angular-chart.min.js',
@@ -77,7 +72,7 @@ angular
                   ]
               });
 
-              var promArray = [prom1, prom2, prom3, prom4, prom5, prom6, prom7, prom8];
+              var promArray = [prom1, prom2, prom3, prom4, prom5, prom6, prom7];
               return $q.all(promArray);
           }
         }
