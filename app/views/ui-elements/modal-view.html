@@ -1,47 +1,132 @@
-<!-- Modal for comment -->
-<div class="modal-content" ng-show="elementType == 'cid'">
-    <div class="modal-header">
-        <button class="btn btn-warning">{{comment.cid}}</button>
-
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" >{{comment.subject}}</h4>
-    </div>
-    <div class="modal-body">
-        {{comment.comment}}
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="cancel()" >Close</button>
-    </div>
-</div>
-<!-- /.modal-content -->
-<!-- Modal for post -->
-<div class="modal-content" ng-show="elementType == 'pid'">
-    <div class="modal-header">
-        <button class="btn btn-success">{{post.pid}}</button>
-
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" >{{post.title}}</h4>
-    </div>
-    <div class="modal-body">
-        {{post.body}}
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="cancel()" >Close</button>
-    </div>
-</div>
-<!-- /.modal-content -->
 <!-- Modal for user -->
 <div class="modal-content" ng-show="elementType == 'uid'" >
     <div class="modal-header">
-        <button class="btn btn-primary" ng-click="cancel()" >{{user.uid}}</button>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" >{{user.name}}</h4>
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" ><button class="btn btn-primary" >{{user.uid}}</button>&nbsp;&nbsp;{{user.name}}</h4>
     </div>
     <div class="modal-body">
-        {{user.biography}}
+        <uib-tabset justified="true">
+            <uib-tab index="0" heading="Infos">
+                Firstname : {{user.first_name}}<br>
+                Active : {{user.active}}<br>
+                Facebook : {{user.facebook}}<br>
+                Twitter : {{user.twitter}}<br>
+                WebSite : {{user.website_url}}<br>
+                Email : {{user.email}}<br>
+                Based : {{user.base}}<br>
+                Age : {{user.age}}<br>
+            </uib-tab>
+            <uib-tab index="1" heading="Biography" disable="!user.biography" >{{user.biography}}</uib-tab>
+            <uib-tab index="2" heading="Posts ({{user.posts.length}})" disable="user.posts.length == 0">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>pid</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="post in user.posts" >
+                        <td>
+                            <button class="btn btn-success" ng-click="openModal('pid', post.pid)" >{{ post.pid }}</button>
+                        </td>
+                        <td>{{ post.title }}</td>
+                        <td>{{ getDate(post.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+            <uib-tab index="3" heading="Comments ({{user.comments.length}})" disable="user.comments.length == 0" >
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>cid</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="comment in user.comments" >
+                        <td>
+                            <button class="btn btn-warning" ng-click="openModal('cid', comment.cid)" >{{ comment.cid }}</button>
+                        </td>
+                        <td>{{ comment.subject }}</td>
+                        <td>{{ getDate(comment.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+        </uib-tabset>
     </div>
     <div class="modal-footer">
         <button class="btn btn-default" ng-click="cancel()" >Close</button>
     </div>
 </div>
 <!-- /.modal-content -->
+<!-- Modal for post -->
+<div class="modal-content" ng-show="elementType == 'pid'">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" ><button class="btn btn-success" ng-click="openModal('pid', post.pid)">{{post.pid}}</button>&nbsp;&nbsp;{{post.title}}</h4>
+        {{ getDate(post.timestamp) }}
+        Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('uid', post.author.uid)">{{post.author.name}}</button>
+    </div>
+    <div class="modal-body">
+        <uib-tabset justified="true">
+            <uib-tab index="0" heading="Body" >
+                {{post.body}}
+            </uib-tab>
+            <uib-tab index="1" heading="Comments ({{post.comments.length}})" disable="post.comments.length == 0" >
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>cid</th>
+                        <th>Author</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="comment in post.comments" >
+                        <td>
+                            <button class="btn btn-warning" ng-click="openModal('cid', comment.cid)" >{{ comment.cid }}</button>
+                        </td>
+                        <td><button class="btn btn-primary" ng-click="openModal('uid', comment.author.uid)">{{ comment.author.name }}</button></td>
+                        <td>{{ comment.subject }}</td>
+                        <td>{{ getDate(comment.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()" >Close</button>
+    </div>
+</div>
+<!-- /.modal-content -->
+<!-- Modal for comment -->
+<div class="modal-content" ng-show="elementType == 'cid'">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" ><button class="btn btn-warning" ng-click="openModal('cid', comment.cid)">{{comment.cid}}</button>&nbsp;&nbsp;{{comment.subject}}</h4>
+        {{ getDate(comment.timestamp) }}
+    </div>
+    <div class="modal-body">
+        <uib-accordion close-others="false">
+            <uib-accordion-group heading="Infos" is-open="true">
+                Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('uid', comment.author.uid)">{{comment.author.name}}</button>
+                Post target :&nbsp;&nbsp;<button class="btn btn-success" ng-click="openModal('pid', comment.post.pid)">{{comment.post.pid}}</button><br/>
+            </uib-accordion-group>
+            <uib-accordion-group heading="Content" is-open="true">
+                {{comment.comment}}
+            </uib-accordion-group>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()" >Close</button>
+    </div>
+</div>
+<!-- /.modal-content -->
+
+

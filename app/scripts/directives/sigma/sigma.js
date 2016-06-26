@@ -85,7 +85,6 @@ angular.module('sbAdminApp')
                         }).map(function (n) {
                             return n.id;
                         });
-                        console.log(nodes);
                         if (nodes.length > 0)
                             locate.nodes(nodes);
                         else

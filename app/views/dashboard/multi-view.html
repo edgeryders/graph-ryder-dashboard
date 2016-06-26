@@ -10,7 +10,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-clock-o fa-fw"></i> Users view <input type="checkbox" ng-model="userel" > labels on egdes
-                    <form ng-submit="submit()">
+                    <form ng-submit="submitUser()">
                     algo :
                     <select ng-model="layoutChoice">
                         <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
@@ -29,8 +29,8 @@
         <div class="col-lg-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Comments view <input type="checkbox" ng-model="commentel" > labels on egdes
-                    <form ng-submit="submit()">
+                    <i class="fa fa-clock-o fa-fw"></i> Comments and Posts view <input type="checkbox" ng-model="commentel" > labels on egdes
+                    <form ng-submit="submitPost()">
                         algo :
                         <select ng-model="layoutChoiceComments">
                             <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
@@ -74,13 +74,14 @@
                             <tbody>
                             <tr ng-repeat="comment in comments" >
                                 <td>
-                                    <button class="btn btn-warning" data-toggle="modal" data-target="#{{ comment.from_id }}">{{ comment.from_id }}</button>
+                                    <button class="btn btn-warning" ng-click="openModal('cid', comment.from_id)" >{{ comment.from_id }}</button>
                                 </td>
                                 <td>{{ comment.from_subject }}</td>
                                 <td> --> </td>
-                                <td >
-                                    <button ng-show="comment.to_type=='cid'" class="btn btn-warning" data-toggle="modal" data-target="#{{ comment.to_id }}">{{ comment.to_id }}</button>
-                                    <button ng-show="comment.to_type=='pid'" class="btn btn-success" data-toggle="modal" data-target="#{{ comment.to_id }}">{{ comment.to_id }}</button>
+                                <td>
+                                    <button ng-show="comment.to_type=='cid'" class="btn btn-warning" ng-click="openModal('cid', comment.from_id)" >{{ comment.to_id }}</button>
+                                    <button ng-show="comment.to_type=='pid'" class="btn btn-success" ng-click="openModal('pid', comment.to_id)" >{{ comment.to_id }}</button>
+                                </td>
                                 <td>{{ comment.to_subject }}</td>
                             </tr>
                             </tbody>

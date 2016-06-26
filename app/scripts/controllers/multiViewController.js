@@ -30,7 +30,7 @@ angular.module('sbAdminApp')
 
         /*** user view ***/
         $scope.usersGraphSigma = [];
-        $scope.submit = function () {
+        $scope.submitUser = function () {
             var drawGraph = $resource(config.apiUrl + 'draw/usersToUsers/'+ $scope.layoutChoice);
             var drawgraph = drawGraph.query();
             drawgraph.$promise.then(function (result) {
@@ -38,10 +38,10 @@ angular.module('sbAdminApp')
             });
         };
 
-        $scope.submit();
+        $scope.submitUser();
         /*** post view ***/
         $scope.commentsGraphSigma = [];
-        $scope.submit = function () {
+        $scope.submitPost = function () {
         var drawGraph = $resource(config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments);
         var drawgraph = drawGraph.query();
         drawgraph.$promise.then(function (result) {
@@ -49,7 +49,7 @@ angular.module('sbAdminApp')
         });
         };
 
-        $scope.submit();
+        $scope.submitPost();
         /*** Event Catcher Users ***/
         $scope.comments = [];
         $scope.click = false;
@@ -60,7 +60,7 @@ angular.module('sbAdminApp')
                 case 'clickNode':
                     $scope.elementType = "uid";
                     $scope.elementId = e.data.node.uid;
-                    $uibModal.open(modalInstance);
+                    $scope.openModal($scope.elementType, $scope.elementId);
                     break;
                 case 'hovers':
                     if($scope.click)
@@ -68,6 +68,7 @@ angular.module('sbAdminApp')
                     else
                         e.data.edge = e.data.current.edges;
                 case 'clickEdges':
+                    console.log(e);
                     $scope.click = (e.type != "hovers");
                     if(e.data.edge != undefined && e.data.edge.length > 0) {
                         $scope.comments = [];
@@ -100,27 +101,54 @@ angular.module('sbAdminApp')
             }
         };
         /********* Modal test ***************/
-        var modalInstance = {
-            animation: true,
-            templateUrl: 'views/ui-elements/modal-view.html',
-            controller: 'ModalInstanceCtrl',
-            buttons: {
-                Cancel: function () {
-                    $("#modal_dialog").dialog("close");
+
+
+        $scope.openModal = function (type, id) {
+            $scope.elementType = type;
+            $scope.elementId = id;
+
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'views/ui-elements/modal-view.html',
+                controller: 'ModalInstanceCtrl',
+                buttons: {
+                    Cancel: function () {
+                        $("#modal_dialog").dialog("close");
+                    }
+                },
+                resolve: {
+                    scopeParent: function() {
+                        return $scope; //On passe à la fenêtre modal une référence vers le scope parent.
+                    }
                 }
-            },
-            resolve: {
-                scopeParent: function() {
-                    return $scope; //On passe à la fenêtre modal une référence vers le scope parent.
+            });
+
+            // Catch return, reopen a new modal ?
+            modalInstance.result.then(function (res) {
+                if(res != undefined) {
+                    res = res.split(':');
+                    $scope.openModal(res[0], res[1]);
                 }
-            }
+            });
         };
 
         /*** Event catcher comment ***/
         $scope.eventCatcherComment = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    console.log(e);
+                    if(e.data.node.uid != undefined) {
+                        $scope.elementType = "uid";
+                        $scope.elementId = e.data.node.uid;
+                    }
+                    else if(e.data.node.pid != undefined) {
+                        $scope.elementType = "pid";
+                        $scope.elementId = e.data.node.pid;
+                    }
+                    else if(e.data.node.cid != undefined) {
+                        $scope.elementType = "cid";
+                        $scope.elementId = e.data.node.cid;
+                    }
+                    $scope.openModal($scope.elementType, $scope.elementId);
                     break;
             }
         };
