@@ -7,20 +7,22 @@ angular.module('sbAdminApp')
         console.log($uibModalInstance);
         $scope.elementId = scopeParent.elementId;
         $scope.elementType = scopeParent.elementType;
+        $scope.loading = true;
 
         switch($scope.elementType) {
             case "uid":
                 var User = $resource(config.apiUrl + "user/hydrate/" + $scope.elementId);
                 var user = User.query();
                 user.$promise.then(function (result) {
+                    $scope.loading = false;
                     $scope.user = result.pop();
-                    console.log("done");
                 });
                 break;
             case "pid":
                 var Post = $resource(config.apiUrl + "post/hydrate/" + $scope.elementId);
                 var post = Post.query();
                 post.$promise.then(function (result) {
+                    $scope.loading = false;
                     $scope.post = result.pop();
                 });
                 break;
@@ -28,6 +30,7 @@ angular.module('sbAdminApp')
                 var Comment = $resource(config.apiUrl + "comment/hydrate/" + $scope.elementId);
                 var comment = Comment.query();
                 comment.$promise.then(function (result) {
+                    $scope.loading = false;
                     $scope.comment = result.pop();
                 });
                 break;
