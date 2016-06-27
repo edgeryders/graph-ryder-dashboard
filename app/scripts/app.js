@@ -12,7 +12,8 @@ angular
     'oc.lazyLoad',
     'ui.router',
     'ui.bootstrap',
-    'angular-loading-bar'
+    'angular-loading-bar',
+    'ngSanitize'
   ])
   .constant('config', {
         apiUrl: 'http://192.168.99.100:5000/',
@@ -87,7 +88,9 @@ angular
               name:'sbAdminApp',
               files:[
               'scripts/controllers/main.js',
-              'scripts/controllers/doiController.js'
+              'scripts/controllers/doiController.js',
+                  'scripts/controllers/modalInstanceController.js'
+
               ]
             })
           }
@@ -103,7 +106,9 @@ angular
                     name:'sbAdminApp',
                     files:[
                         'scripts/controllers/main.js',
-                        'scripts/controllers/globalController.js'
+                        'scripts/controllers/globalController.js',
+                        'scripts/controllers/modalInstanceController.js'
+
                     ]
                 })
             }

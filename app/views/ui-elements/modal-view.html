@@ -48,6 +48,7 @@
                     <tr>
                         <th>cid</th>
                         <th>Subject</th>
+                        <th>Post</th>
                         <th>Date</th>
                     </tr>
                     </thead>
@@ -57,6 +58,9 @@
                             <button class="btn btn-warning" ng-click="openModal('cid', comment.cid)" >{{ comment.cid }}</button>
                         </td>
                         <td>{{ comment.subject }}</td>
+                        <td>
+                            <button class="btn btn-success" ng-click="openModal('pid', comment.parent_id)" >{{ comment.parent_id }}</button>
+                        </td>
                         <td>{{ getDate(comment.timestamp) }}</td>
                     </tr>
                     </tbody>

@@ -20,7 +20,13 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <sigma-js graph="usersGraphSigma" id="user-graph" width="100%" height="400px" edge-labels="userel" event-catcher="eventCatcherUsers" ></sigma-js>
+                    <sigma-js
+                            graph="usersGraphSigma"
+                            id="user-graph"
+                            width="100%" height="400px"
+                            edge-labels="userel"
+                            event-catcher="eventCatcherUsers" >
+                    </sigma-js>
                 </div>
                 <!-- /.panel-body -->
             </div>
@@ -47,7 +53,9 @@
                             width="100%" height="400px"
                             threshold=10
                             edge-labels="commentel"
-                            event-catcher="eventCatcherComment" ></sigma-js>
+                            event-catcher="eventCatcherComment" >
+
+                    </sigma-js>
                 </div>
                 <!-- /.panel-body -->
             </div>

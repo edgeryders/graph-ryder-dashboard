@@ -7,7 +7,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal) {
+    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope) {
 
         /**** Layout ****/
         $scope.layoutChoice = "GEM%20(Frick)";
@@ -35,10 +35,17 @@ angular.module('sbAdminApp')
             var drawgraph = drawGraph.query();
             drawgraph.$promise.then(function (result) {
                 $scope.usersGraphSigma = result.pop();
+                $scope.nodes = $scope.usersGraphSigma.nodes;
+                $rootScope.suggestions = [];
+                angular.forEach($scope.nodes, function(node, key) {
+                    if(node.name != undefined)
+                        $rootScope.suggestions.push(node.name)
+                });
             });
         };
 
         $scope.submitUser();
+
         /*** post view ***/
         $scope.commentsGraphSigma = [];
         $scope.submitPost = function () {
@@ -50,6 +57,7 @@ angular.module('sbAdminApp')
         };
 
         $scope.submitPost();
+
         /*** Event Catcher Users ***/
         $scope.comments = [];
         $scope.click = false;
@@ -68,7 +76,6 @@ angular.module('sbAdminApp')
                     else
                         e.data.edge = e.data.current.edges;
                 case 'clickEdges':
-                    console.log(e);
                     $scope.click = (e.type != "hovers");
                     if(e.data.edge != undefined && e.data.edge.length > 0) {
                         $scope.comments = [];
@@ -93,16 +100,15 @@ angular.module('sbAdminApp')
                                 $scope.locate.push(value.cid2);
                                 comment.to_subject = value.comment2_subject;
                             }
-                            $scope.comments.push(comment)
+                            $scope.comments.push(comment);
                         });
-                        $scope.$apply()
+                        $scope.$apply();
                     }
                     break;
             }
         };
-        /********* Modal test ***************/
 
-
+        /********* Modal  ***************/
         $scope.openModal = function (type, id) {
             $scope.elementType = type;
             $scope.elementId = id;
@@ -152,4 +158,38 @@ angular.module('sbAdminApp')
                     break;
             }
         };
+        /*** search catcher *****/
+        $rootScope.$watch('search', function(newVal,oldVal) {
+            angular.forEach($scope.nodes, function(node, key) {
+                if( node.name == newVal) {
+                    if( node.uid != undefined) {
+                        var type = "uid";
+                        var id = node.uid;
+                    }
+                    else if( node.pid != undefined) {
+                        var type = "pid";
+                        var id = node.pid;
+                    }
+                    else if( node.cid != undefined) {
+                        var type = "cid";
+                        var id = node.cid;
+                    }
+                    var params = {"max_size": 5};
+                    var CreateGraph = $resource(config.apiUrl + 'doi/usersToUsers/'+ type +'/'+ id, params);
+                    var creategraph = CreateGraph.query();
+                    creategraph.$promise.then(function (result) {
+                        var graph_id = result.pop();
+                        var graph_id_string = ""
+                        angular.forEach(graph_id, function(value, key) {
+                            graph_id_string += value;
+                        });
+                        var drawGraph = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
+                        var drawgraph = drawGraph.query();
+                        drawgraph.$promise.then(function (result) {
+                            $scope.usersGraphSigma = result.pop();
+                        });
+                    });
+                }
+            });
+        });
     });

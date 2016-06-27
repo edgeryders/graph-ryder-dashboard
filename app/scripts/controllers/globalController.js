@@ -10,11 +10,12 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('GlobalCtrl', function ($scope, $resource, config) {
+    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $timeout) {
 
         $scope.globalGraphSigma = [];
         $scope.layoutChoice = "GEM%20(Frick)";
         $scope.globalel = false;
+        $rootScope.suggestions = [];
 
         // get layout algo
         var Layout = $resource(config.apiUrl + 'layoutAlgorithm');
@@ -39,7 +40,14 @@ angular.module('sbAdminApp')
             var drawgraph = drawGraph.query();
             drawgraph.$promise.then(function (result) {
                 $scope.globalGraphSigma = result.pop();
-                console.log("done");
+                angular.forEach($scope.globalGraphSigma.nodes, function(node) {
+                    if(node.name != undefined)
+                        $rootScope.suggestions.push(node.name);
+                    else if(node.title != undefined)
+                        $rootScope.suggestions.push(node.title);
+                    else if(node.subject != undefined)
+                        $rootScope.suggestions.push(node.subject);
+                });
             });
         };
         $scope.submit();
@@ -78,12 +86,77 @@ angular.module('sbAdminApp')
         $scope.eventCatcher = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    console.log(e);
-                    if(e.data.node.uid != undefined)
+                    if(e.data.node.uid != undefined) {
                         postTypeAddUser(e.data.node.uid, e.data.node.name, e.data.captor.altKey);
+                    }
+                    else {
+                        // if(e.data.node.uid != undefined) {
+                        //     $scope.elementType = "uid";
+                        //     $scope.elementId = e.data.node.uid;
+                        // }
+                        //else
+                        if (e.data.node.pid != undefined) {
+                            $scope.elementType = "pid";
+                            $scope.elementId = e.data.node.pid;
+                        }
+                        else if (e.data.node.cid != undefined) {
+                            $scope.elementType = "cid";
+                            $scope.elementId = e.data.node.cid;
+                        }
+                        $scope.openModal($scope.elementType, $scope.elementId);
+                    }
                     break;
             }
         };
 
+        /********* Modal  ***************/
+        $scope.openModal = function (type, id) {
+            $scope.elementType = type;
+            $scope.elementId = id;
 
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'views/ui-elements/modal-view.html',
+                controller: 'ModalInstanceCtrl',
+                buttons: {
+                    Cancel: function () {
+                        $("#modal_dialog").dialog("close");
+                    }
+                },
+                resolve: {
+                    scopeParent: function() {
+                        return $scope; //On passe à la fenêtre modal une référence vers le scope parent.
+                    }
+                }
+            });
+
+            // Catch return, reopen a new modal ?
+            modalInstance.result.then(function (res) {
+                if(res != undefined) {
+                    res = res.split(':');
+                    $scope.openModal(res[0], res[1]);
+                }
+            });
+        };
+
+        /*** search catcher *****/
+        $scope.locate = [];
+        $rootScope.$watch('search', function(newVal) {
+            var locateTmp = [];
+            angular.forEach($scope.globalGraphSigma.nodes, function(node) {
+                if( node.name == newVal) {
+                    if( node.uid != undefined) {
+                        locateTmp.push(node.uid);
+                        postTypeAddUser(node.uid, node.name, false);
+                    }
+                    else if( node.pid != undefined) {
+                        locateTmp.push(node.pid);
+                    }
+                    else if( node.cid != undefined) {
+                        locateTmp.push(node.cid);
+                    }
+                }
+            });
+            $scope.locate = locateTmp;
+        });
     });

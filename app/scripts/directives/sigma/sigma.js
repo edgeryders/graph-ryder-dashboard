@@ -71,7 +71,12 @@ angular.module('sbAdminApp')
                 scope.$watch('locate', function (newVal, oldVal) {
                     if(newVal.toString() != oldVal.toString()) {
                         var nodes = s.graph.nodes().filter(function (n) {
-                            if (n.pid != undefined && scope.locate.indexOf(n.pid) != -1) {
+                            if (n.uid != undefined && scope.locate.indexOf(n.uid) != -1) {
+                                //todo use color code
+                                n.color = "rgb(0, 0, 255)";
+                                return true;
+                            }
+                            else if (n.pid != undefined && scope.locate.indexOf(n.pid) != -1) {
                                 //todo use color code
                                 n.color = "rgb(0, 255, 0)";
                                 return true;
@@ -99,7 +104,6 @@ angular.module('sbAdminApp')
                 s.refresh();
             });
             scope.$watch('edgeLabels', function(newVal,oldVal) {
-                console.log("refresh");
                 s.graph.clear();
                 s.settings({
                     drawEdgeLabels: newVal

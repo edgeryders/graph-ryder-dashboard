@@ -1,10 +1,18 @@
 <li class="sidebar-search">
     <div class="input-group custom-search-form">
-        <input type="text" class="form-control" placeholder="Search...">
+        <form ng-submit="submit()" >
+            <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search..."
+                    uib-typeahead="sugess for sugess in suggestions | filter:$viewValue | limitTo:8"
+                    ng-model="search"
+                    ng-disabled="suggestions.length == 0" >
+        </form>
         <span class="input-group-btn">
-            <button class="btn btn-default" type="button">
-                <i class="fa fa-search"></i>
-            </button>
-        </span>
+                <button class="btn btn-default" type="button">
+                    <i class="fa fa-search" ng-click="submit()" ></i>
+                </button>
+            </span>
     </div>
 </li>
