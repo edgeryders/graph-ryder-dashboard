@@ -144,7 +144,7 @@ angular.module('sbAdminApp')
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
             angular.forEach($scope.globalGraphSigma.nodes, function(node) {
-                if( node.name == newVal) {
+                if( node.name == newVal || node.title == newVal || node.subject == newVal) {
                     if( node.uid != undefined) {
                         locateTmp.push(node.uid);
                         postTypeAddUser(node.uid, node.name, false);
