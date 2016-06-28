@@ -52,17 +52,35 @@ angular.module('sbAdminApp')
         };
         $scope.submit();
 
+        /*** TimeLine ****/
+        $scope.time_data = [];
+        var tmp = {"users": [], "posts": []};
+        var usersTime = $resource(config.apiUrl + 'users/count/timestamp');
+        var userTimePromise = usersTime.query();
+        userTimePromise.$promise.then(function (results) {
+            angular.forEach(results, function(result) {
+                tmp.users.push(result);
+            });
+        });
+
+        var postsTime = $resource(config.apiUrl + 'posts/count/timestamp');
+        var postsTimePromise = postsTime.query();
+        postsTimePromise.$promise.then(function (results) {
+            angular.forEach(results, function(result) {
+                tmp.posts.push(result);
+            });
+            $scope.time_data = tmp;
+        });
+
         /*** Radar Chart ***/
         $scope.post = {};
         // get posts type
         var Type = $resource(config.apiUrl + 'post/getType/');
         var type = Type.query();
         type.$promise.then(function (result) {
-
             $scope.post.labels = result[0].labels;
             $scope.post.data = result[0].data;
             $scope.post.series = ["all"]
-
         });
 
         var postTypeAddUser = function (uid, name, append) {
