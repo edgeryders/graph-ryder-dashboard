@@ -10,7 +10,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $timeout) {
+    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q) {
 
         $scope.globalGraphSigma = [];
         $scope.layoutChoice = "GEM%20(Frick)";
@@ -55,28 +55,38 @@ angular.module('sbAdminApp')
         /*** TimeLine ****/
         $scope.time_data = [];
         $scope.selected = {"start": '', "end": ''};
+        var promises = [];
 
-        var tmp = {"users": [], "posts": []};
-        var usersTime = $resource(config.apiUrl + 'users/count/timestamp');
-        var userTimePromise = usersTime.query();
-        userTimePromise.$promise.then(function (results) {
-            angular.forEach(results, function(result) {
+        // Create promises array to wait all data until load
+        promises.push($resource(config.apiUrl + 'users/count/timestamp').query().$promise);
+        promises.push($resource(config.apiUrl + 'posts/count/timestamp').query().$promise);
+        promises.push($resource(config.apiUrl + 'comments/count/timestamp').query().$promise);
+
+        $q.all(promises).then(function(results) {
+            var tmp = {"users": [], "posts": [], "comments": []};
+            // Users
+            angular.forEach(results[0], function(result) {
                 tmp.users.push(result);
             });
-        });
-
-        var postsTime = $resource(config.apiUrl + 'posts/count/timestamp');
-        var postsTimePromise = postsTime.query();
-        postsTimePromise.$promise.then(function (results) {
-            angular.forEach(results, function(result) {
+            // Posts
+            angular.forEach(results[1], function(result) {
                 tmp.posts.push(result);
             });
+            // Comments
+            angular.forEach(results[2], function (result) {
+                tmp.comments.push(result);
+            });
+            // append data 
             $scope.time_data = tmp;
+        }, function (reject) {
+            console.log(reject);
         });
 
+        // Time selevction have been made on the chart
         $scope.extent = function (start, end) {
             $scope.selected.start = start;
             $scope.selected.end = end;
+            // Update sigma filter
             $scope.filter = {"start": start.getTime(), "end": end.getTime()};
             $scope.$apply();
         };

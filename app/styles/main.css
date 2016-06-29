@@ -94,12 +94,17 @@ background-color: #eee;
 
 .userLine {
   fill: none;
-  stroke: steelblue;
+  stroke: rgb(0, 0, 255);
   stroke-width: 1.5px;
 }
 .postLine {
   fill: none;
-  stroke: green;
+  stroke: rgb(0, 255, 0);
+  stroke-width: 1.5px;
+}
+.commentLine {
+  fill: none;
+  stroke: rgb(255, 100, 0);
   stroke-width: 1.5px;
 }
 

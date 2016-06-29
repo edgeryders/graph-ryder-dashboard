@@ -17,7 +17,7 @@ angular.module('sbAdminApp')
             edgeLabels: '=?',
             threshold: '@?',
             eventCatcher: '&',
-            filter: '=?'
+            timeFilter: '=?'
         },
         link: function (scope, element, attrs) {
             // default values
@@ -71,7 +71,7 @@ angular.module('sbAdminApp')
                 });
                 scope.$watch('locate', function (newVal, oldVal) {
                     if(newVal.toString() != oldVal.toString()) {
-                        var nodes = s.graph.nodes().filter(function (n) {
+                        var nodes = s.graph.nodes().timeFilter(function (n) {
                             if (n.uid != undefined && scope.locate.indexOf(n.uid) != -1) {
                                 //todo use color code
                                 n.color = "rgb(0, 0, 255)";
@@ -99,20 +99,20 @@ angular.module('sbAdminApp')
                 });
             }
 
-            /**** filter ****/
-            scope.$watch('filter', function (newVal, oldVal) {
+            /**** timeFilter ****/
+            scope.$watch('timeFilter', function (newVal, oldVal) {
                 var nodes = s.graph.nodes().filter(function (n) {
-                    if (n.uid != undefined && scope.filter.start < n.timestamp && scope.filter.end > n.timestamp) {
+                    if (n.uid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         //todo use color code
                         n.color = "rgb(0, 0, 255)";
                         return true;
                     }
-                    else if (n.pid != undefined && scope.filter.start < n.timestamp && scope.filter.end > n.timestamp) {
+                    else if (n.pid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         //todo use color code
                         n.color = "rgb(0, 255, 0)";
                         return true;
                     }
-                    else if  (n.cid != undefined && scope.filter.start < n.timestamp && scope.filter.end > n.timestamp) {
+                    else if  (n.cid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         n.color = "rgb(255, 100, 0)";
                         return true;
                     }

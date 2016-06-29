@@ -23,8 +23,8 @@ angular.module('sbAdminApp')
             var y1 = d3.scale.linear()
                 .range([scope.height, 0]);
 
-            var y2 = d3.scale.linear()
-                .range([scope.height, 0]);
+            // var y2 = d3.scale.linear()
+            //     .range([scope.height, 0]);
 
             var xAxis = d3.svg.axis()
                 .scale(x)
@@ -34,9 +34,9 @@ angular.module('sbAdminApp')
                 .scale(y1)
                 .orient("left");
 
-            var yAxis2 = d3.svg.axis()
-                .scale(y2)
-                .orient("right");
+            // var yAxis2 = d3.svg.axis()
+            //     .scale(y2)
+            //     .orient("right");
 
             var brush = d3.svg.brush()
                 .x(x)
@@ -48,7 +48,11 @@ angular.module('sbAdminApp')
 
             var postsLine = d3.svg.line()
                 .x(function(d) { return x(d.timestamp); })
-                .y(function(d) { return y2(d.count); });
+                .y(function(d) { return y1(d.count); });
+
+            var commentsLine = d3.svg.line()
+                .x(function(d) { return x(d.timestamp); })
+                .y(function(d) { return y1(d.count); });
 
             var svg = d3.select(element[0].firstChild)
                 .attr("width", width + margin.top + margin.bottom)
@@ -58,15 +62,16 @@ angular.module('sbAdminApp')
 
             scope.$watch("data", function(data) {
                 if(data.length != 0) {
-                    x.domain(d3.extent(data.users, function (d) {
+                    var scale = data.users.concat(data.posts);
+                    x.domain(d3.extent(scale, function (d) {
                         return d.timestamp;
                     }));
-                    y1.domain(d3.extent(data.users, function (d) {
+                    y1.domain(d3.extent(scale, function (d) {
                         return d.count;
                     }));
-                    y2.domain(d3.extent(data.posts, function (d) {
-                        return d.count;
-                    }));
+                    // y2.domain(d3.extent(data.posts, function (d) {
+                    //     return d.count;
+                    // }));
 
                     svg.append("g")
                         .attr("class", "x axis")
@@ -76,23 +81,22 @@ angular.module('sbAdminApp')
                     svg.append("g")
                         .attr("class", "y axis")
                         .call(yAxis1)
-                        .style("fill", "steelblue")
                         .append("text")
-                        .attr("transform", "rotate(-90)")
+                        .attr("transform", "translate(50,0)")
                         .attr("y", 6)
                         .attr("dy", ".71em")
                         .style("text-anchor", "end")
-                        .text("Users");
+                        .text("Count");
 
-                    svg.append("g")
-                        .attr("class", "y axis")
-                        .attr("transform", "translate(" + (width - 25) + ",0)")
-                        .style("fill", "green")
-                        .call(yAxis2)
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .style("text-anchor", "end")
-                        .text("Posts");
+                    // svg.append("g")
+                    //     .attr("class", "y axis")
+                    //     .attr("transform", "translate(" + (width - 25) + ",0)")
+                    //     .style("fill", "green")
+                    //     .call(yAxis2)
+                    //     .append("text")
+                    //     .attr("transform", "rotate(-90)")
+                    //     .style("text-anchor", "end")
+                    //     .text("Posts");
 
                     svg.append("path")
                         .datum(data.users)
@@ -103,6 +107,11 @@ angular.module('sbAdminApp')
                         .datum(data.posts)
                         .attr("class", "postLine")
                         .attr("d", postsLine);
+
+                    svg.append("path")
+                        .datum(data.comments)
+                        .attr("class", "commentLine")
+                        .attr("d", commentsLine);
 
                     svg.append("g")
                         .attr("class", "x brush")
