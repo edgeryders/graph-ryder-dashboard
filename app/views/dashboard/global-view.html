@@ -52,11 +52,11 @@
         <div class="col-lg-6" id="radar-chart">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Posts type of {{post.series}}
+                    <i class="fa fa-clock-o fa-fw"></i> Posts type of {{postType.series}}
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <canvas id="area" class="chart chart-radar" data="post.data" labels="post.labels" series="post.series" legend="true" ></canvas>
+                    <canvas id="area" class="chart chart-radar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
                 </div>
                 <!-- /.panel-body -->
             </div>
@@ -69,7 +69,7 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <canvas id="bar" class="chart chart-bar" data="post.data" labels="post.labels" series="post.series" legend="true" ></canvas>
+                    <canvas id="bar" class="chart chart-bar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
                 </div>
                 <!-- /.panel-body -->
             </div>

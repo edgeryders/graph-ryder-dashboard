@@ -55,14 +55,14 @@ angular.module('sbAdminApp')
         /*** TimeLine ****/
         $scope.time_data = [];
         $scope.selected = {"start": '', "end": ''};
-        var promises = [];
+        var timeLinePromises = [];
 
         // Create promises array to wait all data until load
-        promises.push($resource(config.apiUrl + 'users/count/timestamp').query().$promise);
-        promises.push($resource(config.apiUrl + 'posts/count/timestamp').query().$promise);
-        promises.push($resource(config.apiUrl + 'comments/count/timestamp').query().$promise);
+        timeLinePromises.push($resource(config.apiUrl + 'users/count/timestamp').query().$promise);
+        timeLinePromises.push($resource(config.apiUrl + 'posts/count/timestamp').query().$promise);
+        timeLinePromises.push($resource(config.apiUrl + 'comments/count/timestamp').query().$promise);
 
-        $q.all(promises).then(function(results) {
+        $q.all(timeLinePromises).then(function(results) {
             var tmp = {"users": [], "posts": [], "comments": []};
             // Users
             angular.forEach(results[0], function(result) {
@@ -76,7 +76,7 @@ angular.module('sbAdminApp')
             angular.forEach(results[2], function (result) {
                 tmp.comments.push(result);
             });
-            // append data 
+            // append data
             $scope.time_data = tmp;
         }, function (reject) {
             console.log(reject);
@@ -92,31 +92,47 @@ angular.module('sbAdminApp')
         };
 
         /*** Radar Chart ***/
-        $scope.post = {};
-        // get posts type
-        var Type = $resource(config.apiUrl + 'post/getType/');
-        var type = Type.query();
-        type.$promise.then(function (result) {
-            $scope.post.labels = result[0].labels;
-            $scope.post.data = result[0].data;
-            $scope.post.series = ["all"]
-        });
+        var all = {name: "all"};
+        var postSelection = [all];
 
-        var postTypeAddUser = function (uid, name, append) {
-            var params = {"uid": uid};
+        // Call api and load postType
+        var refreshPostType = function () {
+            $scope.postType = {};
+            $scope.postType.series = [];
+            $scope.postType.labels = [];
+
+            var params = {"uid": []};
+            angular.forEach(postSelection, function(selection) {
+                if(selection != all)
+                    params.uid.push(selection.id);
+                $scope.postType.series.push(selection.name);
+            });
+
+            //todo add time filter
             var Type = $resource(config.apiUrl + 'post/getType/', params);
             var type = Type.query();
             type.$promise.then(function (result) {
-                if(result[0].data[1] != undefined)
-                    if(append) {
-                        $scope.post.data.push(result[0].data[1]);
-                        $scope.post.series.push(name);
-                    }
-                    else {
-                        $scope.post.data = [result[0].data[1]];
-                        $scope.post.series = [name];
-                    }
+                $scope.postType.labels = result[0].labels;
+                if(postSelection.indexOf(all) != -1) {
+                    $scope.postType.data = result[0].data;
+                    $scope.postType.series.push("all");
+                }
+                else {
+                    result[0].data.shift();
+                    $scope.postType.data = result[0].data;
+                }
             });
+        };
+
+        //default load all post type
+        refreshPostType();
+
+        var postTypeAddUser = function (uid, name, append) {
+            if(append)
+                postSelection.push({id: uid, name: name});
+            else
+                postSelection = [{id: uid, name: name}];
+            refreshPostType();
         };
 
         /*** Event Catcher ***/
