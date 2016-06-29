@@ -71,7 +71,7 @@ angular.module('sbAdminApp')
                 });
                 scope.$watch('locate', function (newVal, oldVal) {
                     if(newVal.toString() != oldVal.toString()) {
-                        var nodes = s.graph.nodes().timeFilter(function (n) {
+                        var nodes = s.graph.nodes().filter(function (n) {
                             if (n.uid != undefined && scope.locate.indexOf(n.uid) != -1) {
                                 //todo use color code
                                 n.color = "rgb(0, 0, 255)";
@@ -100,7 +100,7 @@ angular.module('sbAdminApp')
             }
 
             /**** timeFilter ****/
-            scope.$watch('timeFilter', function (newVal, oldVal) {
+            scope.$watch('timeFilter', function () {
                 var nodes = s.graph.nodes().filter(function (n) {
                     if (n.uid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         //todo use color code
