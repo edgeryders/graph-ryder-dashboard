@@ -54,6 +54,8 @@ angular.module('sbAdminApp')
 
         /*** TimeLine ****/
         $scope.time_data = [];
+        $scope.selected = {"start": '', "end": ''};
+
         var tmp = {"users": [], "posts": []};
         var usersTime = $resource(config.apiUrl + 'users/count/timestamp');
         var userTimePromise = usersTime.query();
@@ -71,6 +73,13 @@ angular.module('sbAdminApp')
             });
             $scope.time_data = tmp;
         });
+
+        $scope.extent = function (start, end) {
+            $scope.selected.start = start;
+            $scope.selected.end = end;
+            $scope.filter = {"start": start.getTime(), "end": end.getTime()};
+            $scope.$apply();
+        };
 
         /*** Radar Chart ***/
         $scope.post = {};

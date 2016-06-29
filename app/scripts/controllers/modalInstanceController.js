@@ -3,8 +3,7 @@
  */
 angular.module('sbAdminApp')
     .controller('ModalInstanceCtrl', function ($scope, $resource, $uibModalInstance, config, scopeParent) {
-
-        console.log($uibModalInstance);
+        
         $scope.elementId = scopeParent.elementId;
         $scope.elementType = scopeParent.elementType;
         $scope.loading = true;

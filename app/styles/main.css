@@ -102,3 +102,9 @@ background-color: #eee;
   stroke: green;
   stroke-width: 1.5px;
 }
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}

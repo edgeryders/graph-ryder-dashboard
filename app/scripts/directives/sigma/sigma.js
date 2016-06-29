@@ -16,7 +16,8 @@ angular.module('sbAdminApp')
             id: '@',
             edgeLabels: '=?',
             threshold: '@?',
-            eventCatcher: '&'
+            eventCatcher: '&',
+            filter: '=?'
         },
         link: function (scope, element, attrs) {
             // default values
@@ -97,6 +98,32 @@ angular.module('sbAdminApp')
                     }
                 });
             }
+
+            /**** filter ****/
+            scope.$watch('filter', function (newVal, oldVal) {
+                var nodes = s.graph.nodes().filter(function (n) {
+                    if (n.uid != undefined && scope.filter.start < n.timestamp && scope.filter.end > n.timestamp) {
+                        //todo use color code
+                        n.color = "rgb(0, 0, 255)";
+                        return true;
+                    }
+                    else if (n.pid != undefined && scope.filter.start < n.timestamp && scope.filter.end > n.timestamp) {
+                        //todo use color code
+                        n.color = "rgb(0, 255, 0)";
+                        return true;
+                    }
+                    else if  (n.cid != undefined && scope.filter.start < n.timestamp && scope.filter.end > n.timestamp) {
+                        n.color = "rgb(255, 100, 0)";
+                        return true;
+                    }
+                    else
+                        n.color = "rgb(128, 128, 128)";
+                }).map(function (n) {
+                    return n.id;
+                });
+                s.refresh();
+            });
+
             /**** Watch for update ****/
             scope.$watch('graph', function(newVal,oldVal) {
                 s.graph.clear();

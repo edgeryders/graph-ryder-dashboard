@@ -8,12 +8,12 @@ angular.module('sbAdminApp')
         template: '<svg></svg>',
         scope: {
             height: '@',
-            data: '='
+            data: '=',
+            callBack: '&'
         },
         link: function (scope, element) {
 
             var margin = {top: 20, right: 20, bottom: 30, left: 50};
-
             var width = element.parent().width();
             width = width - margin.left - margin.right;
 
@@ -38,6 +38,10 @@ angular.module('sbAdminApp')
                 .scale(y2)
                 .orient("right");
 
+            var brush = d3.svg.brush()
+                .x(x)
+                .on("brush", brushed);
+
             var usersLine = d3.svg.line()
                 .x(function(d) { return x(d.timestamp); })
                 .y(function(d) { return y1(d.count); });
@@ -54,7 +58,6 @@ angular.module('sbAdminApp')
 
             scope.$watch("data", function(data) {
                 if(data.length != 0) {
-                    console.log(data);
                     x.domain(d3.extent(data.users, function (d) {
                         return d.timestamp;
                     }));
@@ -100,8 +103,19 @@ angular.module('sbAdminApp')
                         .datum(data.posts)
                         .attr("class", "postLine")
                         .attr("d", postsLine);
+
+                    svg.append("g")
+                        .attr("class", "x brush")
+                        .call(brush)
+                        .selectAll("rect")
+                        .attr("y", -6)
+                        .attr("height", scope.height + 7);
                     }
                 });
+
+            function brushed() {
+                scope.callBack()(brush.extent()[0], brush.extent()[1]);
+            }
 
             d3.select(window).on('resize', function () {
                 //todo redraw
