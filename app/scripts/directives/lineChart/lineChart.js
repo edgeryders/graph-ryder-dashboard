@@ -40,7 +40,8 @@ angular.module('sbAdminApp')
 
             var brush = d3.svg.brush()
                 .x(x)
-                .on("brush", brushed);
+                .on("brush", brushed)
+                .on("brushend", released);
 
             var usersLine = d3.svg.line()
                 .x(function(d) { return x(d.timestamp); })
@@ -124,6 +125,9 @@ angular.module('sbAdminApp')
 
             function brushed() {
                 scope.callBack()(brush.extent()[0], brush.extent()[1]);
+            }
+            function released() {
+                scope.callBack()(false, false);
             }
 
             d3.select(window).on('resize', function () {

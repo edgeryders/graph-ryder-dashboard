@@ -54,7 +54,7 @@ angular.module('sbAdminApp')
 
         /*** TimeLine ****/
         $scope.time_data = [];
-        $scope.selected = {"start": '', "end": ''};
+        $scope.selected = {};
         var timeLinePromises = [];
 
         // Create promises array to wait all data until load
@@ -84,11 +84,15 @@ angular.module('sbAdminApp')
 
         // Time selevction have been made on the chart
         $scope.extent = function (start, end) {
-            $scope.selected.start = start;
-            $scope.selected.end = end;
-            // Update sigma filter
-            $scope.filter = {"start": start.getTime(), "end": end.getTime()};
-            $scope.$apply();
+            if(!start && !end) //release signal
+                refreshPostType(); 
+            else {
+                $scope.selected.start = start;
+                $scope.selected.end = end;
+                // Update sigma filter
+                $scope.filter = {"start": start.getTime(), "end": end.getTime()};
+                $scope.$apply();
+            }
         };
 
         /*** Radar Chart ***/
@@ -102,13 +106,19 @@ angular.module('sbAdminApp')
             $scope.postType.labels = [];
 
             var params = {"uid": []};
+
             angular.forEach(postSelection, function(selection) {
-                if(selection != all)
+                if(selection != all) {
                     params.uid.push(selection.id);
-                $scope.postType.series.push(selection.name);
+                    $scope.postType.series.push(selection.name);
+                }
             });
 
-            //todo add time filter
+            if($scope.selected.start != undefined)
+                params.start = $scope.selected.start.getTime();
+            if($scope.selected.end != undefined)
+                params.end = $scope.selected.end.getTime();
+
             var Type = $resource(config.apiUrl + 'post/getType/', params);
             var type = Type.query();
             type.$promise.then(function (result) {
