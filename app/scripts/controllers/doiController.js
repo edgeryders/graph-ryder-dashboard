@@ -7,15 +7,15 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-  .controller('DoiCtrl', function ($scope, $resource, config, $rootScope, $uibModal) {
+  .controller('DoiCtrl', function ($scope, $resource, config, $rootScope, $uibModal, $location) {
 
       $scope.type = "doi";
 
       /***** Init ******/
-
       // When rootScope is ready load the graph
+      //todo clean rootScope on destroy
       $rootScope.$watch('ready', function(newVal) {
-          if(newVal) {
+          if(newVal && $location.path() == "/dashboard/doi") {
               $scope.layoutChoice = $rootScope.layout[17];
               $scope.submit();
           }
@@ -24,7 +24,7 @@ angular.module('sbAdminApp')
       /***** Graph creation *****/
       $scope.field = "uid";
       $scope.value = "34";
-      $scope.doiSize = 50;
+      $scope.doiSize = 25;
       $scope.graphSigma = [];
 
       $scope.submit = function () {
@@ -105,8 +105,9 @@ angular.module('sbAdminApp')
       };
 
       /*** Search Bar Catcher *****/
+      //todo clean rootScope on destroy
       $rootScope.$watch('search', function(newVal) {
-          if(newVal != undefined) {
+          if(newVal != undefined && $location.path() == "/dashboard/doi") {
               if( newVal.uid != undefined) {
                   $scope.field = "uid";
                   $scope.value = newVal.uid;
@@ -119,7 +120,7 @@ angular.module('sbAdminApp')
                   $scope.field = "cid";
                   $scope.value = newVal.cid;
               }
+              $scope.submit();
           }
-          $scope.submit();
       });
 });

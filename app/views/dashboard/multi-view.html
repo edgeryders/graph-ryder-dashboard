@@ -1,4 +1,4 @@
-<div ng-controller="MultiViewCtrl" >
+<div>
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">Dashboard </h1><p>Example of interaction without api call, click on Edges to view the content</p>
@@ -10,7 +10,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-clock-o fa-fw"></i> Users view <input type="checkbox" ng-model="userel" > labels on egdes
-                    <form ng-submit="submitUser()">
+                    <form ng-submit="drawUserGraph()">
                     algo :
                     <select ng-model="layoutChoice">
                         <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
@@ -36,7 +36,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-clock-o fa-fw"></i> Comments and Posts view <input type="checkbox" ng-model="commentel" > labels on egdes
-                    <form ng-submit="submitPost()">
+                    <form ng-submit="darwPostGraph()">
                         algo :
                         <select ng-model="layoutChoiceComments">
                             <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>

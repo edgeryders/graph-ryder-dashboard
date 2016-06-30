@@ -31,6 +31,7 @@ angular
     .state('dashboard', {
         url:'/dashboard',
         templateUrl: 'views/dashboard/main.html',
+        controller: 'MainCtrl',
           resolve: {
               loadMyFiles: function ($ocLazyLoad, $q) {
               var prom1 = $ocLazyLoad.load({
@@ -81,7 +82,7 @@ angular
     })
     .state('dashboard.doi',{
         url:'/doi',
-        controller: 'MainCtrl',
+        controller: 'DoiCtrl',
         templateUrl:'views/dashboard/doi.html',
         resolve: {
           loadMyFiles:function($ocLazyLoad) {
@@ -99,7 +100,7 @@ angular
     })
     .state('dashboard.globalView',{
         url:'/globalView',
-        controller: 'MainCtrl',
+        controller: 'GlobalCtrl',
         templateUrl:'views/dashboard/global-view.html',
         resolve: {
             loadMyFiles:function($ocLazyLoad) {
@@ -117,7 +118,7 @@ angular
     })
     .state('dashboard.multiView',{
         url:'/multiView',
-        controller: 'MainCtrl',
+        controller: 'MultiViewCtrl',
         templateUrl:'views/dashboard/multi-view.html',
         resolve: {
             loadMyFiles:function($ocLazyLoad) {

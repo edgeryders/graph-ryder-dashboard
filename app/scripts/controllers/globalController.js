@@ -10,14 +10,15 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q) {
+    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location) {
 
         /**** Init ****/
         //edge label default
         $scope.globalel = false;
         // When rootScope is ready load the graph
+        //todo clean rootScope on destroy
         $rootScope.$watch('ready', function(newVal) {
-            if(newVal) {
+            if(newVal && $location.path() == "/dashboard/globalView") {
                 $scope.layoutChoice = $rootScope.layout[17];
                 $scope.submit();
                 refreshPostType();
@@ -184,10 +185,10 @@ angular.module('sbAdminApp')
         };
 
         /*** Search Bar Catcher *****/
-        $scope.locate = [];
+        //todo clean rootScope on destroy
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
-            if(newVal != undefined) {
+            if(newVal != undefined && $location.path() == "/dashboard/globalView") {
                 if( newVal.uid != undefined) {
                     locateTmp.push(newVal.uid);
                     postTypeAddUser(newVal.uid, newVal.name, false);
@@ -198,7 +199,7 @@ angular.module('sbAdminApp')
                 else if( newVal.cid != undefined) {
                     locateTmp.push(newVal.cid);
                 }
+                $scope.locate = locateTmp;
             }
-            $scope.locate = locateTmp;
         });
     });

@@ -7,21 +7,24 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope) {
+    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $location) {
 
         /**** Init ****/
         // wait rootScope to be ready
+        //todo clean rootScope on destroy
         $rootScope.$watch('ready', function(newVal) {
-            if(newVal) {
+            if(newVal && $location.path() == "/dashboard/multiView") {
                 $scope.layoutChoice = $rootScope.layout[17];
                 $scope.layoutChoiceComments = $rootScope.layout[17];
-                $scope.submitUser();
-                $scope.submitPost();
+                $scope.drawUserGraph();
+                $scope.darwPostGraph();
             }
         });
         /*** user view ***/
         $scope.usersGraphSigma = [];
-        $scope.submitUser = function () {
+
+        $scope.drawUserGraph = function () {
+            console.log("hola quetal");
             var drawGraph = $resource(config.apiUrl + 'draw/usersToUsers/'+ $scope.layoutChoice);
             var drawgraph = drawGraph.query();
             drawgraph.$promise.then(function (result) {
@@ -41,7 +44,7 @@ angular.module('sbAdminApp')
         /*** post view ***/
         // todo generate this view from the other via edges values
         $scope.commentsGraphSigma = [];
-        $scope.submitPost = function () {
+        $scope.darwPostGraph = function () {
         var drawGraph = $resource(config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments);
         var drawgraph = drawGraph.query();
         drawgraph.$promise.then(function (result) {
@@ -150,8 +153,9 @@ angular.module('sbAdminApp')
             }
         };
         /*** search catcher *****/
+        //todo clean rootScope on destroy
         $rootScope.$watch('search', function(newVal) {
-                if(newVal != undefined) {
+                if(newVal != undefined && $location.path() == "/dashboard/multiView") {
                     if( newVal.uid != undefined) {
                         var type = "uid";
                         var id = newVal.uid;
@@ -169,7 +173,7 @@ angular.module('sbAdminApp')
                     var creategraph = CreateGraph.query();
                     creategraph.$promise.then(function (result) {
                         var graph_id = result.pop();
-                        var graph_id_string = ""
+                        var graph_id_string = "";
                         angular.forEach(graph_id, function(value) {
                             graph_id_string += value;
                         });
