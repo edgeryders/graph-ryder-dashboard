@@ -16,7 +16,6 @@ angular.module('sbAdminApp')
         //edge label default
         $scope.globalel = false;
         // When rootScope is ready load the graph
-        //todo clean rootScope on destroy
         $rootScope.$watch('ready', function(newVal) {
             if(newVal && $location.path() == "/dashboard/globalView") {
                 $scope.layoutChoice = $rootScope.layout[17];
@@ -185,7 +184,6 @@ angular.module('sbAdminApp')
         };
 
         /*** Search Bar Catcher *****/
-        //todo clean rootScope on destroy
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
             if(newVal != undefined && $location.path() == "/dashboard/globalView") {
@@ -201,5 +199,14 @@ angular.module('sbAdminApp')
                 }
                 $scope.locate = locateTmp;
             }
+        });
+        $scope.$on("$destroy", function(){
+            //todo stop all active request
+            // remove watchers in rootScope
+            angular.forEach($rootScope.$$watchers, function(watcher, key) {
+                if(watcher.exp === 'search' || watcher.exp === 'ready') {
+                    $rootScope.$$watchers.splice(key, 1);
+                }
+            });
         });
     });

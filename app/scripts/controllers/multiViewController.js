@@ -11,7 +11,6 @@ angular.module('sbAdminApp')
 
         /**** Init ****/
         // wait rootScope to be ready
-        //todo clean rootScope on destroy
         $rootScope.$watch('ready', function(newVal) {
             if(newVal && $location.path() == "/dashboard/multiView") {
                 $scope.layoutChoice = $rootScope.layout[17];
@@ -24,7 +23,6 @@ angular.module('sbAdminApp')
         $scope.usersGraphSigma = [];
 
         $scope.drawUserGraph = function () {
-            console.log("hola quetal");
             var drawGraph = $resource(config.apiUrl + 'draw/usersToUsers/'+ $scope.layoutChoice);
             var drawgraph = drawGraph.query();
             drawgraph.$promise.then(function (result) {
@@ -153,36 +151,43 @@ angular.module('sbAdminApp')
             }
         };
         /*** search catcher *****/
-        //todo clean rootScope on destroy
         $rootScope.$watch('search', function(newVal) {
-                if(newVal != undefined && $location.path() == "/dashboard/multiView") {
-                    if( newVal.uid != undefined) {
-                        var type = "uid";
-                        var id = newVal.uid;
-                    }
-                    else if( newVal.pid != undefined) {
-                        var type = "pid";
-                        var id = newVal.pid;
-                    }
-                    else if( newVal.cid != undefined) {
-                        var type = "cid";
-                        var id = newVal.cid;
-                    }
-                    var params = {"max_size": 5};
-                    var CreateGraph = $resource(config.apiUrl + 'doi/usersToUsers/'+ type +'/'+ id, params);
-                    var creategraph = CreateGraph.query();
-                    creategraph.$promise.then(function (result) {
-                        var graph_id = result.pop();
-                        var graph_id_string = "";
-                        angular.forEach(graph_id, function(value) {
-                            graph_id_string += value;
-                        });
-                        var drawGraph = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
-                        var drawgraph = drawGraph.query();
-                        drawgraph.$promise.then(function (result) {
-                            $scope.usersGraphSigma = result.pop();
-                        });
-                    });
+            if(newVal != undefined && $location.path() == "/dashboard/multiView") {
+                if( newVal.uid != undefined) {
+                    var type = "uid";
+                    var id = newVal.uid;
                 }
+                else if( newVal.pid != undefined) {
+                    var type = "pid";
+                    var id = newVal.pid;
+                }
+                else if( newVal.cid != undefined) {
+                    var type = "cid";
+                    var id = newVal.cid;
+                }
+                var params = {"max_size": 5};
+                var CreateGraph = $resource(config.apiUrl + 'doi/usersToUsers/'+ type +'/'+ id, params);
+                var creategraph = CreateGraph.query();
+                creategraph.$promise.then(function (result) {
+                    var graph_id = result.pop();
+                    var graph_id_string = "";
+                    angular.forEach(graph_id, function(value) {
+                        graph_id_string += value;
+                    });
+                    var drawGraph = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
+                    var drawgraph = drawGraph.query();
+                    drawgraph.$promise.then(function (result) {
+                        $scope.usersGraphSigma = result.pop();
+                    });
+                });
+            }
+        });
+        $scope.$on("$destroy", function(){
+            //todo stop all active request
+            // remove watchers in rootScope
+            angular.forEach($rootScope.$$watchers, function(watcher, key) {
+                if(watcher.exp === 'search' || watcher.exp === 'ready')
+                    $rootScope.$$watchers.splice(key, 1);
+            });
         });
     });
