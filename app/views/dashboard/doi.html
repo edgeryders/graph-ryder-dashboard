@@ -10,32 +10,17 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-clock-o fa-fw"></i> Test Sigma /
-                    <input type="radio" ng-model="type" value="neighbours" > Neighbours
-                    <input type="radio" ng-model="type" value="doi" > DOI
-                    <input type="checkbox" ng-model="el" > labels on egdes
-                    <!--<form ng-submit="submit()">-->
-                        <!--field :-->
-                        <!--<select ng-model="field" ng-disabled="type=='complete'" >-->
-                            <!--<option value="uid">User</option>-->
-                            <!--<option value="pid">Post</option>-->
-                            <!--<option value="cid">Comment</option>-->
-                        <!--</select>-->
-                        <!--label :-->
-                        <!--<select ng-model="user" ng-show="field=='uid'" ng-disabled="type=='complete'">-->
-                            <!--<option ng-repeat="user in users" value="{{user.uid}}">{{user.name}}</option>-->
-                        <!--</select>-->
-                        <!--<select ng-model="post" ng-show="field=='pid'" ng-disabled="type=='complete'">-->
-                            <!--<option ng-repeat="post in posts" value="{{post.pid}}">{{post.title}}</option>-->
-                        <!--</select>-->
-                        <!--<select ng-model="comment" ng-show="field=='cid'" ng-disabled="type=='complete'">-->
-                            <!--<option ng-repeat="comment in comments" value="{{comment.cid}}">{{comment.subject}}</option>-->
-                        <!--</select>-->
-                        <!--algo :-->
-                        <!--<select ng-model="layoutChoice">-->
-                            <!--<option ng-repeat="option in layout" value="{{option}}">{{option}}</option>-->
-                        <!--</select>-->
-                        <!--<input type="submit" value="go" />-->
-                    <!--</form>-->
+                    <input type="radio" ng-model="type" value="neighbours" /> Neighbours
+                    <input type="radio" ng-model="type" value="doi" /> DOI
+                    <input type="checkbox" ng-model="el" /> labels on egdes
+                    <form ng-submit="submit()">
+                        Doi size : <input type="text" ng-model="doiSize" />
+                        algo :
+                        <select ng-model="layoutChoice">
+                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                        </select>
+                        <input type="submit" value="go" />
+                    </form>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">

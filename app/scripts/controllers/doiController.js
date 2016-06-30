@@ -67,6 +67,8 @@ angular.module('sbAdminApp')
       $scope.field = "uid";
       $scope.value = "34";
       $scope.layoutChoice = "FM^3 (OGDF)";
+      $scope.doiSize = 50;
+
       $scope.submit = function () {
           // // Read the complete graph from api
           if($scope.field == "uid" && $scope.user)
@@ -76,7 +78,7 @@ angular.module('sbAdminApp')
           else if($scope.field == "cid" && $scope.comment)
               $scope.value = $scope.comment;
           if($scope.type === "doi")
-              var CreateGraph = $resource(config.apiUrl + 'doi/'+ $scope.field +'/'+ $scope.value);
+              var CreateGraph = $resource(config.apiUrl + 'doi/complete/'+ $scope.field +'/'+ $scope.value, {"max_size": $scope.doiSize});
           else
               var CreateGraph = $resource(config.apiUrl + 'createGraph/'+ $scope.field +'/'+ $scope.value);
           var creategraph = CreateGraph.query();
