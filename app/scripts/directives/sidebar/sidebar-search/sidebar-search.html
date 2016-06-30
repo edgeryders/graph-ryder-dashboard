@@ -5,7 +5,7 @@
                     type="text"
                     class="form-control"
                     placeholder="Search..."
-                    uib-typeahead="sugess for sugess in suggestions | filter:$viewValue | limitTo:8"
+                    uib-typeahead="sugess as sugess.label for sugess in suggestions | filter:{label:$viewValue} | limitTo:8"
                     ng-model="search"
                     ng-disabled="suggestions.length == 0" >
         </form>

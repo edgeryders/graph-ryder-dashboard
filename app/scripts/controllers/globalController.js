@@ -12,27 +12,20 @@
 angular.module('sbAdminApp')
     .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q) {
 
-        $scope.globalGraphSigma = [];
-        $scope.layoutChoice = "GEM%20(Frick)";
+        /**** Init ****/
+        //edge label default
         $scope.globalel = false;
-        $rootScope.suggestions = [];
-
-        // get layout algo
-        var Layout = $resource(config.apiUrl + 'layoutAlgorithm');
-        var layout = Layout.query();
-        layout.$promise.then(function (result) {
-            var layout = []
-            var layoutName = ""
-            angular.forEach(result, function(value, key) {
-                layoutName = ""
-                angular.forEach(value, function(value2, key) {
-                    layoutName += value2;
-                });
-                layout.push(layoutName)
-            });
-            $scope.layout = layout;
+        // When rootScope is ready load the graph
+        $rootScope.$watch('ready', function(newVal) {
+            if(newVal) {
+                $scope.layoutChoice = $rootScope.layout[17];
+                $scope.submit();
+                refreshPostType();
+            }
         });
 
+        /***** Global view *****/
+        $scope.globalGraphSigma = [];
 
         $scope.submit = function () {
             // // Read the complete graph from api
@@ -40,17 +33,8 @@ angular.module('sbAdminApp')
             var drawgraph = drawGraph.query();
             drawgraph.$promise.then(function (result) {
                 $scope.globalGraphSigma = result.pop();
-                angular.forEach($scope.globalGraphSigma.nodes, function(node) {
-                    if(node.name != undefined)
-                        $rootScope.suggestions.push(node.name);
-                    else if(node.title != undefined)
-                        $rootScope.suggestions.push(node.title);
-                    else if(node.subject != undefined)
-                        $rootScope.suggestions.push(node.subject);
-                });
             });
         };
-        $scope.submit();
 
         /*** TimeLine ****/
         $scope.time_data = [];
@@ -82,10 +66,10 @@ angular.module('sbAdminApp')
             console.log(reject);
         });
 
-        // Time selevction have been made on the chart
+        // Time selection have been made on the chart
         $scope.extent = function (start, end) {
             if(!start && !end) //release signal
-                refreshPostType(); 
+                refreshPostType();
             else {
                 $scope.selected.start = start;
                 $scope.selected.end = end;
@@ -134,9 +118,6 @@ angular.module('sbAdminApp')
             });
         };
 
-        //default load all post type
-        refreshPostType();
-
         var postTypeAddUser = function (uid, name, append) {
             if(append)
                 postSelection.push({id: uid, name: name});
@@ -145,7 +126,7 @@ angular.module('sbAdminApp')
             refreshPostType();
         };
 
-        /*** Event Catcher ***/
+        /*** Sigma Event Catcher ***/
         $scope.eventCatcher = function (e) {
             switch(e.type) {
                 case 'clickNode':
@@ -202,24 +183,22 @@ angular.module('sbAdminApp')
             });
         };
 
-        /*** search catcher *****/
+        /*** Search Bar Catcher *****/
         $scope.locate = [];
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
-            angular.forEach($scope.globalGraphSigma.nodes, function(node) {
-                if( node.name == newVal || node.title == newVal || node.subject == newVal) {
-                    if( node.uid != undefined) {
-                        locateTmp.push(node.uid);
-                        postTypeAddUser(node.uid, node.name, false);
-                    }
-                    else if( node.pid != undefined) {
-                        locateTmp.push(node.pid);
-                    }
-                    else if( node.cid != undefined) {
-                        locateTmp.push(node.cid);
-                    }
+            if(newVal != undefined) {
+                if( newVal.uid != undefined) {
+                    locateTmp.push(newVal.uid);
+                    postTypeAddUser(newVal.uid, newVal.name, false);
                 }
-            });
+                else if( newVal.pid != undefined) {
+                    locateTmp.push(newVal.pid);
+                }
+                else if( newVal.cid != undefined) {
+                    locateTmp.push(newVal.cid);
+                }
+            }
             $scope.locate = locateTmp;
         });
     });

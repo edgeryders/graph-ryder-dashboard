@@ -9,25 +9,16 @@
 angular.module('sbAdminApp')
     .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope) {
 
-        /**** Layout ****/
-        $scope.layoutChoice = "GEM%20(Frick)";
-        $scope.layoutChoiceComments = "GEM%20(Frick)";
-        // get layout algo
-        var Layout = $resource(config.apiUrl + 'layoutAlgorithm');
-        var layout = Layout.query();
-        layout.$promise.then(function (result) {
-            var layout = []
-            var layoutName = ""
-            angular.forEach(result, function(value, key) {
-                layoutName = ""
-                angular.forEach(value, function(value2, key) {
-                    layoutName += value2;
-                });
-                layout.push(layoutName)
-            });
-            $scope.layout = layout;
+        /**** Init ****/
+        // wait rootScope to be ready
+        $rootScope.$watch('ready', function(newVal) {
+            if(newVal) {
+                $scope.layoutChoice = $rootScope.layout[17];
+                $scope.layoutChoiceComments = $rootScope.layout[17];
+                $scope.submitUser();
+                $scope.submitPost();
+            }
         });
-
         /*** user view ***/
         $scope.usersGraphSigma = [];
         $scope.submitUser = function () {
@@ -36,17 +27,19 @@ angular.module('sbAdminApp')
             drawgraph.$promise.then(function (result) {
                 $scope.usersGraphSigma = result.pop();
                 $scope.nodes = $scope.usersGraphSigma.nodes;
+                // todo custom suggestions break suggestions in other pages
                 $rootScope.suggestions = [];
                 angular.forEach($scope.nodes, function(node, key) {
-                    if(node.name != undefined)
-                        $rootScope.suggestions.push(node.name)
+                    if(node.name != undefined) {
+                        node.label = node.name;
+                        $rootScope.suggestions.push(node);
+                    }
                 });
             });
         };
 
-        $scope.submitUser();
-
         /*** post view ***/
+        // todo generate this view from the other via edges values
         $scope.commentsGraphSigma = [];
         $scope.submitPost = function () {
         var drawGraph = $resource(config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments);
@@ -55,8 +48,6 @@ angular.module('sbAdminApp')
             $scope.commentsGraphSigma = result.pop();
         });
         };
-
-        $scope.submitPost();
 
         /*** Event Catcher Users ***/
         $scope.comments = [];
@@ -84,20 +75,20 @@ angular.module('sbAdminApp')
                             var comment = {from_id : "", from_subject: "", to_id: "", to_subject: ""};
                             if (value.pid != undefined) {
                                 comment.from_id = value.cid;
-                                $scope.locate.push(value.cid);
+                                $scope.locate.push(parseInt(value.cid));
                                 comment.from_subject = value.comment_subject;
                                 comment.to_type = "pid";
                                 comment.to_id = value.pid;
-                                $scope.locate.push(value.pid);
+                                $scope.locate.push(parseInt(value.pid));
                                 comment.to_subject = value.post_title;
                             }
                             else {
                                 comment.from_id = value.cid1;
-                                $scope.locate.push(value.cid1);
+                                $scope.locate.push(parseInt(value.cid1));
                                 comment.from_subject = value.comment1_subject;
                                 comment.to_type = "cid";
                                 comment.to_id = value.cid2;
-                                $scope.locate.push(value.cid2);
+                                $scope.locate.push(parseInt(value.cid2));
                                 comment.to_subject = value.comment2_subject;
                             }
                             $scope.comments.push(comment);
@@ -159,20 +150,19 @@ angular.module('sbAdminApp')
             }
         };
         /*** search catcher *****/
-        $rootScope.$watch('search', function(newVal,oldVal) {
-            angular.forEach($scope.nodes, function(node, key) {
-                if( node.name == newVal) {
-                    if( node.uid != undefined) {
+        $rootScope.$watch('search', function(newVal) {
+                if(newVal != undefined) {
+                    if( newVal.uid != undefined) {
                         var type = "uid";
-                        var id = node.uid;
+                        var id = newVal.uid;
                     }
-                    else if( node.pid != undefined) {
+                    else if( newVal.pid != undefined) {
                         var type = "pid";
-                        var id = node.pid;
+                        var id = newVal.pid;
                     }
-                    else if( node.cid != undefined) {
+                    else if( newVal.cid != undefined) {
                         var type = "cid";
-                        var id = node.cid;
+                        var id = newVal.cid;
                     }
                     var params = {"max_size": 5};
                     var CreateGraph = $resource(config.apiUrl + 'doi/usersToUsers/'+ type +'/'+ id, params);
@@ -180,7 +170,7 @@ angular.module('sbAdminApp')
                     creategraph.$promise.then(function (result) {
                         var graph_id = result.pop();
                         var graph_id_string = ""
-                        angular.forEach(graph_id, function(value, key) {
+                        angular.forEach(graph_id, function(value) {
                             graph_id_string += value;
                         });
                         var drawGraph = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
@@ -190,6 +180,5 @@ angular.module('sbAdminApp')
                         });
                     });
                 }
-            });
         });
     });

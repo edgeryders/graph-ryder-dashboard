@@ -10,64 +10,22 @@ angular.module('sbAdminApp')
   .controller('DoiCtrl', function ($scope, $resource, config, $rootScope, $uibModal) {
 
       $scope.type = "doi";
-      $scope.graphSigma = [];
-      $rootScope.suggestions = [];
-      $scope.nodes = [];
-      /***** Load all data *****/
-      //get users
-      var Users = $resource(config.apiUrl + 'users');
-      var users = Users.query();
-      users.$promise.then(function (result) {
-          $scope.users = result;
-          angular.forEach($scope.users, function(user) {
-              $scope.nodes.push(user);
-              if(user.name != undefined)
-                  $rootScope.suggestions.push(user.name);
-          });
-      });
-      //get posts
-      var Posts = $resource(config.apiUrl + 'posts');
-      var posts = Posts.query();
-      posts.$promise.then(function (result) {
-          $scope.posts = result;
-          angular.forEach($scope.posts, function(post) {
-              $scope.nodes.push(post);
-              if(post.title != undefined)
-                  $rootScope.suggestions.push(post.title);
-          });
-      });
-      //get comments
-      var Comments = $resource(config.apiUrl + 'comments');
-      var comments = Comments.query();
-      comments.$promise.then(function (result) {
-          $scope.comments = result;
-          angular.forEach($scope.comments, function(comment) {
-              $scope.nodes.push(comment);
-              if(comment.subject != undefined)
-                  $rootScope.suggestions.push(comment.subject);
-          });
-      });
-      // get layout algo
-      var Layout = $resource(config.apiUrl + 'layoutAlgorithm');
-      var layout = Layout.query();
-      layout.$promise.then(function (result) {
-          var layout = []
-          var layoutName = ""
-          angular.forEach(result, function(value) {
-              layoutName = ""
-              angular.forEach(value, function(value2) {
-                  layoutName += value2;
-              });
-              layout.push(layoutName)
-          });
-          $scope.layout = layout;
+
+      /***** Init ******/
+
+      // When rootScope is ready load the graph
+      $rootScope.$watch('ready', function(newVal) {
+          if(newVal) {
+              $scope.layoutChoice = $rootScope.layout[17];
+              $scope.submit();
+          }
       });
 
       /***** Graph creation *****/
       $scope.field = "uid";
       $scope.value = "34";
-      $scope.layoutChoice = "FM^3 (OGDF)";
       $scope.doiSize = 50;
+      $scope.graphSigma = [];
 
       $scope.submit = function () {
           // // Read the complete graph from api
@@ -96,9 +54,7 @@ angular.module('sbAdminApp')
           });
       };
 
-      $scope.submit();
-
-      /*** Event catcher  ***/
+      /*** Sigma Event Catcher  ***/
       $scope.eventCatcher = function (e) {
           switch(e.type) {
               case 'clickNode':
@@ -148,24 +104,22 @@ angular.module('sbAdminApp')
           });
       };
 
-      /*** search catcher *****/
+      /*** Search Bar Catcher *****/
       $rootScope.$watch('search', function(newVal) {
-          angular.forEach($scope.nodes, function(node) {
-              if( node.name == newVal || node.title == newVal || node.subject == newVal) {
-                  if( node.uid != undefined) {
-                      $scope.field = "uid";
-                      $scope.value = node.uid;
-                  }
-                  else if( node.pid != undefined) {
-                      $scope.field = "pid";
-                      $scope.value = node.pid;
-                  }
-                  else if( node.cid != undefined) {
-                      $scope.field = "cid";
-                      $scope.value = node.cid;
-                  }
+          if(newVal != undefined) {
+              if( newVal.uid != undefined) {
+                  $scope.field = "uid";
+                  $scope.value = newVal.uid;
               }
-          });
+              else if( newVal.pid != undefined) {
+                  $scope.field = "pid";
+                  $scope.value = newVal.pid;
+              }
+              else if( newVal.cid != undefined) {
+                  $scope.field = "cid";
+                  $scope.value = newVal.cid;
+              }
+          }
           $scope.submit();
       });
 });

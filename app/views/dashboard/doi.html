@@ -1,6 +1,7 @@
 <div ng-controller="DoiCtrl" >
     <div class="row">
         <div class="col-lg-12">
+            <h4><-- You can use search bar to design a new point of interest ( default: Alberto)</h4>
             <h1 class="page-header">Dashboard </h1>
         </div>
         <!-- /.col-lg-12 -->
@@ -9,12 +10,12 @@
         <div class="col-lg-12" >
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Test Sigma /
+                    <i class="fa fa-clock-o fa-fw"></i> Display:
                     <input type="radio" ng-model="type" value="neighbours" /> Neighbours
                     <input type="radio" ng-model="type" value="doi" /> DOI
                     <input type="checkbox" ng-model="el" /> labels on egdes
                     <form ng-submit="submit()">
-                        Doi size : <input type="text" ng-model="doiSize" />
+                        Doi size : <input type="number" ng-model="doiSize" ng-hide="type != 'doi'" />
                         algo :
                         <select ng-model="layoutChoice">
                             <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
