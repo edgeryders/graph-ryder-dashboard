@@ -16,7 +16,7 @@ angular
     'ngSanitize'
   ])
   .constant('config', {
-        apiUrl: 'http://192.168.99.100:5000/',
+        apiUrl: 'http://192.168.99.100:5000/'
     })
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
     
@@ -133,6 +133,22 @@ angular
             }
         }
     })
+        .state('dashboard.settings',{
+            url:'/settings',
+            controller: 'SettingsCtrl',
+            templateUrl:'views/dashboard/settings.html',
+            resolve: {
+                loadMyFiles:function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name:'sbAdminApp',
+                        files:[
+                            'scripts/controllers/main.js',
+                            'scripts/controllers/settingsController.js'
+                        ]
+                    })
+                }
+            }
+        })
   }]);
 
     
