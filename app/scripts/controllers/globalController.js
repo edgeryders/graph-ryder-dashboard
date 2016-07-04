@@ -15,6 +15,7 @@ angular.module('sbAdminApp')
         /**** Init ****/
         //edge label default
         $scope.globalel = false;
+        $scope.locate = "";
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal && $location.path() == "/dashboard/globalView") {

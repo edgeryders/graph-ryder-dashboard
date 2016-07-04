@@ -30,26 +30,31 @@ angular.module('sbAdminApp')
 
     /***** Load all data *****/
     $rootScope.suggestions = [];
-    var collectPromises = [];
-    // Create promises array to wait all data until load
-    collectPromises.push($resource(config.apiUrl + 'users').query().$promise);
-    collectPromises.push($resource(config.apiUrl + 'posts').query().$promise);
-    collectPromises.push($resource(config.apiUrl + 'comments').query().$promise);
 
-    $q.all(collectPromises).then(function(results) {
-      angular.forEach(results[0], function(user) {
-        user.label = user.name;
-        $rootScope.suggestions.push(user);
-      });
-      angular.forEach(results[1], function(post) {
-        post.label = post.title;
-        $rootScope.suggestions.push(post);
-      });
-      angular.forEach(results[2], function (comment) {
-        comment.label = comment.subject;
-        $rootScope.suggestions.push(comment);
-      });
-    }, function (reject) {
-      console.log(reject);
-    });
+    $rootScope.resetSuggestions = function () {
+        var collectPromises = [];
+        // Create promises array to wait all data until load
+        collectPromises.push($resource(config.apiUrl + 'users').query().$promise);
+        collectPromises.push($resource(config.apiUrl + 'posts').query().$promise);
+        collectPromises.push($resource(config.apiUrl + 'comments').query().$promise);
+
+        $q.all(collectPromises).then(function (results) {
+            angular.forEach(results[0], function (user) {
+                user.label = user.name;
+                $rootScope.suggestions.push(user);
+            });
+            angular.forEach(results[1], function (post) {
+                post.label = post.title;
+                $rootScope.suggestions.push(post);
+            });
+            angular.forEach(results[2], function (comment) {
+                comment.label = comment.subject;
+                $rootScope.suggestions.push(comment);
+            });
+        }, function (reject) {
+            console.log(reject);
+        });
+    };
+      
+    $rootScope.resetSuggestions();
   });
