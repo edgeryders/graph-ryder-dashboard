@@ -187,7 +187,7 @@ angular.module('sbAdminApp')
         /*** Search Bar Catcher *****/
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
-            if(newVal != undefined && $location.path() == "/dashboard/globalView") {
+            if(newVal != undefined) {
                 if( newVal.uid != undefined) {
                     locateTmp.push(newVal.uid);
                     postTypeAddUser(newVal.uid, newVal.name, false);

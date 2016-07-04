@@ -7,7 +7,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $location) {
+    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $location, $timeout) {
 
         /**** Init ****/
         // wait rootScope to be ready
@@ -15,8 +15,8 @@ angular.module('sbAdminApp')
             if(newVal && $location.path() == "/dashboard/multiView") {
                 $scope.layoutChoice = $rootScope.layout[17];
                 $scope.layoutChoiceComments = $rootScope.layout[17];
-                $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/'+ $scope.layoutChoice);
-                $scope.drawUserGraph();
+                $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/' + $scope.layoutChoice);
+                $scope.drawUserGraph(true);
                 $scope.darwPostGraph();
             }
         });
@@ -24,19 +24,20 @@ angular.module('sbAdminApp')
         /*** user view ***/
         $scope.usersGraphSigma = [];
 
-        $scope.drawUserGraph = function () {
-            var drawGraph = $scope.userGraphRessource.query();
-            drawGraph.$promise.then(function (result) {
+        $scope.drawUserGraph = function (suggestions) {
+            $scope.drawGraphPromise = $scope.userGraphRessource.query();
+            $scope.drawGraphPromise.$promise.then(function (result) {
                 $scope.usersGraphSigma = result.pop();
                 $scope.nodes = $scope.usersGraphSigma.nodes;
-                // todo custom suggestions break suggestions in other pages
-                $rootScope.suggestions = [];
-                angular.forEach($scope.nodes, function(node) {
-                    if(node.name != undefined) {
-                        node.label = node.name;
-                        $rootScope.suggestions.push(node);
-                    }
-                });
+                if(suggestions) {
+                    $rootScope.suggestions = [];
+                    angular.forEach($scope.nodes, function (node) {
+                        if (node.name != undefined) {
+                            node.label = node.name;
+                            $rootScope.suggestions.push(node);
+                        }
+                    });
+                }
             });
         };
 
@@ -154,7 +155,7 @@ angular.module('sbAdminApp')
 
         /*** search catcher *****/
         $rootScope.$watch('search', function(newVal) {
-            if(newVal != undefined && $location.path() == "/dashboard/multiView") {
+            if(newVal != undefined) {
                 if( newVal.uid != undefined) {
                     var type = "uid";
                     var id = newVal.uid;
@@ -177,7 +178,12 @@ angular.module('sbAdminApp')
                         graph_id_string += value;
                     });
                     $scope.userGraphRessource = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
-                    $scope.drawUserGraph();
+                    if (!$scope.drawGraphPromise.$resolved) {
+                        console.log("timeout");
+                        $timeout(function() {$scope.drawUserGraph();}, 1000);
+                    }
+                    else
+                        $scope.drawUserGraph(false);
                 });
             }
         });

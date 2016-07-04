@@ -29,9 +29,8 @@ angular.module('sbAdminApp')
     });
 
     /***** Load all data *****/
-    $rootScope.suggestions = [];
-
     $rootScope.resetSuggestions = function () {
+        $rootScope.suggestions = [];
         var collectPromises = [];
         // Create promises array to wait all data until load
         collectPromises.push($resource(config.apiUrl + 'users').query().$promise);
@@ -55,6 +54,6 @@ angular.module('sbAdminApp')
             console.log(reject);
         });
     };
-      
+
     $rootScope.resetSuggestions();
   });

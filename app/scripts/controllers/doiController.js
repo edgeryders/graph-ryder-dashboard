@@ -105,7 +105,7 @@ angular.module('sbAdminApp')
 
       /*** Search Bar Catcher *****/
       $rootScope.$watch('search', function(newVal) {
-          if(newVal != undefined && $location.path() == "/dashboard/doi") {
+          if(newVal != undefined) {
               if( newVal.uid != undefined) {
                   $scope.field = "uid";
                   $scope.value = newVal.uid;
