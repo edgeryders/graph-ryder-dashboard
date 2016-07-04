@@ -10,7 +10,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location) {
+    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout) {
 
         /**** Init ****/
         //edge label default
@@ -20,7 +20,7 @@ angular.module('sbAdminApp')
         $rootScope.$watch('ready', function(newVal) {
             if(newVal && $location.path() == "/dashboard/globalView") {
                 $scope.layoutChoice = $rootScope.layout[17];
-                $scope.submit();
+                $scope.drawGraph();
                 refreshPostType();
             }
         });
@@ -28,11 +28,11 @@ angular.module('sbAdminApp')
         /***** Global view *****/
         $scope.globalGraphSigma = [];
 
-        $scope.submit = function () {
+        $scope.drawGraph = function () {
             // // Read the complete graph from api
             var drawGraph = $resource(config.apiUrl + 'draw/complete/' + $scope.layoutChoice);
-            var drawgraph = drawGraph.query();
-            drawgraph.$promise.then(function (result) {
+            $scope.drawGraphPromise = drawGraph.query();
+            $scope.drawGraphPromise.$promise.then(function (result) {
                 $scope.globalGraphSigma = result.pop();
             });
         };
@@ -198,7 +198,10 @@ angular.module('sbAdminApp')
                 else if( newVal.cid != undefined) {
                     locateTmp.push(newVal.cid);
                 }
-                $scope.locate = locateTmp;
+                if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
+                    $timeout(function() {$scope.locate = locateTmp;}, 5000);
+                else
+                    $scope.locate = locateTmp;
             }
         });
         $scope.$on("$destroy", function(){

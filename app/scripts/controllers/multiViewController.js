@@ -178,10 +178,8 @@ angular.module('sbAdminApp')
                         graph_id_string += value;
                     });
                     $scope.userGraphRessource = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
-                    if (!$scope.drawGraphPromise.$resolved) {
-                        console.log("timeout");
+                    if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
                         $timeout(function() {$scope.drawUserGraph();}, 1000);
-                    }
                     else
                         $scope.drawUserGraph(false);
                 });
