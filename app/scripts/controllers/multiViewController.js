@@ -15,22 +15,23 @@ angular.module('sbAdminApp')
             if(newVal && $location.path() == "/dashboard/multiView") {
                 $scope.layoutChoice = $rootScope.layout[17];
                 $scope.layoutChoiceComments = $rootScope.layout[17];
+                $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/'+ $scope.layoutChoice);
                 $scope.drawUserGraph();
                 $scope.darwPostGraph();
             }
         });
+
         /*** user view ***/
         $scope.usersGraphSigma = [];
 
         $scope.drawUserGraph = function () {
-            var drawGraph = $resource(config.apiUrl + 'draw/usersToUsers/'+ $scope.layoutChoice);
-            var drawgraph = drawGraph.query();
-            drawgraph.$promise.then(function (result) {
+            var drawGraph = $scope.userGraphRessource.query();
+            drawGraph.$promise.then(function (result) {
                 $scope.usersGraphSigma = result.pop();
                 $scope.nodes = $scope.usersGraphSigma.nodes;
                 // todo custom suggestions break suggestions in other pages
                 $rootScope.suggestions = [];
-                angular.forEach($scope.nodes, function(node, key) {
+                angular.forEach($scope.nodes, function(node) {
                     if(node.name != undefined) {
                         node.label = node.name;
                         $rootScope.suggestions.push(node);
@@ -40,7 +41,7 @@ angular.module('sbAdminApp')
         };
 
         /*** post view ***/
-        // todo generate this view from the other via edges values
+        // todo generate this view from the other ( via edges values )
         $scope.commentsGraphSigma = [];
         $scope.darwPostGraph = function () {
         var drawGraph = $resource(config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments);
@@ -150,6 +151,7 @@ angular.module('sbAdminApp')
                     break;
             }
         };
+
         /*** search catcher *****/
         $rootScope.$watch('search', function(newVal) {
             if(newVal != undefined && $location.path() == "/dashboard/multiView") {
@@ -174,14 +176,13 @@ angular.module('sbAdminApp')
                     angular.forEach(graph_id, function(value) {
                         graph_id_string += value;
                     });
-                    var drawGraph = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
-                    var drawgraph = drawGraph.query();
-                    drawgraph.$promise.then(function (result) {
-                        $scope.usersGraphSigma = result.pop();
-                    });
+                    $scope.userGraphRessource = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
+                    $scope.drawUserGraph();
                 });
             }
         });
+
+        /***** On exit *****/
         $scope.$on("$destroy", function(){
             //todo stop all active request
             // remove watchers in rootScope
