@@ -16,17 +16,33 @@ angular.module('sbAdminApp')
       $rootScope.$watch('ready', function(newVal) {
           if(newVal && $location.path() == "/dashboard/doi") {
               $scope.layoutChoice = $rootScope.layout[17];
-              $scope.submit();
+              $scope.drawDoiGraph();
           }
       });
 
       /***** Graph creation *****/
-      $scope.field = "uid";
-      $scope.value = "34";
+      if($rootScope.search != undefined) {
+          if( $rootScope.search.uid != undefined) {
+              $scope.field = "uid";
+              $scope.value = $rootScope.search.uid;
+          }
+          else if( $rootScope.search.pid != undefined) {
+              $scope.field = "pid";
+              $scope.value = $rootScope.search.pid;
+          }
+          else if( $rootScope.search.cid != undefined) {
+              $scope.field = "cid";
+              $scope.value = $rootScope.search.cid;
+          }
+      }
+      else {
+          $scope.field = "uid";
+          $scope.value = "34";
+      }
       $scope.doiSize = 25;
       $scope.graphSigma = [];
 
-      $scope.submit = function () {
+      $scope.drawDoiGraph = function () {
           // // Read the complete graph from api
           if($scope.field == "uid" && $scope.user)
               $scope.value = $scope.user;
@@ -118,7 +134,7 @@ angular.module('sbAdminApp')
                   $scope.field = "cid";
                   $scope.value = newVal.cid;
               }
-              $scope.submit();
+              $scope.drawDoiGraph();
           }
       });
       $scope.$on("$destroy", function(){

@@ -188,7 +188,7 @@ angular.module('sbAdminApp')
 
         /***** On exit *****/
         $scope.$on("$destroy", function(){
-            $rootScope.resetSuggestions();
+            $rootScope.resetSuggestions(false, true, true);
             //todo stop all active request
             // remove watchers in rootScope
             angular.forEach($rootScope.$$watchers, function(watcher, key) {
