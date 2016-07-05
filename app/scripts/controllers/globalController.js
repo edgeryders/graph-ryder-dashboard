@@ -18,7 +18,7 @@ angular.module('sbAdminApp')
         $scope.locate = "";
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
-            if(newVal && $location.path() == "/dashboard/globalView") {
+            if(newVal) {
                 $scope.layoutChoice = $rootScope.layout[17];
                 $scope.drawGraph();
                 refreshPostType();
@@ -31,9 +31,9 @@ angular.module('sbAdminApp')
         $scope.drawGraph = function () {
             // // Read the complete graph from api
             var drawGraph = $resource(config.apiUrl + 'draw/complete/' + $scope.layoutChoice);
-            $scope.drawGraphPromise = drawGraph.query();
+            $scope.drawGraphPromise = drawGraph.get();
             $scope.drawGraphPromise.$promise.then(function (result) {
-                $scope.globalGraphSigma = result.pop();
+                $scope.globalGraphSigma = result;
             });
         };
 
@@ -105,16 +105,16 @@ angular.module('sbAdminApp')
                 params.end = $scope.selected.end.getTime();
 
             var Type = $resource(config.apiUrl + 'post/getType/', params);
-            var type = Type.query();
+            var type = Type.get();
             type.$promise.then(function (result) {
-                $scope.postType.labels = result[0].labels;
+                $scope.postType.labels = result.labels;
                 if(postSelection.indexOf(all) != -1) {
-                    $scope.postType.data = result[0].data;
+                    $scope.postType.data = result.data;
                     $scope.postType.series.push("all");
                 }
                 else {
-                    result[0].data.shift();
-                    $scope.postType.data = result[0].data;
+                    result.data.shift();
+                    $scope.postType.data = result.data;
                 }
             });
         };

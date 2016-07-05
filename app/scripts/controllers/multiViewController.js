@@ -12,7 +12,7 @@ angular.module('sbAdminApp')
         /**** Init ****/
         // wait rootScope to be ready
         $rootScope.$watch('ready', function(newVal) {
-            if(newVal && $location.path() == "/dashboard/multiView") {
+            if(newVal) {
                 $scope.layoutChoice = $rootScope.layout[17];
                 $scope.layoutChoiceComments = $rootScope.layout[17];
                 $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/' + $scope.layoutChoice);
@@ -25,9 +25,9 @@ angular.module('sbAdminApp')
         $scope.usersGraphSigma = [];
 
         $scope.drawUserGraph = function (suggestions) {
-            $scope.drawGraphPromise = $scope.userGraphRessource.query();
+            $scope.drawGraphPromise = $scope.userGraphRessource.get();
             $scope.drawGraphPromise.$promise.then(function (result) {
-                $scope.usersGraphSigma = result.pop();
+                $scope.usersGraphSigma = result;
                 $scope.nodes = $scope.usersGraphSigma.nodes;
                 if(suggestions) {
                     $rootScope.suggestions = [];
@@ -45,11 +45,10 @@ angular.module('sbAdminApp')
         // todo generate this view from the other ( via edges values )
         $scope.commentsGraphSigma = [];
         $scope.darwPostGraph = function () {
-        var drawGraph = $resource(config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments);
-        var drawgraph = drawGraph.query();
-        drawgraph.$promise.then(function (result) {
-            $scope.commentsGraphSigma = result.pop();
-        });
+            var url = config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments;
+            $resource(url).get().$promise.then(function (result) {
+                $scope.commentsGraphSigma = result;
+            });
         };
 
         /*** Event Catcher Users ***/
@@ -64,17 +63,11 @@ angular.module('sbAdminApp')
                     $scope.elementId = e.data.node.uid;
                     $scope.openModal($scope.elementType, $scope.elementId);
                     break;
-                case 'hovers':
-                    if($scope.click)
-                        break;
-                    else
-                        e.data.edge = e.data.current.edges;
                 case 'clickEdges':
-                    $scope.click = (e.type != "hovers");
                     if(e.data.edge != undefined && e.data.edge.length > 0) {
                         $scope.comments = [];
                         $scope.locate = [];
-                        angular.forEach(e.data.edge, function(value, key) {
+                        angular.forEach(e.data.edge, function(value) {
                             var comment = {from_id : "", from_subject: "", to_id: "", to_subject: ""};
                             if (value.pid != undefined) {
                                 comment.from_id = value.cid;
@@ -118,7 +111,7 @@ angular.module('sbAdminApp')
                 },
                 resolve: {
                     scopeParent: function() {
-                        return $scope; //On passe à la fenêtre modal une référence vers le scope parent.
+                        return $scope; // Give to the modal the parent scope reference
                     }
                 }
             });
@@ -170,16 +163,12 @@ angular.module('sbAdminApp')
                 }
                 var params = {"max_size": 5};
                 var CreateGraph = $resource(config.apiUrl + 'doi/usersToUsers/'+ type +'/'+ id, params);
-                var creategraph = CreateGraph.query();
+                var creategraph = CreateGraph.get();
                 creategraph.$promise.then(function (result) {
-                    var graph_id = result.pop();
-                    var graph_id_string = "";
-                    angular.forEach(graph_id, function(value) {
-                        graph_id_string += value;
-                    });
-                    $scope.userGraphRessource = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
-                    if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
-                        $timeout(function() {$scope.drawUserGraph();}, 1000);
+                    $scope.userGraphRessource = $resource(config.apiUrl + 'draw/'+ result.gid +'/'+ $scope.layoutChoice);
+                    // todo do not wait but cancel the promise
+                    if (!$scope.drawGraphPromise.$resolved)
+                        $timeout(function() { $scope.drawUserGraph(); }, 1000);
                     else
                         $scope.drawUserGraph(false);
                 });
@@ -189,7 +178,7 @@ angular.module('sbAdminApp')
         /***** On exit *****/
         $scope.$on("$destroy", function(){
             $rootScope.resetSuggestions(false, true, true);
-            //todo stop all active request
+            //todo stop all pending request
             // remove watchers in rootScope
             angular.forEach($rootScope.$$watchers, function(watcher, key) {
                 if(watcher.exp === 'search' || watcher.exp === 'ready')

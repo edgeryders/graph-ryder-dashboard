@@ -11,26 +11,26 @@ angular.module('sbAdminApp')
         switch($scope.elementType) {
             case "uid":
                 var User = $resource(config.apiUrl + "user/hydrate/" + $scope.elementId);
-                var user = User.query();
+                var user = User.get();
                 user.$promise.then(function (result) {
                     $scope.loading = false;
-                    $scope.user = result.pop();
+                    $scope.user = result;
                 });
                 break;
             case "pid":
                 var Post = $resource(config.apiUrl + "post/hydrate/" + $scope.elementId);
-                var post = Post.query();
+                var post = Post.get();
                 post.$promise.then(function (result) {
                     $scope.loading = false;
-                    $scope.post = result.pop();
+                    $scope.post = result;
                 });
                 break;
             case "cid":
                 var Comment = $resource(config.apiUrl + "comment/hydrate/" + $scope.elementId);
-                var comment = Comment.query();
+                var comment = Comment.get();
                 comment.$promise.then(function (result) {
                     $scope.loading = false;
-                    $scope.comment = result.pop();
+                    $scope.comment = result;
                 });
                 break;
             default:

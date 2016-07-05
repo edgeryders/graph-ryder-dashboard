@@ -14,7 +14,7 @@ angular.module('sbAdminApp')
       /***** Init ******/
       // When rootScope is ready load the graph
       $rootScope.$watch('ready', function(newVal) {
-          if(newVal && $location.path() == "/dashboard/doi") {
+          if(newVal) {
               $scope.layoutChoice = $rootScope.layout[17];
               $scope.drawDoiGraph();
           }
@@ -54,17 +54,12 @@ angular.module('sbAdminApp')
               var CreateGraph = $resource(config.apiUrl + 'doi/complete/'+ $scope.field +'/'+ $scope.value, {"max_size": $scope.doiSize});
           else
               var CreateGraph = $resource(config.apiUrl + 'createGraph/'+ $scope.field +'/'+ $scope.value);
-          var creategraph = CreateGraph.query();
+          var creategraph = CreateGraph.get();
           creategraph.$promise.then(function (result) {
-              var graph_id = result.pop();
-              var graph_id_string = ""
-              angular.forEach(graph_id, function(value) {
-                  graph_id_string += value;
-              });
-              var drawGraph = $resource(config.apiUrl + 'draw/'+ graph_id_string +'/'+ $scope.layoutChoice);
-              var drawgraph = drawGraph.query();
+              var drawGraph = $resource(config.apiUrl + 'draw/'+ result.gid +'/'+ $scope.layoutChoice);
+              var drawgraph = drawGraph.get();
               drawgraph.$promise.then(function (result) {
-                  $scope.graphSigma = result.pop();
+                  $scope.graphSigma = result;
               });
           });
       };
