@@ -74,16 +74,16 @@ angular.module('sbAdminApp')
                         var nodes = s.graph.nodes().filter(function (n) {
                             if (n.uid != undefined && scope.locate.indexOf(parseInt(n.uid)) != -1) {
                                 //todo use color code
-                                n.color = "rgb(0, 0, 255)";
+                                n.color = "rgb(51,122,183)";
                                 return true;
                             }
                             else if (n.pid != undefined && scope.locate.indexOf(parseInt(n.pid)) != -1) {
                                 //todo use color code
-                                n.color = "rgb(0, 255, 0)";
+                                n.color = "rgb(92,184,92)";
                                 return true;
                             }
                             else if (n.cid != undefined && scope.locate.indexOf(parseInt(n.cid)) != -1) {
-                                n.color = "rgb(255, 100, 0)";
+                                n.color = "rgb(240, 173, 78)";
                                 return true;
                             }
                             else
@@ -104,16 +104,16 @@ angular.module('sbAdminApp')
                 var nodes = s.graph.nodes().filter(function (n) {
                     if (n.uid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         //todo use color code
-                        n.color = "rgb(0, 0, 255)";
+                        n.color = "rgb(51,122,183)";
                         return true;
                     }
                     else if (n.pid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         //todo use color code
-                        n.color = "rgb(0, 255, 0)";
+                        n.color = "rgb(92,184,92)";
                         return true;
                     }
                     else if  (n.cid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
-                        n.color = "rgb(255, 100, 0)";
+                        n.color = "rgb(240, 173, 78)";
                         return true;
                     }
                     else
