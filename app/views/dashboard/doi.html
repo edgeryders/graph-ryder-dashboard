@@ -14,7 +14,7 @@
                     <input type="radio" ng-model="type" value="neighbours" /> Neighbours
                     <input type="radio" ng-model="type" value="doi" /> DOI
                     <input type="checkbox" ng-model="el" /> labels on egdes
-                    <form ng-submit="submit()">
+                    <form ng-submit="drawDoiGraph()">
                         Doi size : <input type="number" ng-model="doiSize" ng-hide="type != 'doi'" />
                         algo :
                         <select ng-model="layoutChoice">

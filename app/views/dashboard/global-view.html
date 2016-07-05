@@ -1,7 +1,7 @@
 <div>
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Dashboard</h1><p>Click on User (blue node) to view post type, Alt + Click to add user and compare with previous</p>
+            <h1 class="page-header">Dashboard</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -25,13 +25,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="globalel" > labels on egdes
-                    <form ng-submit="submit()">
+                    <form ng-submit="drawGraph()">
                         algo :
                         <select ng-model="layoutChoice">
                             <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
                         </select>
                         <input type="submit" value="go" />
                     </form>
+                    <p>Alt + Click on User (blue node) to view post type in metrics window</p>
+                    <p> Alt + Shift + Click to add user and compare with previous</p>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -65,7 +67,7 @@
         <div class="col-lg-6" id="bar-chart">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Posts type of {{post.series}}
+                    <i class="fa fa-clock-o fa-fw"></i> Posts type of {{postType.series}}
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">

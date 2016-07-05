@@ -131,16 +131,16 @@ angular.module('sbAdminApp')
         $scope.eventCatcher = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    if(e.data.node.uid != undefined) {
-                        postTypeAddUser(e.data.node.uid, e.data.node.name, e.data.captor.altKey);
+                    console.log(e.data.captor);
+                    if(e.data.node.uid != undefined && e.data.captor.altKey) {
+                        postTypeAddUser(e.data.node.uid, e.data.node.name, e.data.captor.shiftKey);
                     }
                     else {
-                        // if(e.data.node.uid != undefined) {
-                        //     $scope.elementType = "uid";
-                        //     $scope.elementId = e.data.node.uid;
-                        // }
-                        //else
-                        if (e.data.node.pid != undefined) {
+                        if(e.data.node.uid != undefined) {
+                             $scope.elementType = "uid";
+                             $scope.elementId = e.data.node.uid;
+                        }
+                        else if (e.data.node.pid != undefined) {
                             $scope.elementType = "pid";
                             $scope.elementId = e.data.node.pid;
                         }
