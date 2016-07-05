@@ -24,20 +24,20 @@ angular.module('sbAdminApp')
             $scope.regen = {"complete": false, "users": false, "commentsAndPosts": false, "generated": false, "ramLoad": "unknown", "diskLoad": "unknown"};
 
             var Info = $resource(config.apiUrl + 'info');
-            var info = Info.query();
+            var info = Info.get();
             info.$promise.then(function (result) {
                 // status
-                $scope.api.status = result[0].status;
+                $scope.api.status = result.status;
                 if ($scope.api.status) // color
                     $scope.style.status = $scope.success;
                 // version
-                $scope.api.version = result[0].version;
+                $scope.api.version = result.version;
                 if (new Date().getTime() - $scope.api.version > 2628000)
                     $scope.style.version = $scope.danger;
                 if (new Date().getTime() - $scope.api.version < 604800)
                     $scope.style.version = $scope.success;
                 // ram usage
-                $scope.api.ramLoad = result[0].percentRamUsage;
+                $scope.api.ramLoad = result.percentRamUsage;
                 if ($scope.api.ramLoad < 50.00) // color
                     $scope.style.ram = $scope.success;
                 else if ($scope.api.ramLoad < 80.00)
@@ -45,7 +45,7 @@ angular.module('sbAdminApp')
                 else
                     $scope.style.ram = $scope.danger;
                 // Disk usage
-                $scope.api.diskLoad = result[0].percentDiskUsage;
+                $scope.api.diskLoad = result.percentDiskUsage;
                 if ($scope.api.diskLoad < 50.00) // color
                     $scope.style.disk = $scope.success;
                 else if ($scope.api.diskLoad < 80.00)
