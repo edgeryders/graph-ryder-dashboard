@@ -126,7 +126,7 @@
         <uib-accordion close-others="false">
             <uib-accordion-group heading="Infos" is-open="true">
                 Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('uid', comment.author.uid)">{{comment.author.name}}</button>
-                Post target :&nbsp;&nbsp;<button class="btn btn-success" ng-click="openModal('pid', comment.post.pid)">{{comment.post.pid}}</button><br/>
+                Post target :&nbsp;&nbsp;<button class="btn btn-success" ng-click="openModal('pid', comment.post.pid)">{{comment.post.pid}} : {{comment.post.title.split(" ").slice(0, 3).join(" ").concat("...")}}</button>
             </uib-accordion-group>
             <uib-accordion-group heading="Content" is-open="true">
                 {{comment.comment}}
