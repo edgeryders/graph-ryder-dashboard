@@ -1,62 +1,45 @@
-## SB Admin v2.0 rewritten in AngularJS
+## Graph ryder dashboard
 
-[![Join the chat at https://gitter.im/start-angular/sb-admin-angular](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/start-angular/sb-admin-angular?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-This project is a port of the famous Free Admin Bootstrap Theme [SB Admin v2.0](http://startbootstrap.com/template-overviews/sb-admin-2/) to Angular Theme.
-
-Find out more [Free Angular Themes at StartAngular.com](http://www.startangular.com/).
+This project is base on Free Admin Bootstrap Theme [SB Admin v2.0](http://startbootstrap.com/template-overviews/sb-admin-2/).
 
 ## Installation
-####1. Clone this project or Download that ZIP file
+####1. Tools
 
-```sh
-$ git clone https://github.com/start-angular/sb-admin-angular.git
-```
-
-####2.  Make sure you have [bower](http://bower.io/), [grunt-cli](https://www.npmjs.com/package/grunt-cli) and  [npm](https://www.npmjs.org/) installed globally
- 
- 
 ```sh
 $ sudo apt-get install npm
 $ sudo npm install -g grunt-cli
 $ sudo npm install -g bower
 ```
-####3. On the command prompt run the following commands
+####2. Install
+
+- Bower install is ran from the postinstall
+```sh
+$ npm install
+```
+
+####3. Sigma.js & Linkurious.js
+
+- Sigma and linkurious lib do not provide bower repository yet
+You can link it with
 
 ```sh
-$ cd `project-directory`
+$ bower link linkurious /YourPathTo/linkurious.js
 ```
-- bower install is ran from the postinstall
-```sh
-$ npm install 
+Same way for sigma
+
+####4. Api Url
+
+- Change apiUrl in app/scripts/app.js
+
 ```
+  .constant('config', {
+        apiUrl: 'http://localhost:5000/'
+    })
+```
+
+####5. On the command prompt run the following commands
+
 - a shortcut for `grunt serve`
 ```sh
 $ npm start
 ```
-- a shortcut for `grunt serve:dist` to minify the files for deployment
-```sh
-$ npm run dist 
-```
-
-
-**Note:**
-If you get this following error, 
-```text
-Error: EACCES, permission denied '.config/configstore/insight-bower.yml'
-You don't have access to this file.
-```
-changing ownner .config
-
-```sh
-sudo chown -R [user name] ~/.config
-```
-
-
-## Roadmap
-
-- Add sample AJAX calls and make the directives more modular
-
-### Automation tools
-
-- [Grunt](http://gruntjs.com/)
