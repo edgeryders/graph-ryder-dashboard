@@ -2,7 +2,7 @@
  * Created by nferon on 06/06/16.
  */
 angular.module('sbAdminApp')
-    .directive('lineChart', function() {
+    .directive('timeLine', function() {
     return {
         restrict: 'E',
         template: '<svg></svg>',
