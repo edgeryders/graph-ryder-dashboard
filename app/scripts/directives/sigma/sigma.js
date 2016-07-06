@@ -3,23 +3,21 @@
  */
 angular.module('sbAdminApp')
 .directive('sigmaJs', function() {
-    //over-engineered random id, so that multiple instances can be put on a single page
     return {
         restrict: 'E',
         template: '<div style="width: 100%;height: 100%;"></div>',
         scope: {
-            //@ reads the attribute value, = provides two-way binding, & works with functions
             graph: '=',
-            locate: '=?',
             width: '@',
             height: '@',
             id: '@',
-            edgeLabels: '=?',
             threshold: '@?',
-            eventCatcher: '&',
-            timeFilter: '=?'
+            edgeLabels: '=?',
+            locate: '=?',
+            timeFilter: '=?',
+            eventCatcher: '&'
         },
-        link: function (scope, element, attrs) {
+        link: function (scope, element) {
             // default values
             if (scope.threshold == undefined)
                 scope.threshold = 4;
@@ -78,7 +76,6 @@ angular.module('sbAdminApp')
                                 return true;
                             }
                             else if (n.pid != undefined && scope.locate.indexOf(parseInt(n.pid)) != -1) {
-                                //todo use color code
                                 n.color = "rgb(92,184,92)";
                                 return true;
                             }
@@ -101,7 +98,7 @@ angular.module('sbAdminApp')
 
             /**** timeFilter ****/
             scope.$watch('timeFilter', function () {
-                var nodes = s.graph.nodes().filter(function (n) {
+                s.graph.nodes().filter(function (n) {
                     if (n.uid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         //todo use color code
                         n.color = "rgb(51,122,183)";
@@ -125,12 +122,12 @@ angular.module('sbAdminApp')
             });
 
             /**** Watch for update ****/
-            scope.$watch('graph', function(newVal,oldVal) {
+            scope.$watch('graph', function() {
                 s.graph.clear();
                 s.graph.read(scope.graph);
                 s.refresh();
             });
-            scope.$watch('edgeLabels', function(newVal,oldVal) {
+            scope.$watch('edgeLabels', function(newVal) {
                 s.graph.clear();
                 s.settings({
                     drawEdgeLabels: newVal
@@ -138,12 +135,12 @@ angular.module('sbAdminApp')
                 s.graph.read(scope.graph);
                 s.refresh();
             });
-            scope.$watch('width', function(newVal,oldVal) {
+            scope.$watch('width', function() {
                 element.children().css("width",scope.width);
                 s.refresh();
                 window.dispatchEvent(new Event('resize')); //hack so that it will be shown instantly
             });
-            scope.$watch('height', function(newVal,oldVal) {
+            scope.$watch('height', function() {
                 element.children().css("height",scope.height);
                 s.refresh();
                 window.dispatchEvent(new Event('resize'));//hack so that it will be shown instantly
