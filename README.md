@@ -4,7 +4,7 @@ This project is base on Free Admin Bootstrap Theme [SB Admin v2.0](http://startb
 
 ## Installation
 ####1. Tools
-
+- Install needed tools
 ```sh
 $ sudo apt-get install npm
 $ sudo npm install -g grunt-cli
@@ -20,8 +20,7 @@ $ npm install
 ####3. Sigma.js & Linkurious.js
 
 - Sigma and linkurious lib do not provide bower repository yet
-You can link it with
-
+- You can link it with
 ```sh
 $ bower link linkurious /YourPathTo/linkurious.js
 ```
@@ -30,7 +29,6 @@ Same way for sigma
 ####4. Api Url
 
 - Change apiUrl in app/scripts/app.js
-
 ```
   .constant('config', {
         apiUrl: 'http://localhost:5000/'
