@@ -16,7 +16,7 @@ angular
     'ngSanitize'
   ])
   .constant('config', {
-        apiUrl: 'http://192.168.99.100:5000/'
+        apiUrl: 'http://nferon.ovh:5000/'
     })
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
     
