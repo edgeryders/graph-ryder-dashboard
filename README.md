@@ -1,6 +1,6 @@
 ## Graph ryder dashboard
 
-This project is base on Free Admin Bootstrap Theme [SB Admin v2.0](http://startbootstrap.com/template-overviews/sb-admin-2/).
+This project is based on Free Admin Bootstrap Theme [SB Admin v2.0](http://startbootstrap.com/template-overviews/sb-admin-2/).
 
 ## Local Installation
 ####1. Tools
@@ -20,7 +20,7 @@ $ npm install
 $ bower install
 ```
 
-####3. Sigma.js & Linkurious.js
+####3. Linkurious.js
 
 - Linkurious lib do not provide bower repository yet
 - Clone linkurious where you want
