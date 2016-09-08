@@ -27,10 +27,12 @@ $ bower install
 ```sh
 $ git clone https://github.com/norbertFeron/linkurious.js linkurious
 ```
-- Link it
+- Link and build lib
 ```sh
 $ cd linkurious
 $ bower link
+$ npm install
+$ npm run build
 ```
 - Link to the project
 ```sh
