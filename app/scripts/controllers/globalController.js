@@ -19,7 +19,7 @@ angular.module('sbAdminApp')
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
-                $scope.layoutChoice = $rootScope.layout[17];
+                $scope.layoutChoice = $rootScope.layout[12];
                 $scope.drawGraph();
                 refreshPostType();
             }
@@ -136,17 +136,28 @@ angular.module('sbAdminApp')
                         postTypeAddUser(e.data.node.uid, e.data.node.name, e.data.captor.shiftKey);
                     }
                     else {
-                        if(e.data.node.uid != undefined) {
-                             $scope.elementType = "uid";
-                             $scope.elementId = e.data.node.uid;
+                        if(e.data.node.user_id != undefined) {
+                            $scope.elementType = "user";
+                            $scope.elementId = e.data.node.user_id
                         }
-                        else if (e.data.node.pid != undefined) {
-                            $scope.elementType = "pid";
-                            $scope.elementId = e.data.node.pid;
+                        else if (e.data.node.post_id != undefined) {
+                            $scope.elementType = "post";
+                            $scope.elementId = e.data.node.post_id;
                         }
-                        else if (e.data.node.cid != undefined) {
-                            $scope.elementType = "cid";
-                            $scope.elementId = e.data.node.cid;
+                        else if (e.data.node.comment_id != undefined) {
+                            $scope.elementType = "comment";
+                            $scope.elementId = e.data.node.comment_id;
+                        }
+                        else if (e.data.node.tag_id != undefined) {
+                            $scope.elementType = "tag";
+                            $scope.elementId = e.data.node.tag_id;
+                        }
+                        else if (e.data.node.annotation_id != undefined) {
+                            $scope.elementType = "annotation";
+                            $scope.elementId = e.data.node.annotation_id;
+                        }
+                        else {
+                            console.log("Unexpected node: "+e.data.node);
                         }
                         $scope.openModal($scope.elementType, $scope.elementId);
                     }

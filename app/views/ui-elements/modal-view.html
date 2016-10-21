@@ -4,21 +4,20 @@
     </div>
 </div>
 <!-- Modal for user -->
-<div class="modal-content" ng-show="elementType == 'uid' && !loading" >
+<div class="modal-content" ng-show="elementType == 'user' && !loading" >
     <div class="modal-header">
         <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" ><button class="btn btn-primary" >{{user.uid}}</button>&nbsp;&nbsp;{{user.name}}</h4>
+        <h4 class="modal-title" ><button class="btn btn-primary" >{{user.user_id}}</button>&nbsp;&nbsp;{{user.name}}</h4>
     </div>
     <div class="modal-body">
         <uib-tabset justified="true">
             <uib-tab index="0" heading="Infos">
-                Firstname : {{user.first_name}}<br>
                 Active : {{user.active}}<br>
-                Facebook : {{user.facebook}}<br>
-                Twitter : {{user.twitter}}<br>
-                WebSite : {{user.website_url}}<br>
+                Facebook : {{user.url_facebook}}<br>
+                Twitter : {{user.url_twitter}}<br>
+                WebSite : {{user.url_website}}<br>
                 Email : {{user.email}}<br>
-                Based : {{user.base}}<br>
+                Based : {{user.location}}<br>
                 Age : {{user.age}}<br>
             </uib-tab>
             <uib-tab index="1" heading="Biography" disable="!user.biography" >{{user.biography}}</uib-tab>
@@ -26,7 +25,7 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>pid</th>
+                        <th>Post</th>
                         <th>Title</th>
                         <th>Date</th>
                     </tr>
@@ -34,9 +33,9 @@
                     <tbody>
                     <tr ng-repeat="post in user.posts" >
                         <td>
-                            <button class="btn btn-success" ng-click="openModal('pid', post.pid)" >{{ post.pid }}</button>
+                            <button class="btn btn-success" ng-click="openModal('post', post.post_id)" >{{ post.post_id }}</button>
                         </td>
-                        <td>{{ post.title }}</td>
+                        <td>{{ post.label }}</td>
                         <td>{{ getDate(post.timestamp) }}</td>
                     </tr>
                     </tbody>
@@ -46,8 +45,8 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>cid</th>
-                        <th>Subject</th>
+                        <th>Comment</th>
+                        <th>Title</th>
                         <th>Post</th>
                         <th>Date</th>
                     </tr>
@@ -55,11 +54,11 @@
                     <tbody>
                     <tr ng-repeat="comment in user.comments" >
                         <td>
-                            <button class="btn btn-warning" ng-click="openModal('cid', comment.cid)" >{{ comment.cid }}</button>
+                            <button class="btn btn-warning" ng-click="openModal('comment', comment.comment_id)" >{{ comment.comment_id }}</button>
                         </td>
-                        <td>{{ comment.subject }}</td>
+                        <td>{{ comment.label }}</td>
                         <td>
-                            <button class="btn btn-success" ng-click="openModal('pid', comment.parent_id)" >{{ comment.parent_id }}</button>
+                            <button class="btn btn-success" ng-click="openModal('post', comment.comment_parent_post_id)" >{{ comment.comment_parent_post_id }}</button>
                         </td>
                         <td>{{ getDate(comment.timestamp) }}</td>
                     </tr>
@@ -74,23 +73,23 @@
 </div>
 <!-- /.modal-content -->
 <!-- Modal for post -->
-<div class="modal-content" ng-show="elementType == 'pid' && !loading">
+<div class="modal-content" ng-show="elementType == 'post' && !loading">
     <div class="modal-header">
         <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" ><button class="btn btn-success" ng-click="openModal('pid', post.pid)">{{post.pid}}</button>&nbsp;&nbsp;{{post.title}}</h4>
+        <h4 class="modal-title" ><button class="btn btn-success" ng-click="openModal('post', post.post_id)">{{post.post_id}}</button>&nbsp;&nbsp;{{post.title}}</h4>
         {{ getDate(post.timestamp) }}
-        Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('uid', post.author.uid)">{{post.author.name}}</button>
+        Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('user', post.author.user_id)">{{post.author.name}}</button>
     </div>
     <div class="modal-body">
         <uib-tabset justified="true">
             <uib-tab index="0" heading="Body" >
-                {{post.body}}
+                {{post.content}}
             </uib-tab>
             <uib-tab index="1" heading="Comments ({{post.comments.length}})" disable="post.comments.length == 0" >
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>cid</th>
+                        <th>Comment</th>
                         <th>Author</th>
                         <th>Subject</th>
                         <th>Date</th>
@@ -99,11 +98,33 @@
                     <tbody>
                     <tr ng-repeat="comment in post.comments" >
                         <td>
-                            <button class="btn btn-warning" ng-click="openModal('cid', comment.cid)" >{{ comment.cid }}</button>
+                            <button class="btn btn-warning" ng-click="openModal('comment', comment.comment_id)" >{{ comment.comment_id }}</button>
                         </td>
-                        <td><button class="btn btn-primary" ng-click="openModal('uid', comment.author.uid)">{{ comment.author.name }}</button></td>
-                        <td>{{ comment.subject }}</td>
+                        <td><button class="btn btn-primary" ng-click="openModal('user', comment.author.user_id)">{{ comment.author.name }}</button></td>
+                        <td>{{ comment.title }}</td>
                         <td>{{ getDate(comment.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+            <uib-tab index="2" heading="Tags ({{post.annotations.length}})" disable="post.annotations.length == 0" >
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Annotation</th>
+                        <th>Date</th>
+                        <th>Tag</th>
+                        <th>Label</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="annotation in post.annotations" >
+                        <td>
+                            <button class="btn btn-info" ng-click="openModal('annotation', annotation.annotation_id)" >{{ annotation.annotation_id }}</button>
+                        </td>
+                        <td>{{ getDate(annotation.annotation_timestamp) }}</td>
+                        <td><button class="btn btn-danger" ng-click="openModal('tag', annotation.tag_id)">{{ annotation.tag_id }}</button></td>
+                        <td>{{ annotation.tag_label }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -116,26 +137,151 @@
 </div>
 <!-- /.modal-content -->
 <!-- Modal for comment -->
-<div class="modal-content" ng-show="elementType == 'cid' && !loading">
+<div class="modal-content" ng-show="elementType == 'comment' && !loading">
     <div class="modal-header">
         <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" ><button class="btn btn-warning" ng-click="openModal('cid', comment.cid)">{{comment.cid}}</button>&nbsp;&nbsp;{{comment.subject}}</h4>
+        <h4 class="modal-title" ><button class="btn btn-warning" ng-click="openModal('comment', comment.comment_id)">{{comment.comment_id}}</button>&nbsp;&nbsp;{{comment.title}}</h4>
         {{ getDate(comment.timestamp) }}
+        Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('user', comment.author.user_id)">{{comment.author.user_name}}</button><br>
+        Post target :&nbsp;&nbsp;<button class="btn btn-success" ng-click="openModal('post', comment.post.post_id)">{{comment.post.post_id}} : {{comment.post.post_title.split(" ").slice(0, 3).join(" ").concat("...")}}</button>
     </div>
     <div class="modal-body">
+        <uib-tabset justified="true">
+            <uib-tab index="0" heading="Content" >
+                {{comment.content}}
+            </uib-tab>
+            <uib-tab index="1" heading="Tags ({{comment.annotations.length}})" disable="comment.annotations.length == 0" >
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Annotation</th>
+                        <th>Date</th>
+                        <th>Tag</th>
+                        <th>Label</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="annotation in comment.annotations" >
+                        <td>
+                            <button class="btn btn-info" ng-click="openModal('annotation', annotation.annotation_id)" >{{ annotation.annotation_id }}</button>
+                        </td>
+                        <td>{{ getDate(annotation.annotation_timestamp) }}</td>
+                        <td><button class="btn btn-danger" ng-click="openModal('tag', annotation.tag_id)">{{ annotation.tag_id }}</button></td>
+                        <td>{{ annotation.tag_label }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+        </uib-tabset>
         <uib-accordion close-others="false">
-            <uib-accordion-group heading="Infos" is-open="true">
-                Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('uid', comment.author.uid)">{{comment.author.name}}</button>
-                Post target :&nbsp;&nbsp;<button class="btn btn-success" ng-click="openModal('pid', comment.post.pid)">{{comment.post.pid}} : {{comment.post.title.split(" ").slice(0, 3).join(" ").concat("...")}}</button>
-            </uib-accordion-group>
-            <uib-accordion-group heading="Content" is-open="true">
-                {{comment.comment}}
-            </uib-accordion-group>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="cancel()" >Close</button>
     </div>
 </div>
 <!-- /.modal-content -->
-
-
+<!-- Modal for annotation -->
+<div class="modal-content" ng-show="elementType == 'annotation' && !loading" >
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" ><button class="btn btn-info" ng-click="openModal('annotation', annotation.annotation_id)">{{annotation.annotation_id}}</button>&nbsp;&nbsp;Annotation {{annotation.title}}</h4>
+    {{ getDate(annotation.timestamp) }}
+    </div>
+    <div class="modal-body">
+        <uib-tabset justified="true">
+            <uib-tab index="0">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th ng-if="annotation.entity_type=='post'">Post</th>
+                        <th ng-if="annotation.entity_type=='comment'">Comment</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <button class="btn btn-success" ng-click="openModal(annotation.entity_type, annotation.entity_id)"  ng-if="annotation.entity_type=='post'">{{ annotation.entity_id }}</button>
+                            <button class="btn btn-warning" ng-click="openModal(annotation.entity_type, annotation.entity_id)"  ng-if="annotation.entity_type=='comment'">{{ annotation.entity_id }}</button>
+                        </td>
+                        <td>{{annotation.entity_title}}</td>
+                        <td><button class="btn btn-primary" ng-click="openModal('user', annotation.user_id)">{{ annotation.user_name }}</button></td>
+                        <td>{{ getDate(annotation.entity_timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel()" >Close</button>
+    </div>
+</div>
+<!-- /.modal-content -->
+<!-- Modal for tag -->
+<div class="modal-content" ng-show="elementType == 'tag' && !loading" >
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" ><button class="btn btn-danger" ng-click="openModal('annotation', annotation.annotation_id)">{{tag.tag_id}}</button>&nbsp;&nbsp;{{tag.label}}</h4>
+    </div>
+    <div class="modal-body">
+        <uib-tabset justified="true">
+            <uib-tab index="0" heading="Posts ({{tag.posts.length}})" disable="tag.posts.length == 0">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Annotation</th>
+                        <th>Post</th>
+                        <th>Author</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="post in tag.posts" >
+                        <td>
+                            <button class="btn btn-info" ng-click="openModal('annotation', post.annotation_id)" >{{ post.annotation_id }}</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-success" ng-click="openModal('post', post.post_id)" >{{ post.post_id}} : {{post.post_title.split(" ").slice(0, 3).join(" ").concat("...")}}</button></td>
+                        <td>
+                            <button class="btn btn-primary" ng-click="openModal('user', post.user_id)" >{{ post.user_name }}</button>
+                        </td>
+                        <td>{{ getDate(post.post_timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+            <uib-tab index="1" heading="Comments ({{tag.comments.length}})" disable="tag.comments.length == 0" >
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Annotation</th>
+                        <th>Comment</th>
+                        <th>Author</th>
+                        <!--<th>Post</th>-->
+                        <th>Date</th>
+                    </tr>
+                     </thead>
+                    <tbody>
+                    <tr ng-repeat="comment in tag.comments" >
+                        <td>
+                            <button class="btn btn-info" ng-click="openModal('annotation', comment.annotation_id)" >{{ comment.annotation_id }}</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-success" ng-click="openModal('comment', comment.comment_id)" >{{ comment.comment_id}} : {{comment.comment_title.split(" ").slice(0, 3).join(" ").concat("...")}}</button></td>
+                        <td>
+                            <button class="btn btn-primary" ng-click="openModal('user', comment.user_id)" >{{ comment.user_name }}</button>
+                        </td>
+                        <td>{{ getDate(comment.comment_timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel()" >Close</button>
+    </div>
+</div>

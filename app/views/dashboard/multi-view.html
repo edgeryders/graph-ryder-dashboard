@@ -82,13 +82,13 @@
                             <tbody>
                             <tr ng-repeat="comment in comments" >
                                 <td>
-                                    <button class="btn btn-warning" ng-click="openModal('cid', comment.from_id)" >{{ comment.from_id }}</button>
+                                    <button class="btn btn-warning" ng-click="openModal('comment_id', comment.from_id)" >{{ comment.from_id }}</button>
                                 </td>
                                 <td>{{ comment.from_subject }}</td>
                                 <td> --> </td>
                                 <td>
-                                    <button ng-show="comment.to_type=='cid'" class="btn btn-warning" ng-click="openModal('cid', comment.from_id)" >{{ comment.to_id }}</button>
-                                    <button ng-show="comment.to_type=='pid'" class="btn btn-success" ng-click="openModal('pid', comment.to_id)" >{{ comment.to_id }}</button>
+                                    <button ng-show="comment.to_type=='comment_id'" class="btn btn-warning" ng-click="openModal('comment_id', comment.from_id)" >{{ comment.to_id }}</button>
+                                    <button ng-show="comment.to_type=='post_id'" class="btn btn-success" ng-click="openModal('post_id', comment.to_id)" >{{ comment.to_id }}</button>
                                 </td>
                                 <td>{{ comment.to_subject }}</td>
                             </tr>
