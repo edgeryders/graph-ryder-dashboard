@@ -72,23 +72,23 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th>cid</th>
+                                <th>Comment</th>
                                 <th>Subject</th>
                                 <th></th>
-                                <th>pid /cid</th>
-                                <th>Title / Subject</th>
+                                <th>Parent (post/comment)</th>
+                                <th>Title</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="comment in comments" >
                                 <td>
-                                    <button class="btn btn-warning" ng-click="openModal('comment_id', comment.from_id)" >{{ comment.from_id }}</button>
+                                    <button class="btn btn-warning" ng-click="openModal('comment', comment.from_id)" >{{ comment.from_id }}</button>
                                 </td>
                                 <td>{{ comment.from_subject }}</td>
                                 <td> --> </td>
                                 <td>
-                                    <button ng-show="comment.to_type=='comment_id'" class="btn btn-warning" ng-click="openModal('comment_id', comment.from_id)" >{{ comment.to_id }}</button>
-                                    <button ng-show="comment.to_type=='post_id'" class="btn btn-success" ng-click="openModal('post_id', comment.to_id)" >{{ comment.to_id }}</button>
+                                    <button ng-show="comment.to_type=='comment'" class="btn btn-warning" ng-click="openModal('comment', comment.from_id)" >{{ comment.to_id }}</button>
+                                    <button ng-show="comment.to_type=='post'" class="btn btn-success" ng-click="openModal('post', comment.to_id)" >{{ comment.to_id }}</button>
                                 </td>
                                 <td>{{ comment.to_subject }}</td>
                             </tr>
