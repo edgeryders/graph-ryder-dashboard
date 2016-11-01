@@ -17,7 +17,7 @@ angular.module('sbAdminApp')
                 $scope.layoutChoiceComments = $rootScope.layout[12];
                 $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/' + $scope.layoutChoice);
                 $scope.drawUserGraph(true);
-                $scope.darwPostGraph();
+                $scope.drawPostGraph();
             }
         });
 
@@ -44,7 +44,7 @@ angular.module('sbAdminApp')
         /*** post view ***/
         // todo generate this view from the other ( via edges values )
         $scope.commentsGraphSigma = [];
-        $scope.darwPostGraph = function () {
+        $scope.drawPostGraph = function () {
             var url = config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments;
             $resource(url).get().$promise.then(function (result) {
                 $scope.commentsGraphSigma = result;
@@ -69,7 +69,6 @@ angular.module('sbAdminApp')
                         $scope.locate = [];
                         angular.forEach(e.data.edge, function(value) {
                             var comment = {from_id : "", from_subject: "", to_id: "", to_subject: ""};
-                            console.log(value);
                             if (value.post_id != undefined) {
                                 comment.from_id = value.comment_id;
                                 $scope.locate.push(parseInt(value.comment_id));

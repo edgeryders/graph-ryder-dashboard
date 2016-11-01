@@ -1,0 +1,96 @@
+<div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h5> Color code :
+                <button class="btn btn-primary" style="opacity: 1;" ng-click="openModal('all users', 0)">Users</button>
+                <button class="btn btn-success" style="opacity: 1;" ng-click="openModal('all posts', 0)">Posts</button>
+                <button class="btn btn-warning" style="opacity: 1;" ng-click="openModal('all comments', 0)">Comments</button>
+                <button class="btn btn-danger" style="opacity: 1;" ng-click="openModal('all tags', 0)">Tags</button>
+            </h5>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-6" >
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="tagel" > labels on egdes
+                    <form ng-submit="drawGraph()">
+                        algo :
+                        <select ng-model="layoutChoice">
+                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                        </select>
+                        <input type="submit" value="go" />
+                    </form>
+                    <p>Alt + Click on User (blue node) to view post type in metrics window</p>
+                    <p> Alt + Shift + Click to add user and compare with previous</p>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <sigma-js
+                            graph="tagGraphSigma"
+                            width="100%" height="600px"
+                            edge-labels="tagel"
+                            threshold=10
+                            event-catcher="eventCatcher"
+                            locate="locate"
+                            time-filter="filter" >
+                    </sigma-js>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <time-line height="200" data="time_data" call-back="extent" ></time-line>
+                    Start date: {{selected.start}}
+                    End date: {{selected.end}}
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-6 -->
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form ng-submit="updateTagTable()">
+                        <select ng-model="tableSizeChoice">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="100">100</option>
+                        </select>
+                        <input type="submit" value="go" />
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Tag</th>
+                                <th>Label</th>
+                                <th># Mentions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="tag in tags" >
+                                <td>
+                                    <button class="btn btn-danger" ng-click="drawGraph(tag.id)" >{{ tag.id }}</button>
+                                </td>
+                                <td>{{ tag.label }}</td>
+                                <td>{{ tag.count }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-6 -->
+    </div>
+    <!-- /.row -->
+</div>

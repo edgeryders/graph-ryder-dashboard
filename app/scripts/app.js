@@ -133,6 +133,23 @@ angular
             }
         }
     })
+    .state('dashboard.tagView',{
+        url:'/tagView',
+        controller: 'TagViewCtrl',
+        templateUrl:'views/dashboard/tag-view.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/tagViewController.js',
+                        'scripts/controllers/modalInstanceController.js'
+                    ]
+                })
+            }
+        }
+    })
         .state('dashboard.settings',{
             url:'/settings',
             controller: 'SettingsCtrl',

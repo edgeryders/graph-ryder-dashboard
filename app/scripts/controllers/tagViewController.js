@@ -10,30 +10,41 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout) {
+    .controller('TagViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout) {
 
         /**** Init ****/
         //edge label default
-        $scope.globalel = false;
+        $scope.tagel = false;
         $scope.locate = "";
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
                 $scope.layoutChoice = $rootScope.layout[12];
-                $scope.drawGraph();
-                refreshPostType();
+                $scope.tableSizeChoice = 10;
+                $scope.selected.start= new Date(0);
+                $scope.selected.end= new Date(Date.now());
+                //load tags then create the graph
+                var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/"+$scope.tableSizeChoice).query().$promise;
+                Tags.then(function (result) {
+                    $scope.tags = result;
+                    if($scope.tags[0])
+                        $scope.drawGraph($scope.tags[0].id);
+                });
             }
         });
 
         /***** Global view *****/
-        $scope.globalGraphSigma = [];
+        $scope.tagGraphSigma = [];
 
-        $scope.drawGraph = function () {
-            // // Read the complete graph from api
-            var drawGraph = $resource(config.apiUrl + 'draw/complete/' + $scope.layoutChoice);
-            $scope.drawGraphPromise = drawGraph.get();
-            $scope.drawGraphPromise.$promise.then(function (result) {
-                $scope.globalGraphSigma = result;
+        $scope.drawGraph = function (tag_id) {
+            var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + tag_id);
+            var createGraphPromise = createGraph.get();
+            createGraphPromise.$promise.then(function (result) {
+                var drawGraph = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
+                var drawgraph = drawGraph.get();
+                drawgraph.$promise.then(function (result) {
+                    $scope.tagGraphSigma = result;
+                });
             });
         };
 
@@ -43,22 +54,17 @@ angular.module('sbAdminApp')
         var timeLinePromises = [];
 
         // Create promises array to wait all data until load
-        timeLinePromises.push($resource(config.apiUrl + 'users/count/timestamp').query().$promise);
         timeLinePromises.push($resource(config.apiUrl + 'posts/count/timestamp').query().$promise);
         timeLinePromises.push($resource(config.apiUrl + 'comments/count/timestamp').query().$promise);
 
         $q.all(timeLinePromises).then(function(results) {
             var tmp = {"users": [], "posts": [], "comments": []};
-            // Users
-            angular.forEach(results[0], function(result) {
-                tmp.users.push(result);
-            });
             // Posts
-            angular.forEach(results[1], function(result) {
+            angular.forEach(results[0], function(result) {
                 tmp.posts.push(result);
             });
             // Comments
-            angular.forEach(results[2], function (result) {
+            angular.forEach(results[1], function (result) {
                 tmp.comments.push(result);
             });
             // append data
@@ -69,9 +75,15 @@ angular.module('sbAdminApp')
 
         // Time selection have been made on the chart
         $scope.extent = function (start, end) {
-            if(!start && !end) //release signal
-                refreshPostType();
-            else {
+            if(!start && !end) { //release signal
+                var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/10").query().$promise;
+                Tags.then(function (result) {
+                    $scope.tags = result;
+                    if($scope.tags[0])
+                        $scope.drawGraph($scope.tags[0].id);
+                });
+                $scope.$apply();
+            } else {
                 $scope.selected.start = start;
                 $scope.selected.end = end;
                 // Update sigma filter
@@ -80,58 +92,26 @@ angular.module('sbAdminApp')
             }
         };
 
-        /*** Radar Chart ***/
-        var all = {name: "all"};
-        var postSelection = [all];
-
-        // Call api and load postType
-        var refreshPostType = function () {
-            $scope.postType = {};
-            $scope.postType.series = [];
-            $scope.postType.labels = [];
-
-            var params = {"users": []};
-
-            angular.forEach(postSelection, function(selection) {
-                if(selection != all) {
-                    params.uid.push(selection.id);
-                    $scope.postType.series.push(selection.name);
-                }
-            });
-
-            if($scope.selected.start != undefined)
-                params.start = $scope.selected.start.getTime();
-            if($scope.selected.end != undefined)
-                params.end = $scope.selected.end.getTime();
-
-            var Type = $resource(config.apiUrl + 'post/getType/', params);
-            var type = Type.get();
-            type.$promise.then(function (result) {
-                $scope.postType.labels = result.labels;
-                if(postSelection.indexOf(all) != -1) {
-                    $scope.postType.data = result.data;
-                    $scope.postType.series.push("all");
-                }
-                else {
-                    result.data.shift();
-                    $scope.postType.data = result.data;
-                }
+        $scope.getTagTable = function (start, end, limit) {
+            var Tags = $resource(config.apiUrl + "tags/"+start+"/"+end+"/"+limit).query().$promise;
+            Tags.then(function (result) {
+                return result;
             });
         };
 
-        var postTypeAddUser = function (uid, name, append) {
-            if(append)
-                postSelection.push({id: uid, name: name});
-            else
-                postSelection = [{id: uid, name: name}];
-            refreshPostType();
+        $scope.updateTagTable = function () {
+            //$scope.tags = $scope.getTagTable($scope.selected.start.getTime(), $scope.selected.end.getTime(), $scope.tableSizeChoice);
+            var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+ $scope.selected.end.getTime()+"/"+$scope.tableSizeChoice).query().$promise;
+            Tags.then(function (result) {
+                $scope.tags = result;
+            });
+            //$scope.$apply();
         };
 
         /*** Sigma Event Catcher ***/
         $scope.eventCatcher = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    console.log(e.data.captor);
                     if(e.data.node.uid != undefined && e.data.captor.altKey) {
                         postTypeAddUser(e.data.node.uid, e.data.node.name, e.data.captor.shiftKey);
                     }

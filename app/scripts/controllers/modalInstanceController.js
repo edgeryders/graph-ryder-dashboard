@@ -49,6 +49,34 @@ angular.module('sbAdminApp')
                     $scope.annotation = result;
                 });
                 break;
+            case "all users":
+                var User = $resource(config.apiUrl + "users").query().$promise;
+                User.then(function (result) {
+                    $scope.loading = false;
+                    $scope.users = result;
+                });
+                break;
+            case "all posts":
+                var Post = $resource(config.apiUrl + "posts").query().$promise;
+                Post.then(function (result) {
+                    $scope.loading = false;
+                    $scope.posts = result;
+                });
+                break;
+            case "all comments":
+                var Comment = $resource(config.apiUrl + "comments").query().$promise;
+                Comment.then(function (result) {
+                    $scope.loading = false;
+                    $scope.comments = result;
+                });
+                break;
+            case "all tags":
+                var Tag = $resource(config.apiUrl + "tags").query().$promise;
+                Tag.then(function (result) {
+                    $scope.loading = false;
+                    $scope.tags = result;
+                });
+                break;
             default:
                 console.log("error with modalView directive unknow type");
         }

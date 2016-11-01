@@ -64,6 +64,7 @@ angular.module('sbAdminApp')
             scope.$watch("data", function(data) {
                 if(data.length != 0) {
                     var scale = data.users.concat(data.posts);
+                    scale = scale.concat(data.comments);
                     x.domain(d3.extent(scale, function (d) {
                         return d.timestamp;
                     }));

@@ -10,6 +10,7 @@ angular.module('sbAdminApp')
   .controller('MainCtrl', function($scope, $resource, config, $rootScope, $q) {
 
     $rootScope.ready = false;
+    $rootScope.tableSize = [5, 10, 25, 50, 100];
 
     /***** Load layout algorithm *******/
     var Layout = $resource(config.apiUrl + 'layoutAlgorithm');
@@ -31,17 +32,18 @@ angular.module('sbAdminApp')
     /***** Load all data *****/
     $rootScope.suggestions = [];
 
-    $rootScope.resetSuggestions = function (users, posts, comments) {
+    $rootScope.resetSuggestions = function (users, posts, comments, tags) {
         var collectPromises = [];
         // Create promises array to wait all data until load
         collectPromises.push($resource(config.apiUrl + 'users').query().$promise);
         collectPromises.push($resource(config.apiUrl + 'posts').query().$promise);
         collectPromises.push($resource(config.apiUrl + 'comments').query().$promise);
+        collectPromises.push($resource(config.apiUrl + 'tags').query().$promise);
 
         $q.all(collectPromises).then(function (results) {
             if(users) {
                 angular.forEach(results[0], function (user) {
-                    user.label = user.name;
+                    user.label = user.label;
                     $rootScope.suggestions.push(user);
                 });
             }
@@ -53,8 +55,13 @@ angular.module('sbAdminApp')
             }
             if(comments) {
                 angular.forEach(results[2], function (comment) {
-                    comment.label = comment.subject;
+                    comment.label = comment.title;
                     $rootScope.suggestions.push(comment);
+                });
+            }
+            if(tags) {
+                angular.forEach(results[3], function (tag) {
+                    $rootScope.suggestions.push(tag);
                 });
             }
         }, function (reject) {
@@ -62,5 +69,5 @@ angular.module('sbAdminApp')
         });
     };
 
-    $rootScope.resetSuggestions(true, true, true);
+    $rootScope.resetSuggestions(true, true, true, true);
   });
