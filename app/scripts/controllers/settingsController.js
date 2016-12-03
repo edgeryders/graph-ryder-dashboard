@@ -31,11 +31,15 @@ angular.module('sbAdminApp')
                 if ($scope.api.status) // color
                     $scope.style.status = $scope.success;
                 // version
-                $scope.api.version = result.version;
-                if (new Date().getTime() - $scope.api.version > 2628000)
+                var d = new Date();
+                d.setTime(result.version);
+                $scope.api.version = d.toString();
+                if (new Date().getTime() - d.getTime() > 2628000000) {
                     $scope.style.version = $scope.danger;
-                if (new Date().getTime() - $scope.api.version < 604800)
+                }
+                if (new Date().getTime() - d.getTime() < 604800000) {
                     $scope.style.version = $scope.success;
+                }
                 // ram usage
                 $scope.api.ramLoad = result.percentRamUsage;
                 if ($scope.api.ramLoad < 50.00) // color
@@ -82,6 +86,14 @@ angular.module('sbAdminApp')
             }, function (reject) {
                 console.log(reject);
             });
+        };
+
+        $scope.UpdateFromEdgeryders = function () {
+            var createGraph = $resource(config.apiUrl + 'UpdateFromEdgeRyders');
+            var createGraphPromise = createGraph.get();
+            createGraphPromise.$promise.then(function (result) {
+            });
+            console.log("hello");
         };
 
         /***** Upload and Update *****/

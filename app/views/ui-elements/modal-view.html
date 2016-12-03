@@ -78,7 +78,8 @@
         <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
         <h4 class="modal-title" ><button class="btn btn-success" ng-click="openModal('post', post.post_id)">{{post.post_id}}</button>&nbsp;&nbsp;{{post.title}}</h4>
         {{ getDate(post.timestamp) }}
-        Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('user', post.author.user_id)">{{post.author.name}}</button>
+        Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('user', post.author.user_id)">{{post.author.name}}</button> <br>
+        <a href="https://edgeryders.eu/node/{{post.post_id}}" target="_blank">Original content on Edgeryders</a>
     </div>
     <div class="modal-body">
         <uib-tabset justified="true">
@@ -143,7 +144,8 @@
         <h4 class="modal-title" ><button class="btn btn-warning" ng-click="openModal('comment', comment.comment_id)">{{comment.comment_id}}</button>&nbsp;&nbsp;{{comment.title}}</h4>
         {{ getDate(comment.timestamp) }}
         Author :&nbsp;&nbsp;<button class="btn btn-primary" ng-click="openModal('user', comment.author.user_id)">{{comment.author.user_name}}</button><br>
-        Post target :&nbsp;&nbsp;<button class="btn btn-success" ng-click="openModal('post', comment.post.post_id)">{{comment.post.post_id}}</button> : {{comment.post.post_title}}
+        Post target :&nbsp;&nbsp;<button class="btn btn-success" ng-click="openModal('post', comment.post.post_id)">{{comment.post.post_id}}</button> : {{comment.post.post_title}} <br>
+        <a href="https://edgeryders.eu/comment/{{comment.comment_id}}#comment-{{comment.comment_id}}" target="_blank">Original content on Edgeryders</a>
     </div>
     <div class="modal-body">
         <uib-tabset justified="true">

@@ -1,11 +1,12 @@
 <div>
     <div class="row">
         <div class="col-lg-12">
-            <h5> Color code :
+            <h5> Color code:
                 <button class="btn btn-primary" style="opacity: 1;" ng-click="openModal('all users', 0)">Users</button>
                 <button class="btn btn-success" style="opacity: 1;" ng-click="openModal('all posts', 0)">Posts</button>
                 <button class="btn btn-warning" style="opacity: 1;" ng-click="openModal('all comments', 0)">Comments</button>
                 <button class="btn btn-danger" style="opacity: 1;" ng-click="openModal('all tags', 0)">Tags</button>
+                <br>Drawing directive: <input type="checkbox" ng-model="requestFullTagGraph" > return complete tag-tag graph (slower)
             </h5>
         </div>
         <!-- /.col-lg-12 -->
@@ -15,15 +16,14 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="tagel" > labels on egdes
-                    <form ng-submit="drawGraph()">
+                    <form ng-submit="drawGraph(tag_id)">
                         algo :
                         <select ng-model="layoutChoice">
                             <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
                         </select>
                         <input type="submit" value="go" />
                     </form>
-                    <p>Alt + Click on User (blue node) to view post type in metrics window</p>
-                    <p> Alt + Shift + Click to add user and compare with previous</p>
+                    <p>Shift + Click on Tag (red node) to change focus</p>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -48,6 +48,7 @@
                     <time-line height="200" data="time_data" call-back="extent" ></time-line>
                     Start date: {{selected.start}}
                     End date: {{selected.end}}
+                    <button class="btn text-right" ng-click="resetTimeLine()" >Reset</button>
                 </div>
                 <!-- /.panel-body -->
             </div>

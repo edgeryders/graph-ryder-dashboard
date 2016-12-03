@@ -16,6 +16,8 @@ angular.module('sbAdminApp')
         //edge label default
         $scope.tagel = false;
         $scope.locate = "";
+        $scope.tag_id = 1879;
+        $scope.requestFullTagGraph = false;
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
@@ -37,7 +39,13 @@ angular.module('sbAdminApp')
         $scope.tagGraphSigma = [];
 
         $scope.drawGraph = function (tag_id) {
-            var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + tag_id);
+            $scope.tag_id = tag_id;
+            if ($scope.requestFullTagGraph) {
+                var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.tag_id + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime());
+            } else {
+                var createGraph = $resource(config.apiUrl + 'generateTagDateGraph/' + $scope.tag_id + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime());
+            }
+            //var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + $scope.tag_id);
             var createGraphPromise = createGraph.get();
             createGraphPromise.$promise.then(function (result) {
                 var drawGraph = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
@@ -73,14 +81,20 @@ angular.module('sbAdminApp')
             console.log(reject);
         });
 
+        $scope.resetTimeLine = function () {
+            $scope.selected.start= new Date(0);
+            $scope.selected.end= new Date(Date.now());
+            $scope.extent($scope.extent.start,  $scope.extent.end);
+        }
+
         // Time selection have been made on the chart
         $scope.extent = function (start, end) {
             if(!start && !end) { //release signal
-                var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/10").query().$promise;
+                var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/"+$scope.tableSizeChoice).query().$promise;
                 Tags.then(function (result) {
                     $scope.tags = result;
                     if($scope.tags[0])
-                        $scope.drawGraph($scope.tags[0].id);
+                        $scope.drawGraph($scope.tag_id);
                 });
                 $scope.$apply();
             } else {
@@ -112,8 +126,8 @@ angular.module('sbAdminApp')
         $scope.eventCatcher = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    if(e.data.node.uid != undefined && e.data.captor.altKey) {
-                        postTypeAddUser(e.data.node.uid, e.data.node.name, e.data.captor.shiftKey);
+                    if(e.data.node.tag_id != undefined && e.data.captor.shiftKey) {
+                        $scope.drawGraph(e.data.node.tag_id);
                     }
                     else {
                         if(e.data.node.user_id != undefined) {

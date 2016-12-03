@@ -10,7 +10,6 @@ angular.module('sbAdminApp')
   .controller('MainCtrl', function($scope, $resource, config, $rootScope, $q) {
 
     $rootScope.ready = false;
-    $rootScope.tableSize = [5, 10, 25, 50, 100];
 
     /***** Load layout algorithm *******/
     var Layout = $resource(config.apiUrl + 'layoutAlgorithm');
