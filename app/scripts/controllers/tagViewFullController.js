@@ -10,41 +10,39 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('TagViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout) {
+    .controller('TagViewFullCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout) {
 
         /**** Init ****/
         //edge label default
         $scope.tagel = false;
         $scope.locate = "";
-        $scope.tag_id = 1879;
         $scope.requestFullTagGraph = false;
+        $scope.filterLevels = ["1","2","3","4","5","6","7","8"];
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
                 $scope.layoutChoice = $rootScope.layout[12];
-                $scope.tableSizeChoice = 10;
+                $scope.filterOcc = $scope.filterLevels[1];
+                //$scope.tableSizeChoice = 10;
                 $scope.selected.start= new Date(0);
                 $scope.selected.end= new Date(Date.now());
+                $scope.drawGraph(2);
                 //load tags then create the graph
-                var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/"+$scope.tableSizeChoice).query().$promise;
+                /*var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/10").query().$promise;
                 Tags.then(function (result) {
                     $scope.tags = result;
                     if($scope.tags[0])
-                        $scope.drawGraph($scope.tags[0].id);
-                });
+                       
+                });*/
             }
         });
 
         /***** Global view *****/
         $scope.tagGraphSigma = [];
 
-        $scope.drawGraph = function (tag_id) {
-            $scope.tag_id = tag_id;
-            if ($scope.requestFullTagGraph) {
-                var createGraph = $resource(config.apiUrl + 'generateTagFocusGraph/' + $scope.tag_id + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime());
-            } else {
-                var createGraph = $resource(config.apiUrl + 'generateTagDateGraph/' + $scope.tag_id + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime());
-            }
+        $scope.drawGraph = function () {
+            //$scope.filter_occ = filter_occ;
+            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filterOcc + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime());
             //var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + $scope.tag_id);
             var createGraphPromise = createGraph.get();
             createGraphPromise.$promise.then(function (result) {
@@ -56,14 +54,17 @@ angular.module('sbAdminApp')
             });
         };
 
+/*
+    Generate full tag-to-tag network once when loading then compute the filtering during the drawGraph function*/
+
         /*** TimeLine ****/
         $scope.time_data = [];
         $scope.selected = {};
         var timeLinePromises = [];
 
         // Create promises array to wait all data until load
-        timeLinePromises.push($resource(config.apiUrl + 'posts/count/timestamp').query().$promise);
-        timeLinePromises.push($resource(config.apiUrl + 'comments/count/timestamp').query().$promise);
+        //timeLinePromises.push($resource(config.apiUrl + 'posts/count/timestamp').query().$promise);
+        //timeLinePromises.push($resource(config.apiUrl + 'comments/count/timestamp').query().$promise);
 
         $q.all(timeLinePromises).then(function(results) {
             var tmp = {"users": [], "posts": [], "comments": []};
@@ -106,21 +107,6 @@ angular.module('sbAdminApp')
             }
         };
 
-        $scope.getTagTable = function (start, end, limit) {
-            var Tags = $resource(config.apiUrl + "tags/"+start+"/"+end+"/"+limit).query().$promise;
-            Tags.then(function (result) {
-                return result;
-            });
-        };
-
-        $scope.updateTagTable = function () {
-            //$scope.tags = $scope.getTagTable($scope.selected.start.getTime(), $scope.selected.end.getTime(), $scope.tableSizeChoice);
-            var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+ $scope.selected.end.getTime()+"/"+$scope.tableSizeChoice).query().$promise;
-            Tags.then(function (result) {
-                $scope.tags = result;
-            });
-            //$scope.$apply();
-        };
 
         /*** Sigma Event Catcher ***/
         $scope.eventCatcher = function (e) {

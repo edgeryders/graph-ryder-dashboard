@@ -150,22 +150,55 @@ angular
             }
         }
     })
-        .state('dashboard.settings',{
-            url:'/settings',
-            controller: 'SettingsCtrl',
-            templateUrl:'views/dashboard/settings.html',
-            resolve: {
-                loadMyFiles:function($ocLazyLoad) {
-                    return $ocLazyLoad.load({
-                        name:'sbAdminApp',
-                        files:[
-                            'scripts/controllers/main.js',
-                            'scripts/controllers/settingsController.js'
-                        ]
-                    })
-                }
+    .state('dashboard.tagViewFull',{
+        url:'/tagViewFull',
+        controller: 'TagViewFullCtrl',
+        templateUrl:'views/dashboard/tag-view-full.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/tagViewFullController.js',
+                        'scripts/controllers/modalInstanceController.js'
+                    ]
+                })
             }
-        })
+        }
+    })
+    .state('dashboard.settings',{
+        url:'/settings',
+        controller: 'SettingsCtrl',
+        templateUrl:'views/dashboard/settings.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/settingsController.js'
+                    ]
+                })
+            }
+        }
+    })
+    .state('dashboard.about',{
+        url:'/about',
+        controller: 'AboutCtrl',
+        templateUrl:'views/dashboard/about.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/aboutController.js'
+                    ]
+                })
+            }
+        }
+    })
   }]);
 
     
