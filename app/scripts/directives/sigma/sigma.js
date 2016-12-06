@@ -70,16 +70,16 @@ angular.module('sbAdminApp')
                 scope.$watch('locate', function (newVal, oldVal) {
                     if(newVal.toString() != oldVal.toString()) {
                         var nodes = s.graph.nodes().filter(function (n) {
-                            if (n.uid != undefined && scope.locate.indexOf(parseInt(n.uid)) != -1) {
+                            if (n.user_id != undefined && scope.locate.indexOf(parseInt(n.user_id)) != -1) {
                                 //todo use color code
                                 n.color = "rgb(51,122,183)";
                                 return true;
                             }
-                            else if (n.pid != undefined && scope.locate.indexOf(parseInt(n.pid)) != -1) {
+                            else if (n.post_id != undefined && scope.locate.indexOf(parseInt(n.post_id)) != -1) {
                                 n.color = "rgb(92,184,92)";
                                 return true;
                             }
-                            else if (n.cid != undefined && scope.locate.indexOf(parseInt(n.cid)) != -1) {
+                            else if (n.comment_id != undefined && scope.locate.indexOf(parseInt(n.comment_id)) != -1) {
                                 n.color = "rgb(240, 173, 78)";
                                 return true;
                             }
@@ -99,17 +99,17 @@ angular.module('sbAdminApp')
             /**** timeFilter ****/
             scope.$watch('timeFilter', function () {
                 s.graph.nodes().filter(function (n) {
-                    if (n.uid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
+                    if (n.user_id != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         //todo use color code
                         n.color = "rgb(51,122,183)";
                         return true;
                     }
-                    else if (n.pid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
+                    else if (n.post_id != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         //todo use color code
                         n.color = "rgb(92,184,92)";
                         return true;
                     }
-                    else if  (n.cid != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
+                    else if  (n.comment_id != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
                         n.color = "rgb(240, 173, 78)";
                         return true;
                     }
