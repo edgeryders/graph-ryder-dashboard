@@ -18,6 +18,10 @@ angular.module('sbAdminApp')
         $scope.locate = "";
         $scope.requestFullTagGraph = false;
         $scope.filterLevels = ["1","2","3","4","5","6","7","8"];
+        $scope.interactor = "navigate";
+        $scope.showTagCommonContent = false;
+        $scope.tag_src = {id: -1, label:""};
+        $scope.tag_dst = {id: -1, label:""};
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
@@ -26,7 +30,7 @@ angular.module('sbAdminApp')
                 //$scope.tableSizeChoice = 10;
                 $scope.selected.start= new Date(0);
                 $scope.selected.end= new Date(Date.now());
-                $scope.drawGraph(2);
+                $scope.generateGraph(2);
                 //load tags then create the graph
                 /*var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/10").query().$promise;
                 Tags.then(function (result) {
@@ -40,17 +44,21 @@ angular.module('sbAdminApp')
         /***** Global view *****/
         $scope.tagGraphSigma = [];
 
-        $scope.drawGraph = function () {
+        $scope.drawGraph = function (result) {
+            var drawGraph = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
+            var drawgraph = drawGraph.get();
+            drawgraph.$promise.then(function (result) {
+                $scope.tagGraphSigma = result;
+            });
+        };
+
+        $scope.generateGraph = function () {
             //$scope.filter_occ = filter_occ;
-            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filterOcc + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime());
+            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filterOcc + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
             //var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + $scope.tag_id);
             var createGraphPromise = createGraph.get();
             createGraphPromise.$promise.then(function (result) {
-                var drawGraph = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
-                var drawgraph = drawGraph.get();
-                drawgraph.$promise.then(function (result) {
-                    $scope.tagGraphSigma = result;
-                });
+                $scope.drawGraph();
             });
         };
 
@@ -95,7 +103,7 @@ angular.module('sbAdminApp')
                 Tags.then(function (result) {
                     $scope.tags = result;
                     if($scope.tags[0])
-                        $scope.drawGraph($scope.tag_id);
+                        $scope.generateGraph($scope.tag_id);
                 });
                 $scope.$apply();
             } else {
@@ -112,34 +120,42 @@ angular.module('sbAdminApp')
         $scope.eventCatcher = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    if(e.data.node.tag_id != undefined && e.data.captor.shiftKey) {
-                        $scope.drawGraph(e.data.node.tag_id);
+                    if (e.data.node.tag_id != undefined && (e.data.captor.ctrlKey || $scope.interactor == "information")) {
+                        $scope.elementType = "tag";
+                        $scope.elementId = e.data.node.tag_id;
                     }
                     else {
-                        if(e.data.node.user_id != undefined) {
-                            $scope.elementType = "user";
-                            $scope.elementId = e.data.node.user_id
-                        }
-                        else if (e.data.node.post_id != undefined) {
-                            $scope.elementType = "post";
-                            $scope.elementId = e.data.node.post_id;
-                        }
-                        else if (e.data.node.comment_id != undefined) {
-                            $scope.elementType = "comment";
-                            $scope.elementId = e.data.node.comment_id;
-                        }
-                        else if (e.data.node.tag_id != undefined) {
-                            $scope.elementType = "tag";
-                            $scope.elementId = e.data.node.tag_id;
-                        }
-                        else if (e.data.node.annotation_id != undefined) {
-                            $scope.elementType = "annotation";
-                            $scope.elementId = e.data.node.annotation_id;
-                        }
-                        else {
-                            console.log("Unexpected node: "+e.data.node);
-                        }
-                        $scope.openModal($scope.elementType, $scope.elementId);
+                        console.log("Unexpected node: "+e.data.node);
+                    }
+                    $scope.openModal($scope.elementType, $scope.elementId);
+                    break;
+                case 'clickEdges':
+                    if(e.data.edge != undefined && e.data.edge.length > 0 && ((e.data.captor.ctrlKey || $scope.interactor == "information") || (e.data.captor.shiftKey || $scope.interactor == "focus"))) {
+                        $scope.content = [];
+                        $scope.showTagCommonContent = true;
+                        var tagPromises = [];
+                        // Create promises array to wait all data until load
+                        tagPromises.push($resource(config.apiUrl + "tags/common/content/"+e.data.edge[0].tag_1+"/"+e.data.edge[0].tag_2+"/"+ $scope.selected.start.getTime()+"/"+ $scope.selected.end.getTime()).query().$promise);
+                        tagPromises.push($resource(config.apiUrl + 'tag/'+e.data.edge[0].tag_1).get().$promise);
+                        tagPromises.push($resource(config.apiUrl + 'tag/'+e.data.edge[0].tag_2).get().$promise);
+                        tagPromises[0].then(function(result) {
+                            //console.log(result);
+                            $scope.content = result;
+                        });
+                        tagPromises[1].then(function(result) {
+                            //console.log(result);
+                            $scope.tag_src.id = result.tag_id;
+                            $scope.tag_src.label = result.label;
+                          //  $scope.tag_src = result;
+                        });
+                        tagPromises[2].then(function(result) {
+                            $scope.tag_dst.id = result.tag_id;
+                            $scope.tag_dst.label = result.label;
+                        });
+                        e.data.edge[0].color = 'rgb(0,0,0)';
+                        //TODO tweek sigma renderer for immediate response
+                        //var s = e.data.renderer;
+                        //s.refresh();
                     }
                     break;
             }
@@ -174,6 +190,24 @@ angular.module('sbAdminApp')
                 }
             });
         };
+
+        /******** Interactor Manager ********/
+        $scope.clearInteractor = function() {
+            document.getElementById("interactorNavigate").className="btn btn-default";
+            document.getElementById("interactorInformation").className="btn btn-default";
+        }
+
+        $scope.setInteractorNavigate = function () {
+            $scope.clearInteractor();
+            $scope.interactor="navigate";
+            document.getElementById("interactorNavigate").className="btn btn-primary";
+        }
+
+        $scope.setInteractorInformation = function () {
+            $scope.clearInteractor();
+            $scope.interactor="information";
+            document.getElementById("interactorInformation").className="btn btn-primary";
+        }
 
         /*** Search Bar Catcher *****/
         $rootScope.$watch('search', function(newVal) {

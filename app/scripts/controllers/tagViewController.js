@@ -17,7 +17,12 @@ angular.module('sbAdminApp')
         $scope.tagel = false;
         $scope.locate = "";
         $scope.tag_id = 1879;
+        $scope.tag_src = {id: $scope.tag_id, label:""};
+        $scope.tag_dst = {id: -1, label:""};
         $scope.requestFullTagGraph = false;
+        $scope.showTagCommonContent = false;
+        $scope.tableSizeChoice = '10';
+        $scope.interactor = "navigate";
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
@@ -30,7 +35,7 @@ angular.module('sbAdminApp')
                 Tags.then(function (result) {
                     $scope.tags = result;
                     if($scope.tags[0])
-                        $scope.drawGraph($scope.tags[0].id);
+                        $scope.generateGraph($scope.tags[0].id);
                 });
             }
         });
@@ -38,7 +43,15 @@ angular.module('sbAdminApp')
         /***** Global view *****/
         $scope.tagGraphSigma = [];
 
-        $scope.drawGraph = function (tag_id) {
+        $scope.drawGraph = function () {
+            var drawGraph = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
+            var drawgraph = drawGraph.get();
+            drawgraph.$promise.then(function (result) {
+                $scope.tagGraphSigma = result;
+            });
+        };
+
+        $scope.generateGraph = function (tag_id) {
             $scope.tag_id = tag_id;
             if ($scope.requestFullTagGraph) {
                 var createGraph = $resource(config.apiUrl + 'generateTagFocusGraph/' + $scope.tag_id + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime());
@@ -48,12 +61,12 @@ angular.module('sbAdminApp')
             //var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + $scope.tag_id);
             var createGraphPromise = createGraph.get();
             createGraphPromise.$promise.then(function (result) {
-                var drawGraph = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
-                var drawgraph = drawGraph.get();
-                drawgraph.$promise.then(function (result) {
-                    $scope.tagGraphSigma = result;
-                });
+                $scope.drawGraph();
             });
+        };
+
+        $scope.switchTagGraph = function() {
+            $scope.generateGraph($scope.tag_id);
         };
 
         /*** TimeLine ****/
@@ -94,7 +107,7 @@ angular.module('sbAdminApp')
                 Tags.then(function (result) {
                     $scope.tags = result;
                     if($scope.tags[0])
-                        $scope.drawGraph($scope.tag_id);
+                        $scope.generateGraph($scope.tag_id);
                 });
                 $scope.$apply();
             } else {
@@ -126,10 +139,10 @@ angular.module('sbAdminApp')
         $scope.eventCatcher = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    if(e.data.node.tag_id != undefined && e.data.captor.shiftKey) {
-                        $scope.drawGraph(e.data.node.tag_id);
+                    if(e.data.node.tag_id != undefined && (e.data.captor.shiftKey || $scope.interactor == "focus")) {
+                        $scope.generateGraph(e.data.node.tag_id);
                     }
-                    else {
+                    if(e.data.node.tag_id != undefined && (e.data.captor.ctrlKey || $scope.interactor == "information")) {
                         if(e.data.node.user_id != undefined) {
                             $scope.elementType = "user";
                             $scope.elementId = e.data.node.user_id
@@ -154,6 +167,35 @@ angular.module('sbAdminApp')
                             console.log("Unexpected node: "+e.data.node);
                         }
                         $scope.openModal($scope.elementType, $scope.elementId);
+                    }
+                    break;
+                case 'clickEdges':
+                    if(e.data.edge != undefined && e.data.edge.length > 0 && ((e.data.captor.ctrlKey || $scope.interactor == "information") || (e.data.captor.shiftKey || $scope.interactor == "focus"))) {
+                        $scope.content = [];
+                        $scope.showTagCommonContent = true;
+                        var tagPromises = [];
+                        // Create promises array to wait all data until load
+                        tagPromises.push($resource(config.apiUrl + "tags/common/content/"+e.data.edge[0].tag_1+"/"+e.data.edge[0].tag_2+"/"+ $scope.selected.start.getTime()+"/"+ $scope.selected.end.getTime()).query().$promise);
+                        tagPromises.push($resource(config.apiUrl + 'tag/'+e.data.edge[0].tag_1).get().$promise);
+                        tagPromises.push($resource(config.apiUrl + 'tag/'+e.data.edge[0].tag_2).get().$promise);
+                        tagPromises[0].then(function(result) {
+                            //console.log(result);
+                            $scope.content = result;
+                        });
+                        tagPromises[1].then(function(result) {
+                            //console.log(result);
+                            $scope.tag_src.id = result.tag_id;
+                            $scope.tag_src.label = result.label;
+                          //  $scope.tag_src = result;
+                        });
+                        tagPromises[2].then(function(result) {
+                            $scope.tag_dst.id = result.tag_id;
+                            $scope.tag_dst.label = result.label;
+                        });
+                        e.data.edge[0].color = 'rgb(0,0,0)';
+                        //TODO tweek sigma renderer for immediate response
+                        //var s = e.data.renderer;
+                        //s.refresh();
                     }
                     break;
             }
@@ -189,6 +231,31 @@ angular.module('sbAdminApp')
             });
         };
 
+        /******** Interactor Manager ********/
+        $scope.clearInteractor = function() {
+            document.getElementById("interactorNavigate").className="btn btn-default";
+            document.getElementById("interactorInformation").className="btn btn-default";
+            document.getElementById("interactorFocus").className="btn btn-default";
+        }
+
+        $scope.setInteractorNavigate = function () {
+            $scope.clearInteractor();
+            $scope.interactor="navigate";
+            document.getElementById("interactorNavigate").className="btn btn-primary";
+        }
+
+        $scope.setInteractorInformation = function () {
+            $scope.clearInteractor();
+            $scope.interactor="information";
+            document.getElementById("interactorInformation").className="btn btn-primary";
+        }
+
+        $scope.setInteractorFocus = function () {
+            $scope.clearInteractor();
+            $scope.interactor="focus";
+            document.getElementById("interactorFocus").className="btn btn-primary";
+        }
+
         /*** Search Bar Catcher *****/
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
@@ -202,6 +269,9 @@ angular.module('sbAdminApp')
                 }
                 else if( newVal.cid != undefined) {
                     locateTmp.push(newVal.cid);
+                }
+                else if( newVal.tag_id != undefined) {
+                    $scope.generateGraph(newVal.tag_id);
                 }
                 if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
                     $timeout(function() {$scope.locate = locateTmp;}, 5000);
