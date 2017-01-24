@@ -15,6 +15,8 @@ angular.module('sbAdminApp')
         /**** Init ****/
         //edge label default
         $scope.tagel = false;
+        $scope.tagnl = false;
+        $scope.nodelabelthreshold = 10;
         $scope.locate = "";
         $scope.requestFullTagGraph = false;
         $scope.filterLevels = ["1","2","3","4","5","6","7","8"];
@@ -40,6 +42,14 @@ angular.module('sbAdminApp')
                 });*/
             }
         });
+
+        $scope.switchForceNodeLabel = function() {
+            if ($scope.tagnl) {
+                $scope.nodelabelthreshold = 0;
+            } else {
+                $scope.nodelabelthreshold = 10;
+            }
+        };
 
         /***** Global view *****/
         $scope.tagGraphSigma = [];
@@ -123,11 +133,11 @@ angular.module('sbAdminApp')
                     if (e.data.node.tag_id != undefined && (e.data.captor.ctrlKey || $scope.interactor == "information")) {
                         $scope.elementType = "tag";
                         $scope.elementId = e.data.node.tag_id;
+                        $scope.openModal($scope.elementType, $scope.elementId);
                     }
                     else {
                         console.log("Unexpected node: "+e.data.node);
                     }
-                    $scope.openModal($scope.elementType, $scope.elementId);
                     break;
                 case 'clickEdges':
                     if(e.data.edge != undefined && e.data.edge.length > 0 && ((e.data.captor.ctrlKey || $scope.interactor == "information") || (e.data.captor.shiftKey || $scope.interactor == "focus"))) {

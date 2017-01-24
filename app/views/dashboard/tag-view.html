@@ -16,7 +16,7 @@
         <div class="col-lg-6" >
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="tagel" > labels on egdes
+                    <i class="fa fa-clock-o fa-fw" ></i> Global view &nbsp;&nbsp; <input type="checkbox" ng-model="tagnl" ng-click="switchForceNodeLabel()"> &nbsp;+<input type="range" value="10" max="10" style="width: 80px; display: inline-block;" ng-model="nodelabelthreshold">- &nbsp; labels on nodes &nbsp;&nbsp; <input type="checkbox" ng-model="tagel" > labels on egdes
                     <br>Drawing directive: <input type="checkbox" ng-model="requestFullTagGraph" ng-click="switchTagGraph()" > return complete tag-tag graph (slower)
                     <form ng-submit="drawGraph()">
                         algo :
@@ -37,7 +37,7 @@
                             graph="tagGraphSigma"
                             width="100%" height="600px"
                             edge-labels="tagel"
-                            threshold=10
+                            threshold={{nodelabelthreshold}}
                             event-catcher="eventCatcher"
                             locate="locate"
                             time-filter="filter" >

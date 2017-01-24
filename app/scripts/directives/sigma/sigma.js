@@ -135,6 +135,14 @@ angular.module('sbAdminApp')
                 s.graph.read(scope.graph);
                 s.refresh();
             });
+            scope.$watch('threshold', function(newVal) {
+                s.graph.clear();
+                s.settings({
+                    labelThreshold: newVal
+                });
+                s.graph.read(scope.graph);
+                s.refresh();
+            });
             scope.$watch('width', function() {
                 element.children().css("width",scope.width);
                 s.refresh();

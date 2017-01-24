@@ -15,6 +15,8 @@ angular.module('sbAdminApp')
         /**** Init ****/
         //edge label default
         $scope.tagel = false;
+        $scope.tagnl = false;
+        $scope.nodelabelthreshold = 10;
         $scope.locate = "";
         $scope.tag_id = 1879;
         $scope.tag_src = {id: $scope.tag_id, label:""};
@@ -39,6 +41,14 @@ angular.module('sbAdminApp')
                 });
             }
         });
+
+        $scope.switchForceNodeLabel = function() {
+            if ($scope.tagnl) {
+                $scope.nodelabelthreshold = 0;
+            } else {
+                $scope.nodelabelthreshold = 10;
+            }
+        };
 
         /***** Global view *****/
         $scope.tagGraphSigma = [];
