@@ -7,9 +7,10 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $location, $timeout) {
+    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $location, $timeout, $compile) {
 
         /**** Init ****/
+        $scope.infoPanelParent = "infoPanelParent";
         // wait rootScope to be ready
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
@@ -61,7 +62,7 @@ angular.module('sbAdminApp')
                 case 'clickNode':
                     $scope.elementType = "user";
                     $scope.elementId = e.data.node.user_id;
-                    $scope.openModal($scope.elementType, $scope.elementId);
+                    $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     break;
                 case 'clickEdges':
                     if(e.data.edge != undefined && e.data.edge.length > 0) {
@@ -93,6 +94,16 @@ angular.module('sbAdminApp')
                     }
                     break;
             }
+        };
+
+        /********* Info Panel ***************/
+        $scope.openInfoPanel = function(elementType, elementId) {
+            var mod = document.createElement("panel-info");
+            mod.setAttribute("type", elementType);
+            mod.setAttribute("id", elementId);
+            mod.setAttribute("parent", $scope.infoPanelParent);
+            jQuery("#"+ $scope.infoPanelParent).append(mod);
+            $compile(mod)($scope);
         };
 
         /********* Modal  ***************/
@@ -141,7 +152,7 @@ angular.module('sbAdminApp')
                         $scope.elementType = "comment";
                         $scope.elementId = e.data.node.comment_id;
                     }
-                    $scope.openModal($scope.elementType, $scope.elementId);
+                    $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     break;
             }
         };

@@ -10,7 +10,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('TagViewFullCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout) {
+    .controller('TagViewFullCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout, $compile) {
 
         /**** Init ****/
         //edge label default
@@ -24,6 +24,7 @@ angular.module('sbAdminApp')
         $scope.showTagCommonContent = false;
         $scope.tag_src = {id: -1, label:""};
         $scope.tag_dst = {id: -1, label:""};
+        $scope.infoPanelParent = "infoPanelParent";
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
@@ -133,7 +134,7 @@ angular.module('sbAdminApp')
                     if (e.data.node.tag_id != undefined && (e.data.captor.ctrlKey || $scope.interactor == "information")) {
                         $scope.elementType = "tag";
                         $scope.elementId = e.data.node.tag_id;
-                        $scope.openModal($scope.elementType, $scope.elementId);
+                        $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     }
                     else {
                         console.log("Unexpected node: "+e.data.node);
@@ -169,6 +170,16 @@ angular.module('sbAdminApp')
                     }
                     break;
             }
+        };
+
+        /********* Info Panel ***************/
+        $scope.openInfoPanel = function(elementType, elementId) {
+            var mod = document.createElement("panel-info");
+            mod.setAttribute("type", elementType);
+            mod.setAttribute("id", elementId);
+            mod.setAttribute("parent", $scope.infoPanelParent);
+            jQuery("#"+ $scope.infoPanelParent).append(mod);
+            $compile(mod)($scope);
         };
 
         /********* Modal  ***************/

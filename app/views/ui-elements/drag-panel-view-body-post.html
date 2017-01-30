@@ -1,0 +1,53 @@
+<!-- panel for post -->
+    <div class="panel-body">
+        <uib-tabset justified="true">
+            <uib-tab index="0" heading="Body" >
+                <div style="max-height: 400px; overflow: auto;">{{::post.content}}</div>
+            </uib-tab>
+            <uib-tab index="1" heading="Comments ({{::post.comments.length}})" disable="::post.comments.length == 0" >
+                <div class="table-responsive" style="max-height: 400px; overflow: auto;" >
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Comment</th>
+                        <th>Author</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="comment in ::post.comments" >
+                        <td>
+                            <button id="{{ ::comment.comment_id }}" class="btn btn-warning" ng-click="::openInfoPanel('comment', $event)" >{{ ::comment.comment_id }}</button>
+                        </td>
+                        <td><button id="{{ ::comment.author.user_id }}" class="btn btn-primary" ng-click="::openInfoPanel('user', $event)">{{ ::comment.author.name }}</button></td>
+                        <td>{{ ::comment.title }}</td>
+                        <td>{{ getDate(comment.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </uib-tab>
+            <uib-tab index="2" heading="Tags ({{::post.annotations.length}})" disable="::post.annotations.length == 0" >
+                <div class="table-responsive" style="max-height: 400px; overflow: auto;" >
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Label</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="annotation in ::post.annotations" >
+                        <td><button id="{{ ::annotation.tag_id }}" class="btn btn-danger" ng-click="::openInfoPanel('tag', $event)">{{ ::annotation.tag_id }}</button></td>
+                        <td>{{ ::annotation.tag_label }}</td>
+                        <td>{{ getDate(annotation.annotation_timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+<!-- /.panel-content -->

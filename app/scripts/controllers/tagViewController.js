@@ -10,7 +10,7 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('TagViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout) {
+    .controller('TagViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout, $compile) {
 
         /**** Init ****/
         //edge label default
@@ -25,6 +25,7 @@ angular.module('sbAdminApp')
         $scope.showTagCommonContent = false;
         $scope.tableSizeChoice = '10';
         $scope.interactor = "navigate";
+        $scope.infoPanelParent = "infoPanelParent";
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
@@ -176,7 +177,7 @@ angular.module('sbAdminApp')
                         else {
                             console.log("Unexpected node: "+e.data.node);
                         }
-                        $scope.openModal($scope.elementType, $scope.elementId);
+                        $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     }
                     break;
                 case 'clickEdges':
@@ -209,6 +210,16 @@ angular.module('sbAdminApp')
                     }
                     break;
             }
+        };
+
+        /********* Info Panel ***************/
+        $scope.openInfoPanel = function(elementType, elementId) {
+            var mod = document.createElement("panel-info");
+            mod.setAttribute("type", elementType);
+            mod.setAttribute("id", elementId);
+            mod.setAttribute("parent", $scope.infoPanelParent);
+            jQuery("#"+ $scope.infoPanelParent).append(mod);
+            $compile(mod)($scope);
         };
 
         /********* Modal  ***************/

@@ -10,12 +10,13 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout) {
+    .controller('GlobalCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout, $compile) {
 
         /**** Init ****/
         //edge label default
         $scope.globalel = false;
         $scope.locate = "";
+        $scope.infoPanelParent = "infoPanelParent";
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
@@ -131,7 +132,6 @@ angular.module('sbAdminApp')
         $scope.eventCatcher = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    console.log(e.data.captor);
                     if(e.data.node.uid != undefined && e.data.captor.altKey) {
                         postTypeAddUser(e.data.node.uid, e.data.node.name, e.data.captor.shiftKey);
                     }
@@ -159,10 +159,20 @@ angular.module('sbAdminApp')
                         else {
                             console.log("Unexpected node: "+e.data.node);
                         }
-                        $scope.openModal($scope.elementType, $scope.elementId);
+                        $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     }
                     break;
             }
+        };
+
+        /********* Info Panel ***************/
+        $scope.openInfoPanel = function(elementType, elementId) {
+            var mod = document.createElement("panel-info");
+            mod.setAttribute("type", elementType);
+            mod.setAttribute("id", elementId);
+            mod.setAttribute("parent", $scope.infoPanelParent);
+            jQuery("#"+ $scope.infoPanelParent).append(mod);
+            $compile(mod)($scope);
         };
 
         /********* Modal  ***************/

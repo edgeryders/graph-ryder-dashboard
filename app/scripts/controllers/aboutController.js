@@ -12,5 +12,4 @@
 angular.module('sbAdminApp')
     .controller('AboutCtrl', function ($scope, $resource, config, $q) {
 
-
 });

@@ -1,0 +1,9 @@
+<!-- panel for comment -->
+<div class="panel-title">
+    <h4 class="modal-title" ><button class="btn btn-warning" id="{{::comment.comment_id}}" ng-click="openInfoPanel('comment', $event)">{{::comment.comment_id}}</button>&nbsp;&nbsp;{{::comment.title}}</h4>
+    {{ getDate(comment.timestamp) }}
+    Author :&nbsp;&nbsp;<button class="btn btn-primary" id="{{::comment.author.user_id}}" ng-click="openInfoPanel('user', $event)">{{::comment.author.user_name}}</button><br>
+    Post target :&nbsp;&nbsp;<button class="btn btn-success" id="{{::comment.post.post_id}}" ng-click="openInfoPanel('post', $event)">{{::comment.post.post_id}}</button> : {{::comment.post.post_title}} <br>
+    <a href="https://edgeryders.eu/comment/{{::comment.comment_id}}#comment-{{::comment.comment_id}}" target="_blank">Original content on Edgeryders</a>
+</div>
+<!-- /.panel-content -->

@@ -7,9 +7,10 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-  .controller('DoiCtrl', function ($scope, $resource, config, $rootScope, $uibModal, $location) {
+  .controller('DoiCtrl', function ($scope, $resource, config, $rootScope, $uibModal, $location, $compile) {
 
       $scope.type = "doi";
+      $scope.infoPanelParent = "infoPanelParent";
 
       /***** Init ******/
       // When rootScope is ready load the graph
@@ -83,10 +84,21 @@ angular.module('sbAdminApp')
                       $scope.elementType = "comment";
                       $scope.elementId = e.data.node.comment_id;
                   }
-                  $scope.openModal($scope.elementType, $scope.elementId);
+                  $scope.openInfoPanel($scope.elementType, $scope.elementId);
                   break;
           }
       };
+
+      /********* Info Panel ***************/
+      $scope.openInfoPanel = function(elementType, elementId) {
+          var mod = document.createElement("panel-info");
+          mod.setAttribute("type", elementType);
+          mod.setAttribute("id", elementId);
+          mod.setAttribute("parent", $scope.infoPanelParent);
+          jQuery("#"+ $scope.infoPanelParent).append(mod);
+          $compile(mod)($scope);
+      };
+
       /********* Modal  ***************/
       $scope.openModal = function (type, id) {
           $scope.elementType = type;

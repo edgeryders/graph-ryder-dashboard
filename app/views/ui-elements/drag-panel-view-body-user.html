@@ -1,0 +1,64 @@
+<!-- panel for user -->
+    <div class="panel-body">
+        <uib-tabset justified="true">
+            <!--<uib-tab index="0" heading="Infos">
+                Active : {{::user.active}}<br>
+                Facebook : {{::user.url_facebook}}<br>
+                Twitter : {{::user.url_twitter}}<br>
+                WebSite : {{::user.url_website}}<br>
+                Email : {{::user.email}}<br>
+                Based : {{::user.location}}<br>
+                Age : {{::user.age}}<br>
+            </uib-tab>
+            <uib-tab index="1" heading="Biography" disable="!user.biography" ><div style="max-height: 400px; overflow: auto;">{{::user.biography}}</div></uib-tab>-->
+            <uib-tab index="0" heading="Posts ({{::user.posts.length}})" disable="::user.posts.length == 0">
+                <div class="table-responsive" style="max-height: 300px; overflow: auto;">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Post</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="post in ::user.posts" >
+                        <td>
+                            <button id="{{::post.post_id}}" class="btn btn-success" ng-click="::openInfoPanel('post', $event)" >{{ ::post.post_id }}</button>
+                        </td>
+                        <td>{{ ::post.label }}</td>
+                        <td>{{ getDate(post.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </uib-tab>
+            <uib-tab index="1" heading="Comments ({{::user.comments.length}})" disable="::user.comments.length == 0" >
+                <div class="table-responsive" style="max-height: 300px; overflow: auto;">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Comment</th>
+                        <th>Title</th>
+                        <th>Post</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="comment in ::user.comments" >
+                        <td>
+                            <button id="{{::comment.comment_id}}" class="btn btn-warning" ng-click="::openInfoPanel('comment', $event)" >{{ ::comment.comment_id }}</button>
+                        </td>
+                        <td>{{ ::comment.label }}</td>
+                        <td>
+                            <button id="{{::comment.comment_parent_post_id}}" class="btn btn-success" ng-click="::openInfoPanel('post', $event)" >{{ ::comment.comment_parent_post_id }}</button>
+                        </td>
+                        <td>{{ getDate(comment.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+<!-- /.panel-content -->

@@ -2,13 +2,14 @@
     <!--div class="row">
         <div class="col-lg-12">
             <h5> Color code:
-                <button class="btn btn-primary" style="opacity: 1;" ng-click="openModal('all users', 0)">Users</button>
-                <button class="btn btn-success" style="opacity: 1;" ng-click="openModal('all posts', 0)">Posts</button>
-                <button class="btn btn-warning" style="opacity: 1;" ng-click="openModal('all comments', 0)">Comments</button>
-                <button class="btn btn-danger" style="opacity: 1;" ng-click="openModal('all tags', 0)">Tags</button>
+                <button class="btn btn-primary" style="opacity: 1;" ng-click="openInfoPanel('all users', 0)">Users</button>
+                <button class="btn btn-success" style="opacity: 1;" ng-click="openInfoPanel('all posts', 0)">Posts</button>
+                <button class="btn btn-warning" style="opacity: 1;" ng-click="openInfoPanel('all comments', 0)">Comments</button>
+                <button class="btn btn-danger" style="opacity: 1;" ng-click="openInfoPanel('all tags', 0)">Tags</button>
             </h5>
         </div>
     </div-->
+    <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
     &nbsp;
     <div class="row">
         <div class="col-lg-12" >
@@ -65,7 +66,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <div class="pull-left" ng-show="showTagCommonContent">Content about <button class="btn btn-danger" ng-click="openModal('tag', tag_src.id)" >{{ tag_src.label }}</button> and <button  class="btn btn-danger" ng-click="openModal('tag', tag_dst.id)" >{{ tag_dst.label }}</button>.</div> <div class="pull-right"><button class="btn btn-default" ng-click="showTagCommonContent=false" >Clear</button></div>
+                        <div class="pull-left" ng-show="showTagCommonContent">Content about <button class="btn btn-danger" ng-click="openInfoPanel('tag', tag_src.id)" >{{ tag_src.label }}</button> and <button  class="btn btn-danger" ng-click="openInfoPanel('tag', tag_dst.id)" >{{ tag_dst.label }}</button>.</div> <div class="pull-right"><button class="btn btn-default" ng-click="showTagCommonContent=false" >Clear</button></div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -78,13 +79,13 @@
                             <tbody>
                             <tr ng-repeat="elem in content" >
                                 <td>
-                                    <button ng-show="elem.entity_type=='comment'" class="btn btn-warning" ng-click="openModal('comment', elem.id)" >{{ elem.id }}</button>
-                                    <button ng-show="elem.entity_type=='post'" class="btn btn-success" ng-click="openModal('post', elem.id)" >{{ elem.id }}</button>
+                                    <button ng-show="elem.entity_type=='comment'" class="btn btn-warning" ng-click="openInfoPanel('comment', elem.id)" >{{ elem.id }}</button>
+                                    <button ng-show="elem.entity_type=='post'" class="btn btn-success" ng-click="openInfoPanel('post', elem.id)" >{{ elem.id }}</button>
                                 </td>
                                 <td>{{ elem.label }}</td>
                                 <td>{{ getDate(elem.timestamp) }}</td>
                                 <td>
-                                    <button class="btn btn-primary" ng-click="openModal('user', elem.user_id)" >{{ elem.user_label }}</button>
+                                    <button class="btn btn-primary" ng-click="openInfoPanel('user', elem.user_id)" >{{ elem.user_label }}</button>
                                 </td>
                             </tr>
                             </tbody>

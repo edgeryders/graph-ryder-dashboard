@@ -42,7 +42,8 @@ angular
                       'scripts/directives/sidebar/sidebar.js',
                       'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
                       'scripts/directives/sigma/sigma.js',
-                      'scripts/directives/timeLine/timeLine.js'
+                      'scripts/directives/timeLine/timeLine.js',
+                      'scripts/directives/panelInfo/panelInfo.js'
                   ]
               });
               var prom2 = $ocLazyLoad.load({
