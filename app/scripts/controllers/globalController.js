@@ -26,6 +26,22 @@ angular.module('sbAdminApp')
             }
         });
 
+        /***** Wordcloud *****/
+        if (WordCloud.isSupported) {
+            var startTime = new Date(0);
+            var endTime = new Date(Date.now());
+            var limit = 200;
+            var Tags = $resource(config.apiUrl + "tags/"+startTime.getTime()+"/"+ endTime.getTime()+"/"+limit).query().$promise;
+            Tags.then(function (result) {
+                var list = [];
+                for (var i=0; i< limit; i++) {
+                  list.push([result[i]["label"], result[i]["count"], result[i]["id"]])
+                }
+                WordCloud.minFontSize = "10px"
+                WordCloud(document.getElementById('word_cloud'), {list:list, gridSize: 5, weightFactor: 0.6,   click: function(item) { $scope.openInfoPanel('tag', item[2]);}});
+            });
+        }
+
         /***** Global view *****/
         $scope.globalGraphSigma = [];
 
@@ -82,7 +98,7 @@ angular.module('sbAdminApp')
         };
 
         /*** Radar Chart ***/
-        var all = {name: "all"};
+        var all = {name: "opencare"};
         var postSelection = [all];
 
         // Call api and load postType
@@ -105,13 +121,13 @@ angular.module('sbAdminApp')
             if($scope.selected.end != undefined)
                 params.end = $scope.selected.end.getTime();
 
-            var Type = $resource(config.apiUrl + 'post/getType/', params);
+            var Type = $resource(config.apiUrl + 'status', params);
             var type = Type.get();
             type.$promise.then(function (result) {
                 $scope.postType.labels = result.labels;
                 if(postSelection.indexOf(all) != -1) {
                     $scope.postType.data = result.data;
-                    $scope.postType.series.push("all");
+                    $scope.postType.series.push("opencare");
                 }
                 else {
                     result.data.shift();
