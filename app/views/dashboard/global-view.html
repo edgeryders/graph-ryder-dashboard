@@ -17,8 +17,9 @@
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <time-line height="200" data="time_data" call-back="extent" ></time-line>
-                    Start date: {{selected.start}}
-                    End date: {{selected.end}}
+                    <div class="pull-left">Start date: {{selected.start}}
+                    &nbsp;&nbsp;End date: {{selected.end}}</div>
+                    <div class="pull-right"><button class="btn btn-default text-right" ng-click="resetTimeLine()" >Reset</button></div>
                 </div>
                 <!-- /.panel-body -->
             </div>

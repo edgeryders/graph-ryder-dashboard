@@ -17,30 +17,45 @@ angular.module('sbAdminApp')
         $scope.globalel = false;
         $scope.locate = "";
         $scope.infoPanelParent = "infoPanelParent";
+
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
                 $scope.layoutChoice = $rootScope.layout[12];
+                $scope.selected.start= new Date(0);
+                $scope.selected.end= new Date(Date.now());
                 $scope.drawGraph();
                 refreshPostType();
+                $scope.refreshWordcloud();
             }
         });
 
         /***** Wordcloud *****/
-        if (WordCloud.isSupported) {
-            var startTime = new Date(0);
-            var endTime = new Date(Date.now());
-            var limit = 200;
-            var Tags = $resource(config.apiUrl + "tags/"+startTime.getTime()+"/"+ endTime.getTime()+"/"+limit).query().$promise;
-            Tags.then(function (result) {
-                var list = [];
-                for (var i=0; i< limit; i++) {
-                  list.push([result[i]["label"], result[i]["count"], result[i]["id"]])
-                }
-                WordCloud.minFontSize = "10px"
-                WordCloud(document.getElementById('word_cloud'), {list:list, gridSize: 5, weightFactor: 0.6,   click: function(item) { $scope.openInfoPanel('tag', item[2]);}});
-            });
-        }
+        $scope.refreshWordcloud = function() {
+            if (WordCloud.isSupported) {
+                var startTime = new Date(0);
+                var endTime = new Date(Date.now());
+                if($scope.selected.start != undefined)
+                    startTime = $scope.selected.start;
+                if($scope.selected.end != undefined)
+                    endTime = $scope.selected.end;
+                var limit = 200;
+                var Tags = $resource(config.apiUrl + "tags/"+startTime.getTime()+"/"+ endTime.getTime()+"/"+limit).query().$promise;
+                Tags.then(function (result) {
+                    var list = [];
+                    for (var i=0; i< limit; i++) {
+                        if (result[i] != undefined) {
+                            list.push([result[i]["label"], result[i]["count"], result[i]["id"]])
+                        }
+                    }
+                    if (list.length < 1) {
+                        list.push(["none", 50, -1])
+                    }
+                    WordCloud.minFontSize = "10px"
+                    WordCloud(document.getElementById('word_cloud'), {list:list, gridSize: 5, weightFactor: 0.6,   click: function(item) { $scope.openInfoPanel('tag', item[2]);}});
+                });
+            }
+        };
 
         /***** Global view *****/
         $scope.globalGraphSigma = [];
@@ -84,11 +99,19 @@ angular.module('sbAdminApp')
             console.log(reject);
         });
 
+        $scope.resetTimeLine = function () {
+            $scope.selected.start= new Date(0);
+            $scope.selected.end= new Date(Date.now());
+            $scope.extent($scope.extent.start,  $scope.extent.end);
+            $scope.filter = {"start": $scope.selected.start.getTime(), "end": $scope.selected.end.getTime()};
+        }
+
         // Time selection have been made on the chart
         $scope.extent = function (start, end) {
-            if(!start && !end) //release signal
-                refreshPostType();
-            else {
+            if(!start && !end) { //release signal
+                //refreshPostType();
+                $scope.refreshWordcloud();
+            } else {
                 $scope.selected.start = start;
                 $scope.selected.end = end;
                 // Update sigma filter
@@ -183,6 +206,9 @@ angular.module('sbAdminApp')
 
         /********* Info Panel ***************/
         $scope.openInfoPanel = function(elementType, elementId) {
+            if (elementId < 0) {
+                return;
+            }
             var mod = document.createElement("panel-info");
             mod.setAttribute("type", elementType);
             mod.setAttribute("id", elementId);
