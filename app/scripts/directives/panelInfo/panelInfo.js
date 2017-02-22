@@ -42,6 +42,17 @@ return {
                 $("#"+idInfoPanel).remove();
             };
 
+            scope.stretchUpInfoPanel = function(idInfoPanel) {
+                var val = parseInt($("#"+idInfoPanel)[0].style.width);
+                if (val < 90)
+                    $("#"+idInfoPanel).css("width", val+15+"%");
+            };
+            scope.stretchDownInfoPanel = function(idInfoPanel) {
+                var val = parseInt($("#"+idInfoPanel)[0].style.width);
+                if (val > 15)
+                    $("#"+idInfoPanel).css("width", parseInt(val-15)+"%");
+            };
+
             scope.getDate = function (timestamp) {
                 function complete(val) {
                     if (val < 10)
@@ -113,6 +124,8 @@ return {
             mod.style = "position: absolute; z-index: "+scope.panelViewCrtZindex+"; width: 30%; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
             mod.innerHTML='<div class="panel-heading" ng-mousedown="bringInfoPanelUpward(\''+mod.id+'\')" >'+
                     '        <button type="button" class="close" aria-hidden="true" ng-click="closeInfoPanel(\''+mod.id+'\')" >&times;</button>'+
+                    '       <button type="button" class="close" aria-hidden="true" ng-click="stretchUpInfoPanel(\''+mod.id+'\')" >&plus;&nbsp;</button>'+
+                    '       <button type="button" class="close" aria-hidden="true" ng-click="stretchDownInfoPanel(\''+mod.id+'\')" >&ndash;&nbsp;</button>'+
                     '        <div id="panel-heading-content"><h4 class="modal-title" >Loading...</h4></div>'+
                     '    </div>';
             var footer ='<div class="panel-footer">'+
@@ -122,6 +135,7 @@ return {
             $("#"+mod.id).draggable({
               handle: ".panel-heading"
             });
+            $("#"+mod.id).resizable();
             $.ajax('views/ui-elements/drag-panel-view-head-'+scope.type+'.html', {success: 
               function(responseHeadData) {
                 $.ajax('views/ui-elements/drag-panel-view-body-'+scope.type+'.html', {success: 

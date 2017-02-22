@@ -6,8 +6,9 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Post</th>
+                        <th></th>
                         <th>Title</th>
+                        <th></th>
                         <th>Author</th>
                         <th>Date</th>
                     </tr>
@@ -15,12 +16,13 @@
                     <tbody>
                     <tr ng-repeat="post in ::tag.posts" >
                         <td>
-                            <button id="{{ ::post.post_id }}" class="btn btn-success" ng-click="openInfoPanel('post', $event)" >{{ ::post.post_id }}</button>
+                            <button id="{{ ::post.post_id }}" class="btn btn-success btn-sm" ng-click="openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" aria-hidden="true"></i></button>
                         </td>
                         <td> {{::post.post_title}}</td>
                         <td>
-                            <button id="{{ ::post.user_id }}" class="btn btn-primary" ng-click="openInfoPanel('user', $event)" >{{ ::post.user_name }}</button>
+                            <button id="{{ ::post.user_id }}" class="btn btn-primary btn-sm" ng-click="openInfoPanel('user', $event)" ><i class="fa fa-user" aria-hidden="true"></i></button>
                         </td>
+                        <td>{{ ::post.user_name }}</td>
                         <td>{{ getDate(post.post_timestamp) }}</td>
                     </tr>
                     </tbody>
@@ -32,8 +34,9 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Comment</th>
+                        <th></th>
                         <th>Title</th>
+                        <th></th>
                         <th>Author</th>
                         <!--<th>Post</th>-->
                         <th>Date</th>
@@ -42,12 +45,13 @@
                     <tbody>
                     <tr ng-repeat="comment in ::tag.comments" >
                         <td>
-                            <button id="{{ ::comment.comment_id }}" class="btn btn-warning" ng-click="openInfoPanel('comment', $event)" >{{ ::comment.comment_id }}</button>
+                            <button id="{{ ::comment.comment_id }}" class="btn btn-warning btn-sm" ng-click="openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" aria-hidden="true"></i></button>
                         </td>
                         <td> {{::comment.comment_title }} </td>
                         <td>
-                            <button id="{{ ::comment.user_id }}" class="btn btn-primary" ng-click="openInfoPanel('user', $event)" >{{ ::comment.user_name }}</button>
+                            <button id="{{ ::comment.user_id }}" class="btn btn-primary btn-sm" ng-click="openInfoPanel('user', $event)" ><i class="fa fa-user" aria-hidden="true"></i></button>
                         </td>
+                        <td>{{ ::comment.user_name }}</td>
                         <td>{{ getDate(comment.comment_timestamp) }}</td>
                     </tr>
                     </tbody>

@@ -1,8 +1,7 @@
 <!-- panel for post -->
 <div class="panel-title">
-    <h4 class="modal-title" ><button class="btn btn-success" id="{{::post.post_id}}" ng-click="openInfoPanel('post', $event)">{{::post.post_id}}</button>&nbsp;&nbsp;{{::post.title}}</h4>
-    {{ getDate(post.timestamp) }}
-    Author :&nbsp;&nbsp;<button class="btn btn-primary" id="{{::post.author.user_id}}" ng-click="openInfoPanel('user', $event)">{{::post.author.name}}</button> <br>
-    <a href="https://edgeryders.eu/node/{{::post.post_id}}" target="_blank">Original content on Edgeryders</a>
+    <h4 class="modal-title" ><button class="btn btn-success" id="{{::post.post_id}}" ng-click="openInfoPanel('post', $event)"><i class="fa fa-commenting-o" aria-hidden="true"></i></button>&nbsp;{{::post.title}}</h4>
+    {{ getDate(post.timestamp) }} &ndash; <button class="btn btn-primary btn-sm" id="{{::post.author.user_id}}" ng-click="openInfoPanel('user', $event)"><i class="fa fa-user" aria-hidden="true"></i></button> {{::post.author.name}}<br>
+    <a href="https://edgeryders.eu/node/{{::post.post_id}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i> Original content on Edgeryders</a>
 </div>
 <!-- /.panel-content -->

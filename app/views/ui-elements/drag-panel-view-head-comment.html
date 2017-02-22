@@ -1,9 +1,8 @@
 <!-- panel for comment -->
 <div class="panel-title">
-    <h4 class="modal-title" ><button class="btn btn-warning" id="{{::comment.comment_id}}" ng-click="openInfoPanel('comment', $event)">{{::comment.comment_id}}</button>&nbsp;&nbsp;{{::comment.title}}</h4>
-    {{ getDate(comment.timestamp) }}
-    Author :&nbsp;&nbsp;<button class="btn btn-primary" id="{{::comment.author.user_id}}" ng-click="openInfoPanel('user', $event)">{{::comment.author.user_name}}</button><br>
-    Post target :&nbsp;&nbsp;<button class="btn btn-success" id="{{::comment.post.post_id}}" ng-click="openInfoPanel('post', $event)">{{::comment.post.post_id}}</button> : {{::comment.post.post_title}} <br>
-    <a href="https://edgeryders.eu/comment/{{::comment.comment_id}}#comment-{{::comment.comment_id}}" target="_blank">Original content on Edgeryders</a>
+    <h4 class="modal-title" ><button class="btn btn-warning" id="{{::comment.comment_id}}" ng-click="openInfoPanel('comment', $event)"><i class="fa fa-comments-o" aria-hidden="true"></i></button>&nbsp;&nbsp;{{::comment.title}}</h4>
+    {{ getDate(comment.timestamp) }} &ndash; <button class="btn btn-primary btn-sm" id="{{::comment.author.user_id}}" ng-click="openInfoPanel('user', $event)"><i class="fa fa-user" aria-hidden="true"></i> </button> {{::comment.author.user_name}}<br>
+    <button class="btn btn-success btn-sm" id="{{::comment.post.post_id}}" ng-click="openInfoPanel('post', $event)"><i class="fa fa-commenting-o" aria-hidden="true"></i></button> {{::comment.post.post_title}}<br>
+    <a href="https://edgeryders.eu/comment/{{::comment.comment_id}}#comment-{{::comment.comment_id}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i> Original content on Edgeryders</a>
 </div>
 <!-- /.panel-content -->
