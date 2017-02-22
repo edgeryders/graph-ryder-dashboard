@@ -65,15 +65,17 @@ angular.module('sbAdminApp')
                 if(data.length != 0) {
                     var scale = data.users.concat(data.posts);
                     scale = scale.concat(data.comments);
+                    if (data.users)
+                        scale = scale.concat(data.users);
                     x.domain(d3.extent(scale, function (d) {
                         return d.timestamp;
                     }));
                     y1.domain(d3.extent(scale, function (d) {
                         return d.count;
                     }));
-                    // y2.domain(d3.extent(data.posts, function (d) {
+                    //y2.domain(d3.extent(data.posts, function (d) {
                     //     return d.count;
-                    // }));
+                    //}));
 
                     svg.append("g")
                         .attr("class", "x axis")

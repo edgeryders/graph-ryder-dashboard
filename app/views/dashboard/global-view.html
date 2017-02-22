@@ -2,66 +2,39 @@
     <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
     <div class="row">
         <div class="col-lg-12">
-            <h5> Color code :
-                <button class="btn btn-primary disabled" style="opacity: 1;">Users</button>
-                <button class="btn btn-success disabled" style="opacity: 1;">Posts</button>
-                <button class="btn btn-warning disabled" style="opacity: 1;">Comments</button>
-                <button class="btn btn-danger disabled" style="opacity: 1;">Tags</button>
+            <h5>
             </h5>
         </div>
         <!-- /.col-lg-6 -->
     </div>
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-7">
+            <h5>
+            <div class="btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-primary disabled btn-lg" style="opacity: 1;"><i class="fa fa-users" ></i>&nbsp; {{ DBStatus['Users'] }} Users</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-success disabled btn-lg" style="opacity: 1;"><i class="fa fa-commenting-o" ></i>&nbsp; {{ DBStatus['Posts'] }} Posts</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-warning disabled btn-lg" style="opacity: 1;"><i class="fa fa-comments-o" ></i>&nbsp; {{ DBStatus['Comments'] }} Comments</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-danger disabled btn-lg" style="opacity: 1;"><i class="fa fa-tags" ></i>&nbsp; {{ DBStatus['Tags'] }} Tags</button>
+                </div>
+            </div>
+            </h5>
             <div class="panel panel-default">
                 <!-- /.panel-heading -->
+                <div class="panel-heading">
+                    <label><i class="fa fa-clock-o" ></i> Activity</label>
+                </div>
                 <div class="panel-body">
                     <time-line height="200" data="time_data" call-back="extent" ></time-line>
                     <div class="pull-left">Start date: {{selected.start}}
                     &nbsp;&nbsp;End date: {{selected.end}}</div>
                     <div class="pull-right"><button class="btn btn-default text-right" ng-click="resetTimeLine()" >Reset</button></div>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <div class="col-lg-4" id="radar-chart">
-            <div class="panel panel-default">
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <canvas id="area" class="chart chart-radar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-7" >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="globalel" > labels on egdes
-                    <form ng-submit="drawGraph()">
-                        algo :
-                        <select ng-model="layoutChoice">
-                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
-                        </select>
-                        <input type="submit" value="go" />
-                    </form>
-                    <!--p>Alt + Click on User (blue node) to view post type in metrics window</p>
-                    <p> Alt + Shift + Click to add user and compare with previous</p-->
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <sigma-js
-                            graph="globalGraphSigma"
-                            width="100%" height="600px"
-                            edge-labels="globalel"
-                            threshold=20
-                            event-catcher="eventCatcher"
-                            locate="locate"
-                            time-filter="filter" >
-                    </sigma-js>
                 </div>
                 <!-- /.panel-body -->
             </div>
@@ -73,6 +46,46 @@
                 </div>
             </div>
         </div>
+        <!--div class="col-lg-4" id="radar-chart">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <canvas id="area" class="chart chart-radar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
+                </div>
+            </div>
+        </div-->
+    </div>
+    <div class="row">
+        <!--div class="col-lg-7" >
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="globalel" > labels on egdes
+                    <form ng-submit="drawGraph()">
+                        algo :
+                        <select ng-model="layoutChoice">
+                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                        </select>
+                        <input type="submit" value="go" />
+                    </form>
+                </div>
+                <div class="panel-body">
+                    <sigma-js
+                            graph="globalGraphSigma"
+                            width="100%" height="600px"
+                            edge-labels="globalel"
+                            threshold=20
+                            event-catcher="eventCatcher"
+                            locate="locate"
+                            time-filter="filter" >
+                    </sigma-js>
+                </div>
+            </div>
+        </div-->
+        <!--div class="col-lg-5">
+            <div class="panel panel-default">
+                <div class="panel-body"><canvas id="word_cloud" class="word_cloud" width="600px" height="400px"></canvas>
+                </div>
+            </div>
+        </div-->
         <!--div class="col-lg-6" id="radar-chart">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -95,4 +108,76 @@
         </div-->
     </div>
     <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <label><i class="fa fa-commenting-o" ></i> Latest Posts</label>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th></th>
+                                <th>Author</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="post in latest_posts" >
+                                <td>
+                                    <button class="btn btn-success" ng-click="openInfoPanel('post', post.post_id)" ><i class="fa fa-commenting"></i></button>
+                                </td>
+                                <td>{{ post.post_label }}</td>
+                                <td>{{ getDate(post.timestamp) }}</td>
+                                <td>
+                                    <button class="btn btn-primary" ng-click="openInfoPanel('user', post.user_id)" ><i class="fa fa-user"></i></button>
+                                </td>
+                                <td>{{ post.user_label }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <label><i class="fa fa-comments-o" ></i> Latest Comments</label>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th></th>
+                                <th>Author</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="comment in latest_comments" >
+                                <td>
+                                    <button class="btn btn-warning" ng-click="openInfoPanel('comment', comment.comment_id)" ><i class="fa fa-comments-o"></i></button>
+                                </td>
+                                <td>{{ comment.comment_label }}</td>
+                                <td>{{ getDate(comment.timestamp) }}</td>
+                                <td>
+                                    <button class="btn btn-primary" ng-click="openInfoPanel('user', comment.user_id)" ><i class="fa fa-user"></i></button>
+                                </td>
+                                <td>{{ comment.user_label }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

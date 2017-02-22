@@ -24,8 +24,10 @@ angular.module('sbAdminApp')
                 $scope.layoutChoice = $rootScope.layout[12];
                 $scope.selected.start= new Date(0);
                 $scope.selected.end= new Date(Date.now());
-                $scope.drawGraph();
-                refreshPostType();
+                $scope.updateLatest();
+                //$scope.drawGraph();
+                getStatus();
+                //refreshPostType();
                 $scope.refreshWordcloud();
             }
         });
@@ -56,6 +58,24 @@ angular.module('sbAdminApp')
                 });
             }
         };
+
+        /**** Update latest lists ****/
+        $scope.updateLatest = function () {
+            // // Read the complete graph from api
+            $scope.latest_comments = [];
+            var resComment = $resource(config.apiUrl + 'comments/latest');
+            $scope.resCommentPromise = resComment.query();
+            $scope.resCommentPromise.$promise.then(function (result) {
+                $scope.latest_comments = result;
+            });
+            $scope.latest_posts = [];
+            var resPost = $resource(config.apiUrl + 'posts/latest');
+            $scope.resPostPromise = resPost.query();
+            $scope.resPostPromise.$promise.then(function (result) {
+                $scope.latest_posts = result;
+            });
+        };
+
 
         /***** Global view *****/
         $scope.globalGraphSigma = [];
@@ -155,6 +175,23 @@ angular.module('sbAdminApp')
                 else {
                     result.data.shift();
                     $scope.postType.data = result.data;
+                }
+            });
+        };
+
+        var getStatus = function () {
+            $scope.DBStatus = {};
+            var params = {};
+
+            if($scope.selected.start != undefined)
+                params.start = $scope.selected.start.getTime();
+            if($scope.selected.end != undefined)
+                params.end = $scope.selected.end.getTime();
+
+            var resStatus = $resource(config.apiUrl + 'status', params).get();
+            resStatus.$promise.then(function (result) {
+                for (var i=0; i<result["labels"].length; i++) {
+                    $scope.DBStatus[result["labels"][i]]=result["data"][0][i]
                 }
             });
         };
@@ -261,10 +298,10 @@ angular.module('sbAdminApp')
                 else if( newVal.cid != undefined) {
                     locateTmp.push(newVal.cid);
                 }
-                if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
+                /*if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
                     $timeout(function() {$scope.locate = locateTmp;}, 5000);
                 else
-                    $scope.locate = locateTmp;
+                    $scope.locate = locateTmp;*/
             }
         });
         $scope.$on("$destroy", function(){
