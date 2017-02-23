@@ -9,14 +9,14 @@
 angular.module('sbAdminApp')
   .controller('DoiCtrl', function ($scope, $resource, config, $rootScope, $uibModal, $location, $compile) {
 
-      $scope.type = "doi";
+      $scope.type = "neighbours";
       $scope.infoPanelParent = "infoPanelParent";
 
       /***** Init ******/
       // When rootScope is ready load the graph
       $rootScope.$watch('ready', function(newVal) {
           if(newVal) {
-              $scope.layoutChoice = $rootScope.layout[12];
+              $scope.layoutChoice = $rootScope.layout[40];
               $scope.drawDoiGraph();
           }
       });
@@ -38,8 +38,8 @@ angular.module('sbAdminApp')
           }
       }
       else {
-          $scope.field = "user";
-          $scope.value = "34";
+          $scope.field = "post";
+          $scope.value = "4701";
       }
       $scope.doiSize = 25;
       $scope.graphSigma = [];
@@ -52,12 +52,15 @@ angular.module('sbAdminApp')
               $scope.value = $scope.post;
           else if($scope.field == "comment" && $scope.comment)
               $scope.value = $scope.comment;
-          //else if($scope.field == "tag" && $scope.tag)
-          //    $scope.value = $scope.tag;
+          else if($scope.field == "tag" && $scope.tag)
+              $scope.value = $scope.tag;
           if($scope.type === "doi") {
               var CreateGraph = $resource(config.apiUrl + 'doi/complete/'+ $scope.field +'_id/'+ $scope.value, {"max_size": $scope.doiSize});
-          } else
-              var CreateGraph = $resource(config.apiUrl + 'createGraph/'+ $scope.field +'_id/'+ $scope.value);
+          } else if($scope.type === "pct") {
+              var CreateGraph = $resource(config.apiUrl + 'doi/PostCommentTag/'+ $scope.field +'_id/'+ $scope.value, {"max_size": $scope.doiSize});
+          } else if($scope.type === "neighbours") {
+              var CreateGraph = $resource(config.apiUrl + 'neighbours/'+ $scope.field +'/'+ $scope.value);
+          }
           var creategraph = CreateGraph.get();
           creategraph.$promise.then(function (result) {
               var drawGraph = $resource(config.apiUrl + 'draw/'+ result.gid +'/'+ $scope.layoutChoice);
@@ -83,6 +86,10 @@ angular.module('sbAdminApp')
                   else if(e.data.node.comment_id != undefined) {
                       $scope.elementType = "comment";
                       $scope.elementId = e.data.node.comment_id;
+                  }
+                  else if(e.data.node.tag_id != undefined) {
+                      $scope.elementType = "tag";
+                      $scope.elementId = e.data.node.tag_id;
                   }
                   $scope.openInfoPanel($scope.elementType, $scope.elementId);
                   break;
@@ -135,6 +142,7 @@ angular.module('sbAdminApp')
               if( newVal.user_id != undefined) {
                   $scope.field = "user";
                   $scope.value = newVal.user_id;
+                  $scope.type = "doi"
               }
               else if( newVal.post_id != undefined) {
                   $scope.field = "post";
@@ -143,6 +151,11 @@ angular.module('sbAdminApp')
               else if( newVal.comment_id != undefined) {
                   $scope.field = "comment";
                   $scope.value = newVal.comment_id;
+              }
+              else if( newVal.tag_id != undefined) {
+                  $scope.field = "tag";
+                  $scope.value = newVal.tag_id;
+                  $scope.type = "pct"
               }
               $scope.drawDoiGraph();
           }
