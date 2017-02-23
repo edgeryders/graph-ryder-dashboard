@@ -15,7 +15,12 @@ angular.module('sbAdminApp')
             edgeLabels: '=?',
             locate: '=?',
             timeFilter: '=?',
-            eventCatcher: '&'
+            eventCatcher: '&',
+            metricFilter: '@?',
+            metricMinFilter: '@?',
+            metricMaxFilter: '@?',
+            interactor: '@?',
+            cleanRefresh: '@?'
         },
         link: function (scope, element) {
             // default values
@@ -23,6 +28,15 @@ angular.module('sbAdminApp')
                 scope.threshold = 4;
             if (scope.edgeLabels == undefined)
                 scope.edgeLabels = false;
+            if (scope.metricMinFilter == undefined)
+                scope.metricMinFilter = 1;
+            if (scope.metricMaxFilter == undefined)
+                scope.metricMaxFilter = 10;
+            var neighbourhood = {}
+            neighbourhood.adjacentNodes = [];
+            neighbourhood.adjacentEdges = [];
+            neighbourhood.nodesColour = [];
+            neighbourhood.edgesColour = [];
 
             // Create sigma instance
             var s = new sigma({
@@ -39,13 +53,71 @@ angular.module('sbAdminApp')
                     edgeHoverColor: '#000',
                     defaultEdgeHoverColor: '#000',
                     edgeHoverSizeRatio: 2,
-                    edgeHoverExtremities: true
+                    edgeHoverExtremities: true,
                 }
             });
 
+            /**** Interactions ****/
+            function arrayUnique(array) {
+              var a = array.concat();
+              for(var i=0; i<a.length; ++i) {
+                for(var j=i+1; j<a.length; ++j) {
+                  if(a[i] === a[j])
+                    a.splice(j--, 1);
+                }
+              }
+              return a;
+            };
+            function resetHighlight() {
+              for(var tmp=0; tmp<neighbourhood.adjacentNodes.length ; tmp++) {
+                neighbourhood.adjacentNodes[tmp].size/=2;
+                neighbourhood.adjacentNodes[tmp].color = neighbourhood.nodesColour[tmp];
+              }
+              for(var tmp=0; tmp<neighbourhood.adjacentEdges.length ; tmp++) {
+                neighbourhood.adjacentEdges[tmp].size/=2;
+                neighbourhood.adjacentEdges[tmp].color=neighbourhood.edgesColour[tmp];
+              }
+              neighbourhood.adjacentNodes = [];
+              neighbourhood.adjacentEdges = [];
+            }
+            function highlightNeighbourhood(e) {
+              var node = e.data.node;
+              resetHighlight();
+
+              // Get adjacent nodes:
+              neighbourhood.adjacentNodes = neighbourhood.adjacentNodes.concat(s.graph.adjacentNodes(node.id));
+
+              // Add hovered nodes to the array and remove duplicates:
+              neighbourhood.adjacentNodes = arrayUnique(neighbourhood.adjacentNodes.concat(node));
+
+              // Get adjacent edges:
+              neighbourhood.adjacentEdges = neighbourhood.adjacentEdges.concat(s.graph.adjacentEdges(node.id));
+
+              // Remove duplicates:
+              neighbourhood.adjacentEdges = arrayUnique(neighbourhood.adjacentEdges);
+              for(var tmp=0; tmp<neighbourhood.adjacentNodes.length ; tmp++) {
+                neighbourhood.adjacentNodes[tmp].size*=2;
+                neighbourhood.nodesColour[tmp] = neighbourhood.adjacentNodes[tmp].color;
+                neighbourhood.adjacentNodes[tmp].color="rgb(0,0,200)"
+              }
+              for(var tmp=0; tmp<neighbourhood.adjacentEdges.length ; tmp++) {
+                neighbourhood.adjacentEdges[tmp].size*=2;
+                neighbourhood.edgesColour[tmp] = neighbourhood.adjacentEdges[tmp].color;
+                neighbourhood.adjacentEdges[tmp].color="rgb(0,0,200)"
+              }
+              s.refresh();
+            }
+
             /**** Bind Event ****/
-            s.bind('clickNode clickEdges hovers', function(e) {
+            s.bind('clickEdges hovers', function(e) {
                 scope.eventCatcher()(e);
+            });
+
+            s.bind('clickNode', function(e) {
+                scope.eventCatcher()(e);
+                if (scope.interactor == "neighbourhood") {
+                    highlightNeighbourhood(e);
+                }
             });
 
             /**** locate ****/
@@ -96,7 +168,7 @@ angular.module('sbAdminApp')
                 });
             }
 
-            /**** timeFilter ****/
+            /**** Filter ****/
             scope.$watch('timeFilter', function () {
                 s.graph.nodes().filter(function (n) {
                     if (n.user_id != undefined && scope.timeFilter.start <= n.timestamp && scope.timeFilter.end >= n.timestamp) {
@@ -121,7 +193,29 @@ angular.module('sbAdminApp')
                 s.refresh();
             });
 
-            /**** Watch for update ****/
+            var filter = new sigma.plugins.filter(s);
+            var metricFilter = function(metricMin, metricMax) {
+                filter
+                  .undo('nodeFilter')
+                  .nodesBy(function(n) {
+                    return (Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax));
+                  }, 'nodeFilter')
+                  .apply();
+                filter
+                  .undo('edgeFilter')
+                  .edgesBy(function(e) {
+                    return (Number(e[scope.metricFilter]) >= Number(metricMin) && Number(e[scope.metricFilter]) <= Number(metricMax));
+                  }, 'edgeFilter')
+                  .apply();
+            }
+
+            /**** Watch for update ****/            
+            scope.$watch('metricMinFilter', function(newVal) {
+                metricFilter(newVal, scope.metricMaxFilter);
+            });
+            scope.$watch('metricMaxFilter', function(newVal) {
+                metricFilter(scope.metricMinFilter, newVal);
+            });
             scope.$watch('graph', function() {
                 s.graph.clear();
                 s.graph.read(scope.graph);
@@ -152,6 +246,10 @@ angular.module('sbAdminApp')
                 element.children().css("height",scope.height);
                 s.refresh();
                 window.dispatchEvent(new Event('resize'));//hack so that it will be shown instantly
+            });
+            scope.$watch('cleanRefresh', function() {
+                resetHighlight();
+                s.refresh();
             });
             element.on('$destroy', function() {
                 s.graph.clear();

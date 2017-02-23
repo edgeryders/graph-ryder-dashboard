@@ -14,11 +14,15 @@ angular.module('sbAdminApp')
 
         /**** Init ****/
         //edge label default
+        $scope.sigma_instance;
         $scope.tagel = false;
         $scope.tagnl = false;
         $scope.nodelabelthreshold = 10;
         $scope.locate = "";
+        $scope.clean_refresh_sigma_decorator = 0;
         $scope.requestFullTagGraph = false;
+        $scope.filter_occurence_min = "2";
+        $scope.filter_occurence_max = "14"; 
         $scope.filterLevels = ["1","2","3","4","5","6","7","8"];
         $scope.interactor = "navigate";
         $scope.showTagCommonContent = false;
@@ -29,11 +33,10 @@ angular.module('sbAdminApp')
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
                 $scope.layoutChoice = $rootScope.layout[12];
-                $scope.filterOcc = $scope.filterLevels[1];
                 //$scope.tableSizeChoice = 10;
                 $scope.selected.start= new Date(0);
                 $scope.selected.end= new Date(Date.now());
-                $scope.generateGraph(2);
+                $scope.generateGraph();
                 //load tags then create the graph
                 /*var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/10").query().$promise;
                 Tags.then(function (result) {
@@ -43,6 +46,28 @@ angular.module('sbAdminApp')
                 });*/
             }
         });
+
+    $( "#node-label-intensity-slider" ).slider({
+      min: 0,
+      max: $scope.nodelabelthreshold-1,
+      value: 10-$scope.nodelabelthreshold,
+      slide: function( event, ui ) {
+        $scope.nodelabelthreshold = 10-ui.value;
+        $scope.$apply();
+      }
+    });    
+
+    $( "#coocurrence-intensity-slider-range" ).slider({
+      range: true,
+      min: 1,
+      max: $scope.filter_occurence_max,
+      values: [ $scope.filter_occurence_min, $scope.filter_occurence_max ],
+      slide: function( event, ui ) {
+        $scope.filter_occurence_min = ui.values[0];
+        $scope.filter_occurence_max = ui.values[1];
+        $scope.$apply();
+      }
+    });
 
         $scope.switchForceNodeLabel = function() {
             if ($scope.tagnl) {
@@ -65,7 +90,7 @@ angular.module('sbAdminApp')
 
         $scope.generateGraph = function () {
             //$scope.filter_occ = filter_occ;
-            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filterOcc + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
+            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filter_occurence_min + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
             //var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + $scope.tag_id);
             var createGraphPromise = createGraph.get();
             createGraphPromise.$promise.then(function (result) {
@@ -136,11 +161,14 @@ angular.module('sbAdminApp')
                         $scope.elementId = e.data.node.tag_id;
                         $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     }
-                    else {
+                    else if ($scope.interactor == "neighbourhood") {
+                        // Delegated to directive sigma.js
+                    } else {
                         console.log("Unexpected node: "+e.data.node);
                     }
                     break;
                 case 'clickEdges':
+                    console.log(e)
                     if(e.data.edge != undefined && e.data.edge.length > 0 && ((e.data.captor.ctrlKey || $scope.interactor == "information") || (e.data.captor.shiftKey || $scope.interactor == "focus"))) {
                         $scope.content = [];
                         $scope.showTagCommonContent = true;
@@ -164,6 +192,7 @@ angular.module('sbAdminApp')
                             $scope.tag_dst.label = result.label;
                         });
                         e.data.edge[0].color = 'rgb(0,0,0)';
+                        e.target.refresh()
                         //TODO tweek sigma renderer for immediate response
                         //var s = e.data.renderer;
                         //s.refresh();
@@ -216,18 +245,32 @@ angular.module('sbAdminApp')
         $scope.clearInteractor = function() {
             document.getElementById("interactorNavigate").className="btn btn-default";
             document.getElementById("interactorInformation").className="btn btn-default";
+            document.getElementById("interactorNeighbourhood").className="btn btn-default";
         }
 
         $scope.setInteractorNavigate = function () {
             $scope.clearInteractor();
             $scope.interactor="navigate";
             document.getElementById("interactorNavigate").className="btn btn-primary";
+            document.getElementById("interactorDescriptionLabel").innerHTML = document.getElementById("interactorNavigate").title;
         }
 
         $scope.setInteractorInformation = function () {
             $scope.clearInteractor();
             $scope.interactor="information";
             document.getElementById("interactorInformation").className="btn btn-primary";
+            document.getElementById("interactorDescriptionLabel").innerHTML = document.getElementById("interactorInformation").title;
+        }
+
+        $scope.setInteractorNeighbourhood = function () {
+            $scope.clearInteractor();
+            $scope.interactor="neighbourhood";
+            document.getElementById("interactorNeighbourhood").className="btn btn-primary";
+            document.getElementById("interactorDescriptionLabel").innerHTML = document.getElementById("interactorNeighbourhood").title;
+        }
+
+        $scope.cleanRefreshSigmaDecorator = function () {
+            $scope.clean_refresh_sigma_decorator++;
         }
 
         /*** Search Bar Catcher *****/

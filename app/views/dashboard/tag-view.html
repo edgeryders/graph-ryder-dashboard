@@ -66,27 +66,29 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <div class="pull-left" ng-show="showTagCommonContent">Content about <button class="btn btn-danger" ng-click="openInfoPanel('tag', tag_src.id)" >{{ tag_src.label }}</button> and <button  class="btn btn-danger" ng-click="openInfoPanel('tag', tag_dst.id)" >{{ tag_dst.label }}</button>.</div> <div class="pull-right"><button class="btn btn-default" ng-click="showTagCommonContent=false" >Clear</button></div>
+                        <div class="pull-left" ng-show="showTagCommonContent">Content about <button class="btn btn-danger" ng-click="openInfoPanel('tag', tag_src.id)" ><i class="fa fa-tag"></i></button> <label>{{ tag_src.label }}</label> and <button  class="btn btn-danger" ng-click="openInfoPanel('tag', tag_dst.id)" ><i class="fa fa-tag"></i></button> <label>{{ tag_dst.label }}</label>.</div> <div class="pull-right"><button class="btn btn-default" ng-click="showTagCommonContent=false" >Clear</button></div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th>Id</th>
+                                <th></th>
                                 <th>Content</th>
                                 <th>Date</th>
+                                <th></th>
                                 <th>Author</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="elem in content" >
                                 <td>
-                                    <button ng-show="elem.entity_type=='comment'" class="btn btn-warning" ng-click="openInfoPanel('comment', elem.id)" >{{ elem.id }}</button>
-                                    <button ng-show="elem.entity_type=='post'" class="btn btn-success" ng-click="openInfoPanel('post', elem.id)" >{{ elem.id }}</button>
+                                    <button ng-show="elem.entity_type=='comment'" class="btn btn-warning" ng-click="openInfoPanel('comment', elem.id)" ><i class="fa fa-comments-o"></i></button>
+                                    <button ng-show="elem.entity_type=='post'" class="btn btn-success" ng-click="openInfoPanel('post', elem.id)" ><i class="fa fa-commenting"></i></button>
                                 </td>
                                 <td>{{ elem.label }}</td>
                                 <td>{{ getDate(elem.timestamp) }}</td>
                                 <td>
-                                    <button class="btn btn-primary" ng-click="openInfoPanel('user', elem.user_id)" >{{ elem.user_label }}</button>
+                                    <button class="btn btn-primary" ng-click="openInfoPanel('user', elem.user_id)" ><i class="fa fa-user"></i></button>
                                 </td>
+                                <td>{{ elem.user_label }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -109,6 +111,7 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>Tag</th>
                                 <th># Mentions</th>
                             </tr>
@@ -116,8 +119,9 @@
                             <tbody>
                             <tr ng-repeat="tag in tags" >
                                 <td>
-                                    <button class="btn btn-danger" ng-click="generateGraph(tag.id)" >{{ tag.label }}</button>
+                                    <button class="btn btn-danger" ng-click="generateGraph(tag.id)" ><i class="fa fa-tag"></i></button>
                                 </td>
+                                <td>{{ tag.label }}</td>
                                 <td>{{ tag.count }}</td>
                             </tr>
                             </tbody>
