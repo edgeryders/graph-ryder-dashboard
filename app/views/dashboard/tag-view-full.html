@@ -19,7 +19,7 @@
                     <!--<i class="fa fa-clock-o fa-fw" ></i> Global view &nbsp;&nbsp; <input type="checkbox" ng-model="tagnl" ng-click="switchForceNodeLabel()"> &nbsp;+<input type="range" value="10" max="10" style="width: 80px; display: inline-block;" ng-model="nodelabelthreshold">
 - &nbsp; labels on nodes &nbsp;&nbsp;  <input type="checkbox" ng-model="tagel" > labels on edges -->
 <div>Display label on nodes: None &nbsp;  <div id="node-label-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All</div>
-<div>Co-occurence intensity: Weak &nbsp; <div id="coocurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
+<div>Co-occurrence intensity: Weak &nbsp; <div id="coocurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
                     <div>
                         <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
                         <button id="interactorInformation" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
@@ -34,7 +34,7 @@
                         <select ng-model="layoutChoice">
                             <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
                         </select>
-                        Filter by number of co-occurences:
+                        Filter by number of co-occurrences:
                         <select ng-model="filter_occurence_min">
                             <option ng-repeat="filter in ['1','2','3','4','5','6','7','8']" value="{{filter}}">{{filter}}</option>
                         </select>
