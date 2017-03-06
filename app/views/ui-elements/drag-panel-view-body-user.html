@@ -24,7 +24,7 @@
                     <tbody>
                     <tr ng-repeat="post in ::user.posts" >
                         <td>
-                            <button id="{{::post.post_id}}" class="btn btn-success btn-sm" ng-click="::openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" aria-hidden="true"></i></button>
+                            <button data-click-id="{{::post.post_id}}" class="btn btn-success btn-sm" ng-click="::openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" data-click-id="{{::post.post_id}}" aria-hidden="true"></i></button>
                         </td>
                         <td>{{ ::post.label }}</td>
                         <td>{{ getDate(post.timestamp) }}</td>
@@ -48,11 +48,11 @@
                     <tbody>
                     <tr ng-repeat="comment in ::user.comments" >
                         <td>
-                            <button id="{{::comment.comment_id}}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" aria-hidden="true"></i></button>
+                            <button data-click-id="{{::comment.comment_id}}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" data-click-id="{{::comment.comment_id}}" aria-hidden="true"></i></button>
                         </td>
                         <td>{{ ::comment.label }}</td>
                         <td>
-                            <button id="{{::comment.comment_parent_post_id}}" class="btn btn-success btn-sm" ng-click="::openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" aria-hidden="true"></i></button>
+                            <button data-click-id="{{::comment.comment_parent_post_id}}" class="btn btn-success btn-sm" ng-click="::openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" data-click-id="{{::comment.comment_parent_post_id}}" aria-hidden="true"></i></button>
                         </td>
                         <td>{{ ::comment.comment_parent_post_label }}</td>
                         <td>{{ getDate(comment.timestamp) }}</td>

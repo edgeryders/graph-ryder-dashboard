@@ -18,10 +18,10 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="response in ::comment.comments" >
-                        <td><button id="{{::response.comment_id}}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)"><i class="fa fa-comments-o" aria-hidden="true"></i></button></td>
+                        <td><button data-click-id="{{::response.comment_id}}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)"><i class="fa fa-comments-o" data-click-id="{{::response.comment_id}}" aria-hidden="true"></i></button></td>
                         <td>{{ ::response.comment_label }}</td>
                         <td>{{ getDate(response.comment_timestamp) }}</td>
-                        <td><button id="{{::response.user_id}}" class="btn btn-primary btn-sm" ng-click="::openInfoPanel('user', $event)"><i class="fa fa-user" aria-hidden="true"></i></button></td>
+                        <td><button data-click-id="{{::response.user_id}}" class="btn btn-primary btn-sm" ng-click="::openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{::response.user_id}}" aria-hidden="true"></i></button></td>
                         <td>{{ ::response.user_label }}</td>
                     </tr>
                     </tbody>
@@ -40,7 +40,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="annotation in ::comment.annotations" >
-                        <td><button id="{{::annotation.tag_id}}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" aria-hidden="true"></i></button></td>
+                        <td><button data-click-id="{{::annotation.tag_id}}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" data-click-id="{{::annotation.tag_id}}" aria-hidden="true"></i></button></td>
                         <td>{{ ::annotation.tag_label }}</td>
                         <td>{{ getDate(annotation.annotation_timestamp) }}</td>
                     </tr>

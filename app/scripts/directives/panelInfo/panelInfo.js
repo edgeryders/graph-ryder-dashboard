@@ -5,14 +5,14 @@ return {
         restrict: 'E',
         template: '<div></div>',
         scope: {
-            type: '@', 
+            type: '@',
             id: '@',
             parent: '@'
         },
         link: function (scope, element) {
 
             scope.openInfoPanel = function(elementType, event) {
-                var elementId = event.target.id;
+                var elementId = $(event.target).attr("data-click-id");
                 if($("#"+elementType+"_"+elementId).length) {
                     scope.bringInfoPanelUpward(elementType+"_"+elementId);
                 } else {
@@ -136,9 +136,9 @@ return {
               handle: ".panel-heading"
             });
             $("#"+mod.id).resizable();
-            $.ajax('views/ui-elements/drag-panel-view-head-'+scope.type+'.html', {success: 
+            $.ajax('views/ui-elements/drag-panel-view-head-'+scope.type+'.html', {success:
               function(responseHeadData) {
-                $.ajax('views/ui-elements/drag-panel-view-body-'+scope.type+'.html', {success: 
+                $.ajax('views/ui-elements/drag-panel-view-body-'+scope.type+'.html', {success:
                   function(responseBodyData) {
                     mod.insertAdjacentHTML('beforeend', responseBodyData);
                     mod.insertAdjacentHTML('beforeend', footer);

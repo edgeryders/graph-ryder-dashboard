@@ -19,10 +19,10 @@
                     <tbody>
                     <tr ng-repeat="comment in ::post.comments" >
                         <td>
-                            <button id="{{ ::comment.comment_id }}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" aria-hidden="true"></i></button>
+                            <button data-click-id="{{ ::comment.comment_id }}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" data-click-id="{{ ::comment.comment_id }}" aria-hidden="true"></i></button>
                         </td>
                         <td>{{ ::comment.title }}</td>
-                        <td><button id="{{ ::comment.author.user_id }}" class="btn btn-primary btn-sm" ng-click="::openInfoPanel('user', $event)"><i class="fa fa-user" aria-hidden="true"></i></button></td>
+                        <td><button data-click-id="{{ ::comment.author.user_id }}" class="btn btn-primary btn-sm" ng-click="::openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{ ::comment.author.user_id }}" aria-hidden="true"></i></button></td>
                         <td>{{ ::comment.author.name }}</td>
                         <td>{{ getDate(comment.timestamp) }}</td>
                     </tr>
@@ -42,7 +42,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="annotation in ::post.annotations" >
-                        <td><button id="{{ ::annotation.tag_id }}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" aria-hidden="true"></i></button></td>
+                        <td><button data-click-id="{{ ::annotation.tag_id }}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" data-click-id="{{ ::annotation.tag_id }}" aria-hidden="true"></i></button></td>
                         <td>{{ ::annotation.tag_label }}</td>
                         <td>{{ getDate(annotation.annotation_timestamp) }}</td>
                     </tr>
@@ -63,9 +63,9 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="innovation in ::post.innovations" >
-                        <td><button id="{{ ::innovation.tag_id }}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" aria-hidden="true"></i></button></td>
+                        <td><button data-click-id="{{ ::innovation.tag_id }}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" data-click-id="{{ ::innovation.tag_id }}" aria-hidden="true"></i></button></td>
                         <td>{{ ::innovation.tag_label }}</td>
-                        <td><button id="{{ ::innovation.comment_id }}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)"><i class="fa fa-comments-o" aria-hidden="true"></i></button></td>
+                        <td><button data-click-id="{{ ::innovation.comment_id }}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)"><i class="fa fa-comments-o" data-click-id="{{ ::innovation.comment_id }}" aria-hidden="true"></i></button></td>
                         <td>{{ ::innovation.comment_label }}</td>
                     </tr>
                     </tbody>

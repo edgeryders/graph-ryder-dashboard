@@ -16,11 +16,11 @@
                     <tbody>
                     <tr ng-repeat="post in ::tag.posts" >
                         <td>
-                            <button id="{{ ::post.post_id }}" class="btn btn-success btn-sm" ng-click="openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" aria-hidden="true"></i></button>
+                            <button data-click-id="{{ ::post.post_id }}" class="btn btn-success btn-sm" ng-click="openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" data-click-id="{{ ::post.post_id }}" aria-hidden="true"></i></button>
                         </td>
                         <td> {{::post.post_title}}</td>
                         <td>
-                            <button id="{{ ::post.user_id }}" class="btn btn-primary btn-sm" ng-click="openInfoPanel('user', $event)" ><i class="fa fa-user" aria-hidden="true"></i></button>
+                            <button data-click-id="{{ ::post.user_id }}" class="btn btn-primary btn-sm" ng-click="openInfoPanel('user', $event)" ><i class="fa fa-user" data-click-id="{{ ::post.user_id }}" aria-hidden="true"></i></button>
                         </td>
                         <td>{{ ::post.user_name }}</td>
                         <td>{{ getDate(post.post_timestamp) }}</td>
@@ -45,11 +45,11 @@
                     <tbody>
                     <tr ng-repeat="comment in ::tag.comments" >
                         <td>
-                            <button id="{{ ::comment.comment_id }}" class="btn btn-warning btn-sm" ng-click="openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" aria-hidden="true"></i></button>
+                            <button data-click-id="{{ ::comment.comment_id }}" class="btn btn-warning btn-sm" ng-click="openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" data-click-id="{{ ::comment.comment_id }}" aria-hidden="true"></i></button>
                         </td>
                         <td> {{::comment.comment_title }} </td>
                         <td>
-                            <button id="{{ ::comment.user_id }}" class="btn btn-primary btn-sm" ng-click="openInfoPanel('user', $event)" ><i class="fa fa-user" aria-hidden="true"></i></button>
+                            <button data-click-id="{{ ::comment.user_id }}" class="btn btn-primary btn-sm" ng-click="openInfoPanel('user', $event)" ><i class="fa fa-user" data-click-id="{{ ::comment.user_id }}" aria-hidden="true"></i></button>
                         </td>
                         <td>{{ ::comment.user_name }}</td>
                         <td>{{ getDate(comment.comment_timestamp) }}</td>
@@ -60,4 +60,3 @@
             </uib-tab>
         </uib-tabset>
     </div>
-
