@@ -18,6 +18,8 @@ angular.module('sbAdminApp')
         $scope.tagnl = false;
         $scope.nodelabelthreshold = 10;
         $scope.locate = "";
+        $scope.filter_occurence_min = "1";
+        $scope.filter_occurence_max = "100";
         $scope.tag_id = 1879;
         $scope.tag_src = {id: $scope.tag_id, label:""};
         $scope.tag_dst = {id: -1, label:""};
@@ -40,6 +42,27 @@ angular.module('sbAdminApp')
                     if($scope.tags[0])
                         $scope.generateGraph($scope.tags[0].id);
                 });
+            }
+        });
+        $( "#node-label-intensity-slider" ).slider({
+            min: 0,
+            max: $scope.nodelabelthreshold-1,
+            value: 10-$scope.nodelabelthreshold,
+            slide: function( event, ui ) {
+                $scope.nodelabelthreshold = 10-ui.value;
+                $scope.$apply();
+            }
+        });
+
+        $( "#coocurrence-intensity-slider-range" ).slider({
+            range: true,
+            min: 1,
+            max: $scope.filter_occurence_max,
+            values: [ $scope.filter_occurence_min, $scope.filter_occurence_max ],
+            slide: function( event, ui ) {
+                $scope.filter_occurence_min = ui.values[0];
+                $scope.filter_occurence_max = ui.values[1];
+                $scope.$apply();
             }
         });
 
@@ -257,24 +280,28 @@ angular.module('sbAdminApp')
             document.getElementById("interactorNavigate").className="btn btn-default";
             document.getElementById("interactorInformation").className="btn btn-default";
             document.getElementById("interactorFocus").className="btn btn-default";
+            document.getElementById("interactorDescriptionLabel").innerHTML = "";
         }
 
         $scope.setInteractorNavigate = function () {
             $scope.clearInteractor();
             $scope.interactor="navigate";
             document.getElementById("interactorNavigate").className="btn btn-primary";
+            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorNavigate").attr("data-title");
         }
 
         $scope.setInteractorInformation = function () {
             $scope.clearInteractor();
             $scope.interactor="information";
             document.getElementById("interactorInformation").className="btn btn-primary";
+            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorInformation").attr("data-title");
         }
 
         $scope.setInteractorFocus = function () {
             $scope.clearInteractor();
             $scope.interactor="focus";
             document.getElementById("interactorFocus").className="btn btn-primary";
+            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorFocus").attr("data-title");
         }
 
         /*** Search Bar Catcher *****/

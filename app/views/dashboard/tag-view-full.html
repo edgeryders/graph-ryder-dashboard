@@ -21,9 +21,9 @@
 <div>Display label on nodes: None &nbsp;  <div id="node-label-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All</div>
 <div>Co-occurrence intensity: Weak &nbsp; <div id="coocurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
                     <div>
-                        <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
-                        <button id="interactorInformation" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
-                        <button id="interactorNeighbourhood" class="btn btn-default" title="Show direct neighbourhood of the element (reset with <i class='fa fa-trash'></i>)" ng-click="setInteractorNeighbourhood()"><i class="fa fa-compass"></i></button>
+                        <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
+                        <button id="interactorInformation" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" data-title="Show details about the elements" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
+                        <button id="interactorNeighbourhood" class="btn btn-default" title="Show direct neighbourhood of the element" data-title="Show direct neighbourhood of the element (reset with <i class='fa fa-trash'></i>)" ng-click="setInteractorNeighbourhood()"><i class="fa fa-compass"></i></button>
                         <label id="interactorDescriptionLabel">Navigate the graph</label>
                         <button id="operationCleanRefresh" class="btn btn-default pull-right" title="" ng-click="cleanRefreshSigmaDecorator()" ng-model="clean_refresh_sigma_decorator"><i class="fa fa-trash"></i></button>
 <div class="dropdown pull-right">

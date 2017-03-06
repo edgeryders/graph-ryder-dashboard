@@ -17,21 +17,31 @@
         <div class="col-lg-6" >
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw" ></i> Global view &nbsp;&nbsp; <input type="checkbox" ng-model="tagnl" ng-click="switchForceNodeLabel()"> &nbsp;+<input type="range" value="10" max="10" style="width: 80px; display: inline-block;" ng-model="nodelabelthreshold">- &nbsp; labels on nodes &nbsp;&nbsp; <input type="checkbox" ng-model="tagel" > labels on egdes
-                    <br>Drawing directive: <input type="checkbox" ng-model="requestFullTagGraph" ng-click="switchTagGraph()" > return complete tag-tag graph (slower)
-                    <form ng-submit="drawGraph()">
-                        algo :
-                        <select ng-model="layoutChoice">
-                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
-                        </select>
-                        <input type="submit" value="go" />
-                    </form>
+                  <div>Display label on nodes: None &nbsp;  <div id="node-label-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All</div>
+                  <div>Co-occurrence intensity: Weak &nbsp; <div id="coocurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
+                    <div>Drawing directive: <input type="checkbox" ng-model="requestFullTagGraph" ng-click="switchTagGraph()" > Complete tag-tag graph (slower)</div>
                     <div>
-                        <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
-                        <button id="interactorInformation" class="btn btn-default" title="Show details about the elements -- Ctrl + Click on element" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
-                        <button id="interactorFocus" class="btn btn-default" title="Change the view's focus -- Shift + Click on element" ng-click="setInteractorFocus()"><i class="fa fa-crosshairs"></i></button>
-                    </div>
-                </div>
+                        <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
+                        <button id="interactorInformation" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" data-title="Show details about the elements" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
+                        <button id="interactorFocus" class="btn btn-default" title="Change the view's focus (Shift + Click on element)" data-title="Change the view's focus" ng-click="setInteractorFocus()"><i class="fa fa-crosshairs"></i></button>
+                        <label id="interactorDescriptionLabel">Navigate the graph</label>
+<div class="dropdown pull-right">
+  <button id="" class="btn btn-default pull-right dropdown-toggle"  data-toggle="dropdown" title="" ><i class="fa fa-cog"></i> <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+    <li><form ng-submit="drawGraph()">
+              Redraw using:
+              <select ng-model="layoutChoice">
+                  <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+              </select>
+              <input type="submit" value="Go" />
+        </form></li>
+    <li class="divider"></li>
+    <li>Display labels on edges <input type="checkbox" ng-model="tagel" ></li>
+  </ul>
+</div>
+
+            </div>
+        </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <sigma-js
@@ -39,6 +49,9 @@
                             width="100%" height="600px"
                             edge-labels="tagel"
                             threshold={{nodelabelthreshold}}
+                            metric-filter="occ"
+                            metric-min-filter={{filter_occurence_min}}
+                            metric-max-filter={{filter_occurence_max}}
                             event-catcher="eventCatcher"
                             locate="locate"
                             time-filter="filter" >

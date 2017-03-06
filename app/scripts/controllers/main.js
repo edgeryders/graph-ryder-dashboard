@@ -29,9 +29,15 @@ angular.module('sbAdminApp')
     });
 
     $rootScope.getDate = function (timestamp) {
+            function complete(val) {
+                if (val < 10)
+                    return "0"+val;
+                else
+                    return val;
+            };
             var date = new Date(timestamp);
             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes();
+            return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + ' ' + complete(date.getHours()) + ':' + complete(date.getMinutes());
         };
 
     /***** Load all data *****/

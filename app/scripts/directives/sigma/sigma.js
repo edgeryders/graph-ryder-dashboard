@@ -19,6 +19,7 @@ angular.module('sbAdminApp')
             metricFilter: '@?',
             metricMinFilter: '@?',
             metricMaxFilter: '@?',
+            metricNEutralFilter: '@?',
             interactor: '@?',
             cleanRefresh: '@?'
         },
@@ -32,6 +33,8 @@ angular.module('sbAdminApp')
                 scope.metricMinFilter = 1;
             if (scope.metricMaxFilter == undefined)
                 scope.metricMaxFilter = 10;
+            if (scope.metricNeutralFilter == undefined)
+                scope.metricNeutralFilter = -1;
             var neighbourhood = {}
             neighbourhood.adjacentNodes = [];
             neighbourhood.adjacentEdges = [];
@@ -198,7 +201,7 @@ angular.module('sbAdminApp')
                 filter
                   .undo('nodeFilter')
                   .nodesBy(function(n) {
-                    return (Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax));
+                    return ((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter));
                   }, 'nodeFilter')
                   .apply();
                 filter
@@ -209,7 +212,7 @@ angular.module('sbAdminApp')
                   .apply();
             }
 
-            /**** Watch for update ****/            
+            /**** Watch for update ****/
             scope.$watch('metricMinFilter', function(newVal) {
                 metricFilter(newVal, scope.metricMaxFilter);
             });
