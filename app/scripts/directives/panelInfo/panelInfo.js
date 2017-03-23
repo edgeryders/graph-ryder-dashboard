@@ -133,8 +133,6 @@ return {
             mod.style = "position: absolute; z-index: "+scope.panelViewCrtZindex+"; width: 530px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
             mod.innerHTML='<div class="panel-heading" ng-mousedown="bringInfoPanelUpward(\''+mod.id+'\')" >'+
                     '        <button type="button" class="close" aria-hidden="true" ng-click="closeInfoPanel(\''+mod.id+'\')" >&times;</button>'+
-                    '       <button type="button" class="close" aria-hidden="true" ng-click="stretchUpInfoPanel(\''+mod.id+'\')" >&plus;&nbsp;</button>'+
-                    '       <button type="button" class="close" aria-hidden="true" ng-click="stretchDownInfoPanel(\''+mod.id+'\')" >&ndash;&nbsp;</button>'+
                     '        <div id="panel-heading-content"><h4 class="modal-title" >Loading...</h4></div>'+
                     '    </div>';
             var footer ='<div id="footer" class="panel-footer">'+
