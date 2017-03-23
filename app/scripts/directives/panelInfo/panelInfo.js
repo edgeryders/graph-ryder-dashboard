@@ -113,6 +113,15 @@ return {
                         scope.tag = result;
                     });
                     break;
+                case "annotation":
+                    //$scope.annotation={"annotation_id": "", "entity_timestamp": "", "entity_type": "", "entity_title": "", "entity_id": "", "timestamp": "", "user_id": "", "quote": "", "user_name": ""}
+                    var Annotation = $resource(config.apiUrl + "annotation/hydrate/" + scope.id);
+                    var annotationP = Annotation.get();
+                    annotationP.$promise.then(function (result) {
+                        //$scope.loading = false;
+                        scope.annotation = result;
+                    });
+                    break;
                 default:
                     console.log("error with panelView directive unknow type");
             }
@@ -121,21 +130,22 @@ return {
             mod.className = "panel panel-default";
             mod.id = scope.type+"_"+scope.id;
             scope.panelViewCrtZindex =  document.getElementById(scope.parent).style.zIndex;
-            mod.style = "position: absolute; z-index: "+scope.panelViewCrtZindex+"; width: 30%; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
+            mod.style = "position: absolute; z-index: "+scope.panelViewCrtZindex+"; width: 530px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
             mod.innerHTML='<div class="panel-heading" ng-mousedown="bringInfoPanelUpward(\''+mod.id+'\')" >'+
                     '        <button type="button" class="close" aria-hidden="true" ng-click="closeInfoPanel(\''+mod.id+'\')" >&times;</button>'+
                     '       <button type="button" class="close" aria-hidden="true" ng-click="stretchUpInfoPanel(\''+mod.id+'\')" >&plus;&nbsp;</button>'+
                     '       <button type="button" class="close" aria-hidden="true" ng-click="stretchDownInfoPanel(\''+mod.id+'\')" >&ndash;&nbsp;</button>'+
                     '        <div id="panel-heading-content"><h4 class="modal-title" >Loading...</h4></div>'+
                     '    </div>';
-            var footer ='<div class="panel-footer">'+
+            var footer ='<div id="footer" class="panel-footer">'+
                     '    <button class="btn btn-default" ng-click="closeInfoPanel(\''+mod.id+'\')" >Close</button>'+
                     '</div>';
             jQuery("#"+scope.parent).append(mod);
             $("#"+mod.id).draggable({
               handle: ".panel-heading"
             });
-            $("#"+mod.id).resizable();
+
+
             $.ajax('views/ui-elements/drag-panel-view-head-'+scope.type+'.html', {success:
               function(responseHeadData) {
                 $.ajax('views/ui-elements/drag-panel-view-body-'+scope.type+'.html', {success:
@@ -147,6 +157,7 @@ return {
                     $compile($("#"+mod.id).find(".panel-heading"))(scope);
                     $compile($("#"+mod.id).find(".panel-body"))(scope);
                     $compile($("#"+mod.id).find(".panel-footer"))(scope);
+                    $("#"+mod.id).resizable({maxHeight: 900, maxWidth: 1000, minHeight: 300, minWidth:300, alsoResize: ".tab_"+mod.id});
                   }
                 });
               }

@@ -12,7 +12,7 @@
             </uib-tab>
             <uib-tab index="1" heading="Biography" disable="!user.biography" ><div style="max-height: 400px; overflow: auto;">{{::user.biography}}</div></uib-tab>-->
             <uib-tab index="0" heading="Posts ({{::user.posts.length}})" disable="::user.posts.length == 0">
-                <div class="table-responsive" style="max-height: 300px; overflow: auto;">
+                <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;">
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -34,7 +34,7 @@
                 </div>
             </uib-tab>
             <uib-tab index="1" heading="Comments ({{::user.comments.length}})" disable="::user.comments.length == 0" >
-                <div class="table-responsive" style="max-height: 300px; overflow: auto;">
+                <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;">
                 <table class="table table-striped">
                     <thead>
                     <tr>
