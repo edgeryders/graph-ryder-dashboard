@@ -59,6 +59,7 @@ angular.module('sbAdminApp')
                     edgeHoverExtremities: true,
                 }
             });
+            /**** Plugins ****/
 
             /**** Interactions ****/
             function arrayUnique(array) {
@@ -253,6 +254,22 @@ angular.module('sbAdminApp')
             scope.$watch('cleanRefresh', function() {
                 resetHighlight();
                 s.refresh();
+            });
+            scope.$watch('interactor', function() {
+                if (scope.interactor == 'dragNode') {
+                    console.log('change to drag')
+                    // Instanciate the ActiveState plugin:
+                    var activeState = sigma.plugins.activeState(s);
+
+                    // Initialize the dragNodes plugin:
+                    var dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
+                } else {
+                    console.log('smt else')
+                    sigma.plugins.killDragNodes(s);
+                }
+                //var dragListener = new sigma.plugins.dragNodes(sigmaInstance, renderer, activeState);
+
+
             });
             element.on('$destroy', function() {
                 s.graph.clear();

@@ -24,6 +24,7 @@
                         <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
                         <button id="interactorInformation" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" data-title="Show details about the elements" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
                         <button id="interactorFocus" class="btn btn-default" title="Change the view's focus (Shift + Click on element)" data-title="Change the view's focus" ng-click="setInteractorFocus()"><i class="fa fa-crosshairs"></i></button>
+                        <button id="interactorDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorDragNode()"><i class="fa fa-arrows"></i></button>
                         <label id="interactorDescriptionLabel">Navigate the graph</label>
 <div class="dropdown pull-right">
   <button id="" class="btn btn-default pull-right dropdown-toggle"  data-toggle="dropdown" title="" ><i class="fa fa-cog"></i> <span class="caret"></span></button>
@@ -54,6 +55,7 @@
                             metric-max-filter={{filter_occurence_max}}
                             event-catcher="eventCatcher"
                             locate="locate"
+                            interactor={{interactor}}
                             time-filter="filter" >
                     </sigma-js>
                 </div>

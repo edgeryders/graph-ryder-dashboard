@@ -280,6 +280,7 @@ angular.module('sbAdminApp')
             document.getElementById("interactorNavigate").className="btn btn-default";
             document.getElementById("interactorInformation").className="btn btn-default";
             document.getElementById("interactorFocus").className="btn btn-default";
+            document.getElementById("interactorDragNode").className="btn btn-default";
             document.getElementById("interactorDescriptionLabel").innerHTML = "";
         }
 
@@ -302,6 +303,13 @@ angular.module('sbAdminApp')
             $scope.interactor="focus";
             document.getElementById("interactorFocus").className="btn btn-primary";
             document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorFocus").attr("data-title");
+        }
+
+        $scope.setInteractorDragNode = function () {
+            $scope.clearInteractor();
+            $scope.interactor="dragNode";
+            document.getElementById("interactorDragNode").className="btn btn-primary";
+            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorDragNode").attr("data-title");
         }
 
         /*** Search Bar Catcher *****/

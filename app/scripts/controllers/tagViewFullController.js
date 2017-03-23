@@ -24,6 +24,7 @@ angular.module('sbAdminApp')
         $scope.filter_occurence_min = "2";
         $scope.filter_occurence_max = "100";
         $scope.filterLevels = ["1","2","3","4","5","6","7","8"];
+        $scope.sigma_instance = undefined;
         $scope.interactor = "navigate";
         $scope.showTagCommonContent = false;
         $scope.tag_src = {id: -1, label:""};
@@ -95,6 +96,7 @@ angular.module('sbAdminApp')
             var createGraphPromise = createGraph.get();
             createGraphPromise.$promise.then(function (result) {
                 $scope.drawGraph();
+                //console.log($scope.sigma_instance.graph.nodes())
             });
         };
 
@@ -162,6 +164,9 @@ angular.module('sbAdminApp')
                         $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     }
                     else if ($scope.interactor == "neighbourhood") {
+                        // Delegated to directive sigma.js
+                    }
+                    else if ($scope.interactor == "dragNode") {
                         // Delegated to directive sigma.js
                     } else {
                         console.log("Unexpected node: "+e.data.node);
@@ -245,6 +250,7 @@ angular.module('sbAdminApp')
             document.getElementById("interactorNavigate").className="btn btn-default";
             document.getElementById("interactorInformation").className="btn btn-default";
             document.getElementById("interactorNeighbourhood").className="btn btn-default";
+            document.getElementById("interactorDragNode").className="btn btn-default";
             document.getElementById("interactorDescriptionLabel").innerHTML = "";
         }
 
@@ -267,6 +273,13 @@ angular.module('sbAdminApp')
             $scope.interactor="neighbourhood";
             document.getElementById("interactorNeighbourhood").className="btn btn-primary";
             document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorNeighbourhood").attr("data-title");
+        }
+
+        $scope.setInteractorDragNode = function () {
+            $scope.clearInteractor();
+            $scope.interactor="dragNode";
+            document.getElementById("interactorDragNode").className="btn btn-primary";
+            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorDragNode").attr("data-title");
         }
 
         $scope.cleanRefreshSigmaDecorator = function () {
