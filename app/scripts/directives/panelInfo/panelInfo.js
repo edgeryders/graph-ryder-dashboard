@@ -122,6 +122,15 @@ return {
                         scope.annotation = result;
                     });
                     break;
+                case "nottagged":
+                    var Content = $resource(config.apiUrl + "content/nottagged");
+                    var contentP = Content.get();
+                    contentP.$promise.then(function (result) {
+                        //$scope.loading = false;
+                        scope.posts = result.posts;
+                        scope.comments = result.comments;
+                    });
+                    break;
                 default:
                     console.log("error with panelView directive unknow type");
             }

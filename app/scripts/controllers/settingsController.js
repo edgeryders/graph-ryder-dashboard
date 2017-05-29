@@ -10,15 +10,16 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('SettingsCtrl', function ($scope, $resource, config, $q) {
+    .controller('SettingsCtrl', function ($scope, $resource, config, $q, $compile) {
 
         $scope.warning = {color: 'orange'};
         $scope.danger = {color: 'red'};
         $scope.success = {color: '#39b500'};
+        $scope.infoPanelParent = "infoPanelParent";
 
         /***** Load api infos *****/
         $scope.refresh = function () {
-            
+
             $scope.api = {"url": config.apiUrl, "status": "unknown", "version": "unknown"};
             $scope.style = {"status": $scope.warning, "version": $scope.warning, "ram": $scope.warning, "disk": $scope.warning};
             $scope.regen = {"complete": false, "users": false, "commentsAndPosts": false, "generated": false, "ramLoad": "unknown", "diskLoad": "unknown"};
@@ -97,6 +98,16 @@ angular.module('sbAdminApp')
             createGraphPromise.$promise.then(function (result) {
             });
             console.log("hello");
+        };
+
+        /********* Info Panel ***************/
+        $scope.openInfoPanel = function(elementType, elementId) {
+            var mod = document.createElement("panel-info");
+            mod.setAttribute("type", elementType);
+            mod.setAttribute("id", elementId);
+            mod.setAttribute("parent", $scope.infoPanelParent);
+            jQuery("#"+ $scope.infoPanelParent).append(mod);
+            $compile(mod)($scope);
         };
 
         /***** Upload and Update *****/

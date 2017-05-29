@@ -1,0 +1,50 @@
+<!-- panel for user -->
+    <div class="panel-body">
+        <uib-tabset justified="true">
+            <uib-tab index="0" heading="Posts ({{::posts.length}})" disable="::posts.length == 0">
+                <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Title</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="post in ::posts" >
+                        <td>
+                            <button data-click-id="{{::post.post_id}}" class="btn btn-success btn-sm" ng-click="::openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" data-click-id="{{::post.post_id}}" aria-hidden="true"></i></button>
+                        </td>
+                        <td>{{ ::post.label }}</td>
+                        <td>{{ getDate(post.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </uib-tab>
+            <uib-tab index="1" heading="Comments ({{::comments.length}})" disable="::comments.length == 0" >
+                <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Title</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="comment in ::comments" >
+                        <td>
+                            <button data-click-id="{{::comment.comment_id}}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" data-click-id="{{::comment.comment_id}}" aria-hidden="true"></i></button>
+                        </td>
+                        <td>{{ ::comment.label }}</td>
+                        <td>{{ getDate(comment.timestamp) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+<!-- /.panel-content -->

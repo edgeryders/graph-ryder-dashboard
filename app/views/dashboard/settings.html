@@ -1,5 +1,6 @@
 <div>
     &nbsp;
+    <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
     <div class="row">
         <div class="col-lg-12" >
             <div class="panel panel-default">
@@ -43,6 +44,10 @@
                             <input type="submit" value="RegenerateGraphs" /><br/><br/>
                         </fieldset>
                     </form>
+                    <div>
+                      <legend><i class="fa fa-user-md"></i> Ethnographer tools</legend>
+                          <button class="btn btn-info" ng-click="openInfoPanel('nottagged', 0);" >List elements not tagged</button><br><br>
+                    </div>
                     <form ng-submit="upload()">
                         <fieldset>
                             <legend>Update data</legend>
