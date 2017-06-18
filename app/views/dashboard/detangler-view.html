@@ -1,0 +1,82 @@
+<div>
+    <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
+      &nbsp; <!-- Space above the main Panel -->
+    </div-->
+    <div class="row">
+        <div class="col-lg-6" >
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div>Display label on nodes: None &nbsp;  <div id="node-label-user-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All </div>
+                    <div>
+                        <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
+
+                        <button id="interactorSelectNode" class="btn btn-default" title="Selection of a node" data-title="Selection of a node" ng-click="setInteractorNodeSelection()"><i class="fa  fa-hand-o-up" aria-hidden="true"></i></button>
+
+                        <button id="interactorLasso" class="btn btn-default" title="Selection of multiples modes" data-title="Selection of multiple nodes" ng-click="setInteractorLasso()"><i class="fa fa-circle-thin" aria-hidden="true"></i></button>
+
+                        <button id="interactorDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorDragNode()"><i class="fa fa-arrows"></i></button>
+
+                        <label id="interactorDescriptionLabel">Navigate the graph</label>
+                    </div>
+
+
+
+
+
+                </div> <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <sigma-js
+                          graph="usersGraphSigma"
+                          id="user-graph"
+                          width="100%" height="400px"
+                          threshold={{nodeUserelThreshold}}
+                          edge-labels="userel"
+                          metric-min-filter={{filter_occurence_min}}
+                          metric-max-filter={{filter_occurence_max}}
+                          interactor={{interactor}}
+                          event-catcher="eventCatcher"
+                          default-node-color={{defaultNodeColor}}
+                          default-node-size={{defaultNodeSize}} >
+                    </sigma-js>
+                </div> <!-- /.panel-body -->
+
+            </div> <!-- /.panel -->
+        </div> <!-- /.col-lg-6 -->
+
+        <div class="col-lg-6" >
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div>Display label on nodes: None &nbsp;  <div id="node-label-tag-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All </div>
+                    <div>Co-occurrence intensity: Weak &nbsp; <div id="coocurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
+
+
+
+                </div> <!-- /.panel-heading -->
+                <div class="panel-body">
+                  <!-- /.Graphe des tags -->
+                  <sigma-js
+                          graph="tagsGraphSigma"
+                          id="comment-graph"
+                          width="100%" height="400px"
+                          threshold={{nodeTagelThreshold}}
+                          metric-filter="occ"
+                          metric-min-filter={{filter_occurence_tag_min}}
+                          metric-max-filter={{filter_occurence_tag_max}}
+                          locate="locate"
+
+                          edge-labels="tagel" >
+
+                  </sigma-js>
+                </div> <!-- /.panel-body -->
+
+            </div> <!-- /.panel -->
+        </div> <!-- /.col-lg-6 -->
+
+
+
+
+
+    </div> <!-- /.row -->
+
+
+</div>

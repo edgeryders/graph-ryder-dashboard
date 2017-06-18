@@ -21,7 +21,9 @@ angular.module('sbAdminApp')
             metricMaxFilter: '@?',
             metricNEutralFilter: '@?',
             interactor: '@?',
-            cleanRefresh: '@?'
+            cleanRefresh: '@?',
+            defaultNodeColor: '@',
+            defaultNodeSize: '@'
         },
         link: function (scope, element) {
             // default values
@@ -255,6 +257,38 @@ angular.module('sbAdminApp')
                 resetHighlight();
                 s.refresh();
             });
+
+
+            var lasso = new sigma.plugins.lasso(s, s.renderers[0], {
+              'strokeStyle': 'black',
+              'lineWidth': 2,
+              'fillWhileDrawing': true,
+              'fillStyle': 'rgba(41, 41, 41, 0.2)',
+              'cursor': 'crosshair'
+            });
+
+            lasso.bind('selectedNodes', function (event) {
+              // Do something with the selected nodes
+              var nodes = event.data;
+
+
+              // For instance, reset all node size as their initial size
+              s.graph.nodes().forEach(function (node) {
+                node.color = scope.defaultNodeColor;
+                node.size = scope.defaultNodeSize;
+              });
+
+              // Then increase the size of selected nodes...
+              nodes.forEach(function (node) {
+                node.color = 'rgb(42, 187, 155)';
+                node.size *= 7;
+                console.log(node);
+              });
+
+              s.refresh();
+            });
+
+
             scope.$watch('interactor', function() {
                 if (scope.interactor == 'dragNode') {
                     console.log('change to drag')
@@ -264,10 +298,55 @@ angular.module('sbAdminApp')
                     // Initialize the dragNodes plugin:
                     var dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
                 } else {
-                    console.log('smt else')
                     sigma.plugins.killDragNodes(s);
                 }
+
+                if (scope.interactor == 'nodeSelection') {
+                    console.log('color',scope.defaultNodeColor);
+                    console.log('change to node selection')
+                    var activeState = sigma.plugins.activeState(s);
+                    // Initialize the Select plugin:
+                    var selectListener = sigma.plugins.select(s, activeState);
+                    //var keyboard = sigma.plugins.keyboard(s, s.renderers[0]);
+                    //selectListener.bindKeyboard(keyboard);
+
+                    //activeState.bind('activeNodes', _.debounce(function(event) {
+                    //    console.log('active nodes:', activeState.nodes());}, 250)
+                    //);
+                    activeState.bind('activeNodes', function(event) {
+                        console.log('active nodes:', activeState.nodes());
+                        console.log(scope.defaultNodeSize);
+                        s.graph.nodes().forEach(function (node) {
+                          node.color = scope.defaultNodeColor;
+                          node.size = scope.defaultNodeSize;
+                        });
+                        activeState.nodes().forEach(function (node) {
+                          node.color = 'rgb(42, 187, 155)';
+                          node.size *= 7;
+                        });
+                    });
+                }
+                else{
+                  sigma.plugins.killActiveState();
+                  sigma.plugins.killSelect(s);
+                }
+
+                if (scope.interactor == 'lasso') {
+                  console.log('change to lasso');
+                  lasso.activate();
+                }
+                else{
+                  lasso.deactivate();
+                }
+
+                if (scope.interactor == 'navigate') {
+                    console.log('change to navigate')
+                }
                 //var dragListener = new sigma.plugins.dragNodes(sigmaInstance, renderer, activeState);
+
+
+            });
+            scope.$watch('highlightNodes', function (newVal, oldVal) {
 
 
             });
