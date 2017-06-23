@@ -104,74 +104,10 @@ angular.module('sbAdminApp')
             $scope.generateGraph($scope.tag_id);
         };
 
+
+
         $scope.generateDownloadLink = function () {
-            var tmp = [];
-            var x;
-            var line_csv;
-            var nodes_json = [];
-            var nodes_csv = '';
-            var nodes_csv_partial = '';
-            var tmp_head = $scope.tagGraphSigma.nodes[1];
-            for (x in tmp_head) {
-                nodes_csv+="'"+x+"',";
-            }
-            nodes_csv=nodes_csv.slice(0,-1)+'\n';
-            nodes_csv_partial=nodes_csv;
-            for (var i=0;i<$scope.tagGraphSigma.nodes.length; i++) {
-                tmp = $scope.tagGraphSigma.nodes[i];
-                nodes_json.push(JSON.stringify(tmp));
-                line_csv = '';
-                for (x in tmp_head) {
-                    line_csv+="'"+tmp[x]+"',";
-                }
-                nodes_csv+=line_csv.slice(0,-1)+'\n';
-                if (!(tmp['hidden'] == true))
-                    nodes_csv_partial+=line_csv.slice(0,-1)+'\n';
-            }
-            var edges_json = [];
-            var edges_csv = '';
-            var edges_csv_partial = '';
-            tmp_head = $scope.tagGraphSigma.edges[1];
-            for (x in tmp_head) {
-                edges_csv+="'"+x+"',";
-            }
-            edges_csv=edges_csv.slice(0,-1)+'\n';
-            edges_csv_partial=edges_csv;
-            for (var i=0;i<$scope.tagGraphSigma.edges.length; i++) {
-                tmp = $scope.tagGraphSigma.edges[i];
-                edges_json.push(JSON.stringify(tmp));
-                line_csv = '';
-                for (x in tmp_head) {
-                    line_csv+="'"+tmp[x]+"',";
-                }
-                edges_csv+=line_csv.slice(0,-1)+'\n';
-                if (!(tmp['hidden'] == true))
-                    edges_csv_partial+=line_csv.slice(0,-1)+'\n';
-            }
-            var properties = {type: 'application/json'}; // Specify the file's mime-type.
-            //try {
-              // Specify the filename using the File constructor, but ...
-            //  var file_nodes_json = new File(nodes_json, "tag_view_full_nodes.json", properties);
-            //  var file_edges_json = new File(edges_json, "tag_view_full_edges.json", properties);
-            //} catch (e) {
-              // ... fall back to the Blob constructor if that isn't supported.
-              var file_nodes_json = new Blob(nodes_json, properties);
-              var file_edges_json = new Blob(edges_json, properties);
-              var file_nodes_csv = new Blob([nodes_csv], properties);
-              var file_edges_csv = new Blob([edges_csv], properties);
-              var file_nodes_csv_partial = new Blob([nodes_csv_partial], properties);
-              var file_edges_csv_partial = new Blob([edges_csv_partial], properties);
-            //}
-            var url_nodes_json = URL.createObjectURL(file_nodes_json);
-            var url_edges_json = URL.createObjectURL(file_edges_json);
-            var url_nodes_csv = URL.createObjectURL(file_nodes_csv);
-            var url_edges_csv = URL.createObjectURL(file_edges_csv);
-            var url_nodes_csv_partial = URL.createObjectURL(file_nodes_csv_partial);
-            var url_edges_csv_partial = URL.createObjectURL(file_edges_csv_partial);
-            var html_json = 'JSON (complete): <a target="_blank" class="btn btn-default" download="tag_view_full_nodes.json" href="'+url_nodes_json+'" >Nodes</a>&nbsp;|&nbsp;<a target="_blank" class="btn btn-default" download="tag_view_full_edges.json" href="'+url_edges_json+'" >Edges</a>';
-            var html_csv = 'CSV (complete): <a target="_blank" class="btn btn-default" download="tag_view_full_nodes.csv" href="'+url_nodes_csv+'" >Nodes</a>&nbsp;|&nbsp;<a target="_blank" class="btn btn-default" download="tag_view_full_edges.csv" href="'+url_edges_csv+'" >Edges</a>';
-            var html_csv_partial = 'CSV (partial): <a target="_blank" class="btn btn-default" download="tag_view_full_nodes_partial.csv" href="'+url_nodes_csv_partial+'" >Nodes</a>&nbsp;|&nbsp;<a target="_blank" class="btn btn-default" download="tag_view_full_edges_partial.csv" href="'+url_edges_csv_partial+'" >Edges</a>';
-            $("#download_link_dialog").html(html_json+"<br/>"+html_csv+"<br/>"+html_csv_partial);
+            $("#download_link_dialog").html($rootScope.generateDownloadLinkForSigma( $scope.tagGraphSigma.nodes, $scope.tagGraphSigma.edges, 'tag_view'));
             $("#download_link_dialog").attr('title', 'Download a copy of the graph');
             $("#download_link_dialog").dialog("open");
         }
