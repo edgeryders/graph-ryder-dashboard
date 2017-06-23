@@ -9,6 +9,12 @@
                     <input type="radio" ng-model="type" value="neighbours" /> Neighbours
                     <input type="radio" ng-model="type" value="doi" /> DOI
                     <input type="checkbox" ng-model="el" /> labels on edges
+                    <div class="dropdown pull-right">
+                      <button id="" class="btn btn-default pull-right dropdown-toggle"  data-toggle="dropdown" title="" ><i class="fa fa-cog"></i> <span class="caret"></span></button>
+                      <ul class="dropdown-menu pull-right">
+                        <li><button class="btn btn-default" title="Download file" ng-click="generateDownloadLink()">Download Graph</button><div id="download_link_dialog" title="Download a copy of the graph"></div></li>
+                      </ul>
+                    </div>
                     <form ng-submit="drawDoiGraph()">
                         Doi size : <input type="number" ng-model="doiSize" ng-hide="type != 'doi'" />
                         algo :
