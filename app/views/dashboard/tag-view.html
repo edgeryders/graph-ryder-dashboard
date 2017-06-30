@@ -14,7 +14,7 @@
     &nbsp;
     </div-->
     <div class="row">
-        <div class="col-lg-6" >
+        <div class="col-lg-8" >
             <div class="panel panel-default">
                 <div class="panel-heading">
                   <div>Display label on nodes: None &nbsp;  <div id="node-label-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All</div>
@@ -39,7 +39,7 @@
     <li class="divider"></li>
     <li>Display labels on edges <input type="checkbox" ng-model="tagel" ></li>
     <li class="divider"></li>
-    <li><button class="btn btn-default" title="Download file" ng-click="generateDownloadLink()">Download Graph</button><div id="download_link_dialog" title="Download a copy of the graph"></div></li>
+    <li>&nbsp;<button class="btn btn-default" title="Download file" ng-click="generateDownloadLink()">Download Graph</button><div id="download_link_dialog" title="Download a copy of the graph"></div></li>
   </ul>
 </div>
 
@@ -65,13 +65,13 @@
             </div>
             <!-- /.panel -->
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="panel panel-default">
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <time-line height="200" data="time_data" call-back="extent" ></time-line>
-                    <div class="pull-left">Start date: {{selected.start}}
-                    &nbsp;&nbsp;End date: {{selected.end}}</div>
+                    <div class="pull-left">Start date: {{getDate(selected.start)}}<br/>
+                    End date: {{getDate(selected.end)}}</div>
                     <div class="pull-right"><button class="btn btn-default text-right" ng-click="resetTimeLine()" >Reset</button></div>
                 </div>
                 <!-- /.panel-body -->
@@ -79,7 +79,7 @@
             <!-- /.panel -->
         </div>
         <!-- /.col-lg-6 -->
-        <div class="col-lg-6" ng-show="showTagCommonContent">
+        <div class="col-lg-4" ng-show="showTagCommonContent">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="table-responsive">
@@ -115,7 +115,7 @@
             </div>
             <!-- /.panel -->
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <form ng-submit="updateTagTable()">
