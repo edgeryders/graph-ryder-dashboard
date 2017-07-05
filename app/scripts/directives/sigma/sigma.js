@@ -22,8 +22,9 @@ angular.module('sbAdminApp')
             metricNEutralFilter: '@?',
             interactor: '@?',
             cleanRefresh: '@?',
-            defaultNodeColor: '@',
-            defaultNodeSize: '@'
+            s: '=?',
+            lasso: '=?',
+            maxNodeSize: '=?'
         },
         link: function (scope, element) {
             // default values
@@ -42,6 +43,8 @@ angular.module('sbAdminApp')
             neighbourhood.adjacentEdges = [];
             neighbourhood.nodesColour = [];
             neighbourhood.edgesColour = [];
+            //scope.user_node_selected = [];
+            scope.showNodeFilter = [];
 
             // Create sigma instance
             var s = new sigma({
@@ -54,13 +57,15 @@ angular.module('sbAdminApp')
                     labelSize: "fixed",
                     drawEdgeLabels: scope.edgeLabels,
                     minArrowSize: 5,
-                    enableEdgeHovering: true,
+                    enableEdgeHovering: false,
                     edgeHoverColor: '#000',
                     defaultEdgeHoverColor: '#000',
                     edgeHoverSizeRatio: 2,
                     edgeHoverExtremities: true,
+                    maxNodeSize: scope.maxNodeSize
                 }
             });
+            scope.s = s;
             /**** Plugins ****/
 
             /**** Interactions ****/
@@ -204,7 +209,7 @@ angular.module('sbAdminApp')
                 filter
                   .undo('nodeFilter')
                   .nodesBy(function(n) {
-                    return ((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter));
+                    return (((n.couldAppear != undefined) ? n.couldAppear : true) && ((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter)));
                   }, 'nodeFilter')
                   .apply();
                 filter
@@ -215,7 +220,31 @@ angular.module('sbAdminApp')
                   .apply();
             }
 
+
+            /*
+            var second_filter = new sigma.plugins.filter(s);
+            var nodeFilter = function(tab_node) {
+              filter
+                .undo('nodeShowFilter')
+                .nodesBy(function(n) {
+                  if (tab_node.indexOf(n.user_id) > -1){
+                    console.log(n);
+                    console.log(tab_node);
+                  }
+                  //return (scope.showNodeFilter.indexOf(n.user_id) > -1);
+                  return true;
+                }, 'nodeShowFilter')
+                .apply();
+              }
+            */
+
+
+
+            //var filter_node = new sigma.plugins.filter(s);
+            //filter_node.nodesBy(function(n) {
+
             /**** Watch for update ****/
+
             scope.$watch('metricMinFilter', function(newVal) {
                 metricFilter(newVal, scope.metricMaxFilter);
             });
@@ -266,27 +295,7 @@ angular.module('sbAdminApp')
               'fillStyle': 'rgba(41, 41, 41, 0.2)',
               'cursor': 'crosshair'
             });
-
-            lasso.bind('selectedNodes', function (event) {
-              // Do something with the selected nodes
-              var nodes = event.data;
-
-
-              // For instance, reset all node size as their initial size
-              s.graph.nodes().forEach(function (node) {
-                node.color = scope.defaultNodeColor;
-                node.size = scope.defaultNodeSize;
-              });
-
-              // Then increase the size of selected nodes...
-              nodes.forEach(function (node) {
-                node.color = 'rgb(42, 187, 155)';
-                node.size *= 7;
-                console.log(node);
-              });
-
-              s.refresh();
-            });
+            scope.lasso = lasso;
 
 
             scope.$watch('interactor', function() {
@@ -302,7 +311,6 @@ angular.module('sbAdminApp')
                 }
 
                 if (scope.interactor == 'nodeSelection') {
-                    console.log('color',scope.defaultNodeColor);
                     console.log('change to node selection')
                     var activeState = sigma.plugins.activeState(s);
                     // Initialize the Select plugin:

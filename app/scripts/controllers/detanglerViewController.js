@@ -32,25 +32,236 @@
          $scope.requestFullTagGraph = false;
          $scope.showTagCommonContent = false;
          $scope.tableSizeChoice = '10';
-         $scope.interactor = "navigate";
+         $scope.userinteractor = "navigate";
+         $scope.taginteractor = "navigate";
+         $scope.userVennInteractor = "union"
+         $scope.tagVennInteractor = "union"
          $scope.infoPanelParent = "infoPanelParent";
          $scope.selected = {}; //test
          $scope.selected.start= new Date(0);
          $scope.selected.end= new Date(Date.now());
          $scope.layoutChoice = 'Circular';
-         $scope.defaultNodeColor = '';
-         $scope.defaultNodeSize = '';
-
+         $scope.defaultUserNodeColor = '';
+         $scope.defaultTagNodeColor = '';
+         $scope.s_user = undefined;
+         $scope.s_tag = undefined;
+         $scope.lasso_user = {};
+         $scope.lasso_tag = {};
+         $scope.isCheckedUser = false;
+         $scope.tab_users = [];
+         $scope.tab_tags = [];
+         $scope.communityManagers = ["Alberto", "Nadia", "Noemi"];
+         $scope.metricFilter = "occ";
 
          // When rootScope is ready load the graph
          $rootScope.$watch('ready', function(newVal) {
              if(newVal) {
                  $scope.layoutChoice = $rootScope.layout[12];
                  $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/' + $scope.layoutChoice);
+                 $scope.tagGraphRessource = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
 
                  $scope.drawUserGraph(true);
-                 $scope.generateTagGraph();
+                 $scope.drawTagGraph(true);
+                 //$scope.generateTagGraph();
+                 //$scope.generateUserGraph();
+
              }
+         });
+
+         $scope.fctUnion = function (tab_ini, tab_to_merge){
+           if (tab_ini == undefined){
+             tab_ini = [];
+           }
+           return [...new Set([...tab_ini ,...tab_to_merge])];
+         }
+
+         $scope.fctIntersect = function (tab_ini, tab_to_merge){
+            if (tab_ini == undefined){
+              return tab_to_merge;
+            }
+            else if (tab_ini.length == 0){
+              return []
+            }
+            else{
+              return [...new Set(tab_ini.filter(x => new Set(tab_to_merge).has(x)))];
+              //new Set([...setA].filter(x => setB.has(x)));
+            }
+          }
+
+         //We handle above the union/intersection feature
+         $scope.$watch("userVennInteractor", function() {
+           if ($scope.userVennInteractor == "union"){
+             $scope.selectTagNodes = $scope.fctUnion;
+           }
+           if ($scope.userVennInteractor == "intersect"){
+             $scope.selectTagNodes = $scope.fctIntersect;
+            }
+           if ($scope.lasso_user != undefined && $scope.lasso_user.selectedNodes != undefined && $scope.lasso_user.selectedNodes.length != 0){
+              $scope.refreshTagView();
+           }
+         });
+
+         $scope.$watch("tagVennInteractor", function() {
+           if ($scope.tagVennInteractor == "union"){
+             $scope.selectUserNodes = $scope.fctUnion;
+           }
+           if ($scope.tagVennInteractor == "intersect"){
+             $scope.selectUserNodes = $scope.fctIntersect;
+            }
+           if ($scope.lasso_tag != undefined && $scope.lasso_tag.selectedNodes != undefined && $scope.lasso_tag.selectedNodes.length != 0){
+              $scope.refreshUserView();
+           }
+         });
+
+         $scope.refreshTagView = function(){
+
+           //Set the default properties
+           $scope.s_tag.graph.edges().forEach(function (edge) {
+             edge.hidden = false;
+           });
+
+           $scope.s_tag.graph.nodes().forEach(function (node) {
+             node.color = $scope.defaultTagNodeColor;
+             node.hidden = true;
+             node.couldAppear = false;
+           });
+
+           $scope.s_user.graph.nodes().forEach(function (node) {
+             node.color = $scope.defaultUserNodeColor;
+           });
+
+           //We search what are the tags that must be colored
+           $scope.tab_tags = undefined;
+           $scope.lasso_user.selectedNodes.forEach(function (node) {
+              node.color = 'rgb(42, 187, 155)';
+              if (node.tagsAssociateNodeTlp != undefined) {
+                var text = node.tagsAssociateNodeTlp
+                var tab_few_tag = eval("[" + text.substring(1,text.length-1) + "]")
+              }
+              else{
+                var tab_few_tag = [];
+              }
+              $scope.tab_tags = $scope.selectTagNodes($scope.tab_tags,tab_few_tag);
+           });
+
+           //We filter the tags and we change the color.
+           if ($scope.tab_tags != undefined){
+             $scope.s_tag.graph.nodes().filter( function (node){
+                return $scope.tab_tags.indexOf(parseInt(node.tag_id)) > -1
+             }).forEach( function (node){
+                node.color = 'rgb(42, 187, 155)';
+                if (Number(node[$scope.metricFilter]) >= Number($scope.filter_occurence_tag_min) && Number(node[$scope.metricFilter]) <= Number($scope.filter_occurence_tag_max)){
+                  node.hidden = false;
+                }
+                else{
+                  node.hidden = true;
+                }
+                node.couldAppear = true;
+             });
+           }
+
+           if (($scope.tab_tags != undefined && $scope.tab_tags.length == 0) || $scope.tab_tags == undefined){
+             $scope.s_tag.graph.nodes().forEach(function (node) {
+               if (Number(node[$scope.metricFilter]) >= Number($scope.filter_occurence_tag_min) && Number(node[$scope.metricFilter]) <= Number($scope.filter_occurence_tag_max)){
+                 node.hidden = false;
+               }
+               else{
+                 node.hidden = true;
+               }
+               node.couldAppear = true;
+             });
+           }
+
+           $scope.s_tag.refresh();
+           $scope.s_user.refresh();
+           $scope.lasso_user.deactivate();
+           $scope.lasso_user.activate();
+         }
+
+         $scope.refreshUserView = function(){
+
+           //Set the default properties
+           $scope.s_user.graph.edges().forEach(function (edge) {
+             edge.hidden = false;
+           });
+
+           $scope.s_user.graph.nodes().forEach(function (node) {
+             node.color = $scope.defaultUserNodeColor;
+             node.hidden = true;
+             node.couldAppear = false;
+           });
+
+           $scope.s_tag.graph.nodes().forEach(function (node) {
+             node.color = $scope.defaultTagNodeColor;
+           });
+
+           //We search what are the users that must be colored
+           $scope.tab_users = undefined;
+           $scope.lasso_tag.selectedNodes.forEach(function (node) {
+              node.color = 'rgb(42, 187, 155)';
+              if (node.usersAssociateNodeTlp != undefined) {
+                var text = node.usersAssociateNodeTlp
+                var tab_few_user = eval("[" + text.substring(1,text.length-1) + "]")
+              }
+              else{
+                var tab_few_user = [];
+              }
+              $scope.tab_users = $scope.selectUserNodes($scope.tab_users,tab_few_user);
+           });
+
+           //We filter the users and we change the color.
+           if ($scope.tab_users != undefined){
+             $scope.s_user.graph.nodes().filter( function (node){
+                return $scope.tab_users.indexOf(parseInt(node.user_id)) > -1
+             }).forEach( function (node){
+                node.color = 'rgb(42, 187, 155)';
+                node.hidden = false;
+                if ($scope.isCheckedUser){
+                  if ($scope.communityManagers.indexOf(node.name) > -1){
+                    node.hidden = true;
+                  }
+                }
+                node.couldAppear = true;
+             });
+          }
+           if (($scope.tab_users != undefined && $scope.tab_users.length == 0) || $scope.tab_users == undefined){
+             $scope.s_user.graph.nodes().forEach(function (node) {
+               node.hidden = false;
+               if ($scope.isCheckedUser){
+                 if ($scope.communityManagers.indexOf(node.name) > -1){
+                   node.hidden = true;
+                 }
+               }
+               node.couldAppear = true;
+             });
+           }
+
+
+           $scope.s_tag.refresh();
+           $scope.s_user.refresh();
+           $scope.lasso_tag.deactivate();
+           $scope.lasso_tag.activate();
+
+           
+
+           $scope.s_user.startForceAtlas2();
+         }
+
+
+         //We want to bind the lasso when s_tag and s_user are ready
+         var toUnBind = $scope.$watch("s_tag", function() {
+           if ($scope.s_tag != undefined) {
+             //When the lasso_user catch new nodes
+             $scope.lasso_user.bind('selectedNodes', function (event) {
+               $scope.refreshTagView();
+             });
+
+             //When the lasso_tag catch new nodes
+             $scope.lasso_tag.bind('selectedNodes', function (event) {
+               $scope.refreshUserView();
+             });
+             toUnBind(); //We stop the watcher wich is useless now.
+           }
          });
 
 
@@ -94,12 +305,11 @@
          $scope.usersGraphSigma = [];
 
          $scope.drawUserGraph = function (suggestions) {
-             $scope.drawGraphPromise = $scope.userGraphRessource.get();
-             $scope.drawGraphPromise.$promise.then(function (result) {
+             $scope.drawUserGraphPromise = $scope.userGraphRessource.get();
+             $scope.drawUserGraphPromise.$promise.then(function (result) {
                  $scope.usersGraphSigma = result;
-                 $scope.nodes = $scope.usersGraphSigma.nodes;
-                 $scope.defaultNodeColor = $scope.usersGraphSigma.nodes[0].color
-                 $scope.defaultNodeSize = $scope.usersGraphSigma.nodes[0].size
+                 $scope.defaultUserNodeColor = $scope.usersGraphSigma.nodes[0].color
+                 /*
                  if(suggestions) {
                      $rootScope.suggestions = [];
                      angular.forEach($scope.nodes, function (node) {
@@ -109,72 +319,163 @@
                          }
                      });
                  }
+                 */
              });
          };
 
          $scope.tagsGraphSigma = [];
 
          $scope.drawTagGraph = function (result) {
-             var drawGraph = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
-             var drawgraph = drawGraph.get();
-             drawgraph.$promise.then(function (result) {
+             $scope.drawTagGraphPromise = $scope.tagGraphRessource.get();
+             $scope.drawTagGraphPromise.$promise.then(function (result) {
                  $scope.tagsGraphSigma = result;
+                  $scope.defaultTagNodeColor = $scope.tagsGraphSigma.nodes[0].color
              });
          };
 
          $scope.generateTagGraph = function () {
              //$scope.filter_occ = filter_occ;
              var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filter_occurence_tag_min + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
-             //var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + $scope.tag_id);
              var createGraphPromise = createGraph.get();
              createGraphPromise.$promise.then(function (result) {
                  $scope.drawTagGraph();
-                 //console.log($scope.sigma_instance.graph.nodes())
+             });
+         };
+
+         $scope.generateUserGraph = function () {
+             //$scope.filter_occ = filter_occ;
+             var createGraph = $resource(config.apiUrl + 'generateUserGraph');
+             var createGraphPromise = createGraph.get();
+             createGraphPromise.$promise.then(function (result) {
+                 $scope.drawUserGraph();
              });
          };
 
          /******** Interactor Manager ********/
-         $scope.clearInteractor = function() {
-             document.getElementById("interactorNavigate").className="btn btn-default";
-             document.getElementById("interactorSelectNode").className="btn btn-default";
-             document.getElementById("interactorDragNode").className="btn btn-default";
-             document.getElementById("interactorLasso").className="btn btn-default";
-             document.getElementById("interactorDescriptionLabel").innerHTML = "";
+         $scope.clearUserInteractor = function() {
+             document.getElementById("interactorUserNavigate").className="btn btn-default";
+             //document.getElementById("interactorUserSelectNode").className="btn btn-default";
+             document.getElementById("interactorUserDragNode").className="btn btn-default";
+             document.getElementById("interactorUserLasso").className="btn btn-default";
+             document.getElementById("interactorUserDescriptionLabel").innerHTML = "";
          }
 
-         $scope.setInteractorNavigate = function () {
-             $scope.clearInteractor();
-             $scope.interactor="navigate";
-             document.getElementById("interactorNavigate").className="btn btn-primary";
-             document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorNavigate").attr("data-title");
+         $scope.setInteractorUserNavigate = function () {
+             $scope.clearUserInteractor();
+             $scope.userinteractor="navigate";
+             document.getElementById("interactorUserNavigate").className="btn btn-primary";
+             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserNavigate").attr("data-title");
          }
 
-         $scope.setInteractorNodeSelection = function () {
-             $scope.clearInteractor();
-             $scope.interactor="nodeSelection";
-             document.getElementById("interactorSelectNode").className="btn btn-primary";
-             document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorSelectNode").attr("data-title");
+         $scope.setInteractorUserNodeSelection = function () {
+             $scope.clearUserInteractor();
+             $scope.userinteractor="nodeSelection";
+             document.getElementById("interactorUserSelectNode").className="btn btn-primary";
+             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserSelectNode").attr("data-title");
          }
 
-         $scope.setInteractorDragNode = function () {
-             $scope.clearInteractor();
-             $scope.interactor="dragNode";
-             document.getElementById("interactorDragNode").className="btn btn-primary";
-             document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorDragNode").attr("data-title");
+         $scope.setInteractorUserDragNode = function () {
+             $scope.clearUserInteractor();
+             $scope.userinteractor="dragNode";
+             document.getElementById("interactorUserDragNode").className="btn btn-primary";
+             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserDragNode").attr("data-title");
          }
 
-         $scope.setInteractorLasso = function () {
-             $scope.clearInteractor();
-             $scope.interactor="lasso";
-             document.getElementById("interactorLasso").className="btn btn-primary";
-             document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorLasso").attr("data-title");
+         $scope.setInteractorUserLasso = function () {
+             $scope.clearUserInteractor();
+             $scope.userinteractor="lasso";
+             document.getElementById("interactorUserLasso").className="btn btn-primary";
+             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserLasso").attr("data-title");
          }
 
-         //document.getElementById("user-graph").$watch('threshold', function(newVal) {
-        //     if(newVal) {
-        //         console.log('threshold', newval);
-        //     }
-        // });
+
+         $scope.clearUserVennInteractor = function() {
+             document.getElementById("interactorUserUnion").className="btn btn-default";
+             document.getElementById("interactorUserIntersect").className="btn btn-default";
+         }
+
+         $scope.setInteractorUserUnion = function () {
+             $scope.clearUserVennInteractor();
+             $scope.userVennInteractor ="union";
+             document.getElementById("interactorUserUnion").className="btn btn-primary";
+         }
+
+         $scope.setInteractorUserIntersect = function () {
+             $scope.clearUserVennInteractor();
+             $scope.userVennInteractor ="intersect";
+             document.getElementById("interactorUserIntersect").className="btn btn-primary";
+         }
+
+
+         $scope.setInteractorUserRemoveManagers = function (check) {
+           $scope.isCheckedUser = check;
+
+           $scope.s_user.graph.nodes().filter( function (node){
+              return $scope.tab_users.indexOf(parseInt(node.user_id)) > -1 || $scope.tab_users.length == 0
+           }).forEach( function (node){
+              node.hidden = false;
+              if (check){
+                if ($scope.communityManagers.indexOf(node.name) > -1){
+                  node.hidden = true;
+                }
+              }
+           });
+           $scope.s_user.refresh();
+         }
+
+         $scope.clearTagInteractor = function() {
+             document.getElementById("interactorTagNavigate").className="btn btn-default";
+             //document.getElementById("interactorTagSelectNode").className="btn btn-default";
+             document.getElementById("interactorTagDragNode").className="btn btn-default";
+             document.getElementById("interactorTagLasso").className="btn btn-default";
+             document.getElementById("interactorTagDescriptionLabel").innerHTML = "";
+         }
+
+         $scope.setInteractorTagNavigate = function () {
+             $scope.clearTagInteractor();
+             $scope.taginteractor="navigate";
+             document.getElementById("interactorTagNavigate").className="btn btn-primary";
+             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagNavigate").attr("data-title");
+         }
+
+         $scope.setInteractorTagNodeSelection = function () {
+             $scope.clearTagInteractor();
+             $scope.taginteractor="nodeSelection";
+             document.getElementById("interactorTagSelectNode").className="btn btn-primary";
+             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagSelectNode").attr("data-title");
+         }
+
+         $scope.setInteractorTagDragNode = function () {
+             $scope.clearTagInteractor();
+             $scope.taginteractor="dragNode";
+             document.getElementById("interactorTagDragNode").className="btn btn-primary";
+             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagDragNode").attr("data-title");
+         }
+
+         $scope.setInteractorTagLasso = function () {
+             $scope.clearTagInteractor();
+             $scope.taginteractor="lasso";
+             document.getElementById("interactorTagLasso").className="btn btn-primary";
+             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagLasso").attr("data-title");
+         }
+
+         $scope.clearTagVennInteractor = function() {
+             document.getElementById("interactorTagUnion").className="btn btn-default";
+             document.getElementById("interactorTagIntersect").className="btn btn-default";
+         }
+
+         $scope.setInteractorTagUnion = function () {
+             $scope.clearTagVennInteractor();
+             $scope.tagVennInteractor ="union";
+             document.getElementById("interactorTagUnion").className="btn btn-primary";
+         }
+
+         $scope.setInteractorTagIntersect = function () {
+             $scope.clearTagVennInteractor();
+             $scope.tagVennInteractor ="intersect";
+             document.getElementById("interactorTagIntersect").className="btn btn-primary";
+         }
+
 
          /*** Sigma Event Catcher ***/
          $scope.eventCatcher = function (e) {};
