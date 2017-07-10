@@ -43,8 +43,6 @@ angular.module('sbAdminApp')
             neighbourhood.adjacentEdges = [];
             neighbourhood.nodesColour = [];
             neighbourhood.edgesColour = [];
-            //scope.user_node_selected = [];
-            scope.showNodeFilter = [];
 
             // Create sigma instance
             var s = new sigma({
@@ -221,30 +219,8 @@ angular.module('sbAdminApp')
             }
 
 
-            /*
-            var second_filter = new sigma.plugins.filter(s);
-            var nodeFilter = function(tab_node) {
-              filter
-                .undo('nodeShowFilter')
-                .nodesBy(function(n) {
-                  if (tab_node.indexOf(n.user_id) > -1){
-                    console.log(n);
-                    console.log(tab_node);
-                  }
-                  //return (scope.showNodeFilter.indexOf(n.user_id) > -1);
-                  return true;
-                }, 'nodeShowFilter')
-                .apply();
-              }
-            */
-
-
-
-            //var filter_node = new sigma.plugins.filter(s);
-            //filter_node.nodesBy(function(n) {
 
             /**** Watch for update ****/
-
             scope.$watch('metricMinFilter', function(newVal) {
                 metricFilter(newVal, scope.metricMaxFilter);
             });
@@ -256,7 +232,7 @@ angular.module('sbAdminApp')
                 s.graph.read(scope.graph);
                 if (s.graph.nodes().length > 0){
                   s.ready = true;
-                }                
+                }
                 s.refresh();
             });
             scope.$watch('edgeLabels', function(newVal) {
@@ -313,35 +289,6 @@ angular.module('sbAdminApp')
                     sigma.plugins.killDragNodes(s);
                 }
 
-                if (scope.interactor == 'nodeSelection') {
-                    console.log('change to node selection')
-                    var activeState = sigma.plugins.activeState(s);
-                    // Initialize the Select plugin:
-                    var selectListener = sigma.plugins.select(s, activeState);
-                    //var keyboard = sigma.plugins.keyboard(s, s.renderers[0]);
-                    //selectListener.bindKeyboard(keyboard);
-
-                    //activeState.bind('activeNodes', _.debounce(function(event) {
-                    //    console.log('active nodes:', activeState.nodes());}, 250)
-                    //);
-                    activeState.bind('activeNodes', function(event) {
-                        console.log('active nodes:', activeState.nodes());
-                        console.log(scope.defaultNodeSize);
-                        s.graph.nodes().forEach(function (node) {
-                          node.color = scope.defaultNodeColor;
-                          node.size = scope.defaultNodeSize;
-                        });
-                        activeState.nodes().forEach(function (node) {
-                          node.color = 'rgb(42, 187, 155)';
-                          node.size *= 7;
-                        });
-                    });
-                }
-                else{
-                  sigma.plugins.killActiveState();
-                  sigma.plugins.killSelect(s);
-                }
-
                 if (scope.interactor == 'lasso') {
                   console.log('change to lasso');
                   lasso.activate();
@@ -357,10 +304,7 @@ angular.module('sbAdminApp')
 
 
             });
-            scope.$watch('highlightNodes', function (newVal, oldVal) {
 
-
-            });
             element.on('$destroy', function() {
                 s.graph.clear();
             });
