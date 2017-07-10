@@ -44,6 +44,8 @@
          $scope.defaultUserNodeColor = '';
          $scope.defaultTagNodeColor = '';
          $scope.s_user = undefined;
+         $scope.user_graph_intact = {};
+         $scope.tag_graph_intact = {};
          $scope.s_tag = undefined;
          $scope.lasso_user = {};
          $scope.lasso_tag = {};
@@ -52,6 +54,7 @@
          $scope.tab_tags = [];
          $scope.communityManagers = ["Alberto", "Nadia", "Noemi"];
          $scope.metricFilter = "occ";
+         $scope.configAtlasForceAlgo = {scalingRatio:1,strongGravityMode:false,gravity:3,adjustSizes:true};
 
          // When rootScope is ready load the graph
          $rootScope.$watch('ready', function(newVal) {
@@ -143,6 +146,11 @@
               }
               $scope.tab_tags = $scope.selectTagNodes($scope.tab_tags,tab_few_tag);
            });
+
+           //We will display only the selected users and the nodes that are connected to the selection.
+           if ($scope.lasso_user.selectedNodes.length != 0){
+             
+           }
 
            //We filter the tags and we change the color.
            if ($scope.tab_tags != undefined){
@@ -241,15 +249,11 @@
            $scope.s_user.refresh();
            $scope.lasso_tag.deactivate();
            $scope.lasso_tag.activate();
-
-           
-
-           $scope.s_user.startForceAtlas2();
          }
 
 
          //We want to bind the lasso when s_tag and s_user are ready
-         var toUnBind = $scope.$watch("s_tag", function() {
+         var toUnBind1 = $scope.$watch("s_tag", function() {
            if ($scope.s_tag != undefined) {
              //When the lasso_user catch new nodes
              $scope.lasso_user.bind('selectedNodes', function (event) {
@@ -260,7 +264,40 @@
              $scope.lasso_tag.bind('selectedNodes', function (event) {
                $scope.refreshUserView();
              });
-             toUnBind(); //We stop the watcher wich is useless now.
+
+             var toUnBind2 = $scope.$watch("s_tag.ready", function (){
+               if ($scope.s_tag.ready == true){
+                 $scope.s_tag.graph.nodes().forEach(function (node) {
+                   node.hidden = false;
+                 });
+                 $scope.s_tag.graph.edges().forEach(function (edge) {
+                   edge.hidden = false;
+                 });
+
+                 $scope.tag_graph_intact.nodes = jQuery.extend(true,[], $scope.s_tag.graph.nodes());
+                 $scope.tag_graph_intact.edges = jQuery.extend(true,[], $scope.s_tag.graph.edges());
+                 toUnBind2();
+               }
+             });
+
+             var toUnBind3 = $scope.$watch("s_user.ready", function (){
+               if ($scope.s_user.ready == true){
+                 $scope.s_user.graph.nodes().forEach(function (node) {
+                   node.hidden = false;
+                 });
+                 $scope.s_user.graph.edges().forEach(function (edge) {
+                   edge.hidden = false;
+                 });
+
+                 $scope.user_graph_intact.nodes = jQuery.extend(true,[], $scope.s_user.graph.nodes());
+                 $scope.user_graph_intact.edges = jQuery.extend(true,[], $scope.s_user.graph.edges());
+                 toUnBind3();
+               }
+             });
+
+
+
+             toUnBind1(); //We stop the watcher wich is useless now.
            }
          });
 
@@ -409,19 +446,10 @@
 
          $scope.setInteractorUserRemoveManagers = function (check) {
            $scope.isCheckedUser = check;
-
-           $scope.s_user.graph.nodes().filter( function (node){
-              return $scope.tab_users.indexOf(parseInt(node.user_id)) > -1 || $scope.tab_users.length == 0
-           }).forEach( function (node){
-              node.hidden = false;
-              if (check){
-                if ($scope.communityManagers.indexOf(node.name) > -1){
-                  node.hidden = true;
-                }
-              }
-           });
-           $scope.s_user.refresh();
+           $scope.refreshUserView();
          }
+
+
 
          $scope.clearTagInteractor = function() {
              document.getElementById("interactorTagNavigate").className="btn btn-default";
@@ -475,6 +503,135 @@
              $scope.tagVennInteractor ="intersect";
              document.getElementById("interactorTagIntersect").className="btn btn-primary";
          }
+
+         $scope.setInteractorUserLayoutStop = function () {
+           if (document.getElementById("interactorUserLayoutStop").className != "btn btn-primary"){
+               document.getElementById("interactorUserLayoutStop").className="btn btn-primary";
+               document.getElementById("interactorUserLayoutPlay").className="btn btn-default";
+
+               $scope.s_user.stopForceAtlas2();
+            }
+         }
+
+         $scope.setInteractorUserLayoutPlay = function () {
+           if (document.getElementById("interactorUserLayoutPlay").className != "btn btn-primary"){
+
+             document.getElementById("interactorUserLayoutPlay").className="btn btn-primary";
+             document.getElementById("interactorUserLayoutStop").className="btn btn-default";
+
+
+             var nodeToAdd = [];
+             var edgeToAdd = [];
+
+
+             $scope.s_user.graph.nodes().forEach(function (node) {
+               if (node.hidden == false){
+                 nodeToAdd.push(jQuery.extend(true,{},node));
+               }
+             });
+
+              $scope.s_user.graph.edges().forEach(function (edge) {
+                if ($scope.s_user.graph.nodes(edge.source).hidden == false && $scope.s_user.graph.nodes(edge.target).hidden == false){
+                  edgeToAdd.push(jQuery.extend(true,{},edge));
+                }
+             });
+
+             $scope.s_user.graph.clear();
+
+             nodeToAdd.forEach(function (node) {
+               $scope.s_user.graph.addNode(node);
+             });
+
+             edgeToAdd.forEach(function (edge) {
+               $scope.s_user.graph.addEdge(edge);
+             });
+
+
+
+              $scope.s_user.refresh();
+              $scope.s_user.killForceAtlas2();
+              $scope.s_user.startForceAtlas2($scope.configAtlasForceAlgo);
+           }
+         }
+
+         $scope.setInteractorUserLayoutReset = function () {
+           $scope.s_user.graph.clear();
+
+           $scope.user_graph_intact.nodes.forEach(function (node) {
+             $scope.s_user.graph.addNode(jQuery.extend(true,{},node));
+           })
+
+           $scope.user_graph_intact.edges.forEach(function (edge) {
+             $scope.s_user.graph.addEdge(jQuery.extend(true,{},edge));
+           })
+
+           $scope.s_user.refresh();
+         }
+
+         $scope.setInteractorTagLayoutStop = function () {
+           if (document.getElementById("interactorTagLayoutStop").className != "btn btn-primary"){
+             document.getElementById("interactorTagLayoutStop").className="btn btn-primary";
+             document.getElementById("interactorTagLayoutPlay").className="btn btn-default";
+
+             $scope.s_tag.stopForceAtlas2();
+           }
+
+         }
+
+         $scope.setInteractorTagLayoutPlay = function () {
+           if (document.getElementById("interactorTagLayoutPlay").className != "btn btn-primary"){
+
+             document.getElementById("interactorTagLayoutPlay").className="btn btn-primary";
+             document.getElementById("interactorTagLayoutStop").className="btn btn-default";
+
+             var nodeToAdd = [];
+             var edgeToAdd = [];
+
+
+             $scope.s_tag.graph.nodes().forEach(function (node) {
+               if (node.hidden == false){
+                 nodeToAdd.push(jQuery.extend(true,{},node));
+               }
+             });
+
+              $scope.s_tag.graph.edges().forEach(function (edge) {
+                if ($scope.s_tag.graph.nodes(edge.source).hidden == false && $scope.s_tag.graph.nodes(edge.target).hidden == false){
+                  edgeToAdd.push(jQuery.extend(true,{},edge));
+                }
+             });
+
+             $scope.s_tag.graph.clear();
+
+             nodeToAdd.forEach(function (node) {
+               $scope.s_tag.graph.addNode(node);
+             });
+
+             edgeToAdd.forEach(function (edge) {
+               $scope.s_tag.graph.addEdge(edge);
+             });
+
+
+
+              $scope.s_tag.refresh();
+              $scope.s_tag.killForceAtlas2();
+              $scope.s_tag.startForceAtlas2($scope.configAtlasForceAlgo);
+           }
+         }
+
+         $scope.setInteractorTagLayoutReset = function () {
+           $scope.s_tag.graph.clear();
+
+           $scope.tag_graph_intact.nodes.forEach(function (node) {
+             $scope.s_tag.graph.addNode(jQuery.extend(true,{},node));
+           })
+
+           $scope.tag_graph_intact.edges.forEach(function (edge) {
+             $scope.s_tag.graph.addEdge(jQuery.extend(true,{},edge));
+           })
+
+           $scope.s_tag.refresh();
+         }
+
 
 
          /*** Sigma Event Catcher ***/

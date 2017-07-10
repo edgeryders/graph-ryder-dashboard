@@ -254,6 +254,9 @@ angular.module('sbAdminApp')
             scope.$watch('graph', function() {
                 s.graph.clear();
                 s.graph.read(scope.graph);
+                if (s.graph.nodes().length > 0){
+                  s.ready = true;
+                }                
                 s.refresh();
             });
             scope.$watch('edgeLabels', function(newVal) {
