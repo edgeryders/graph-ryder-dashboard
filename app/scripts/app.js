@@ -19,7 +19,7 @@ angular
         apiUrl: 'http://localhost:5000/'
     })
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
-    
+
     $ocLazyLoadProvider.config({
       debug:false,
       events:true
@@ -200,6 +200,21 @@ angular
             }
         }
     })
+    .state('dashboard.detanglerView',{
+        url:'/detanglerView',
+        controller: 'DetanglerViewCtrl',
+        templateUrl:'views/dashboard/detangler-view.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/detanglerViewController.js',
+                        'scripts/controllers/modalInstanceController.js'
+                    ]
+                })
+            }
+        }
+    })
   }]);
-
-    
