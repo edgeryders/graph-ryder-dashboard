@@ -16,10 +16,11 @@ angular.module('sbAdminApp')
       /***** Init ******/
       // When rootScope is ready load the graph
       $rootScope.$watch('ready', function(newVal) {
-          if(newVal) {
-              $scope.layoutChoice = $rootScope.layout[40];
-              $scope.drawDoiGraph();
-          }
+        $rootScope.resetSuggestions(true, true, true, true);
+        if(newVal) {
+            $scope.layoutChoice = $rootScope.layout[40];
+            $scope.drawDoiGraph();
+        }
       });
 
       /***** Graph creation *****/
