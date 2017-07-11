@@ -19,14 +19,14 @@
                     <!--<i class="fa fa-clock-o fa-fw" ></i> Global view &nbsp;&nbsp; <input type="checkbox" ng-model="tagnl" ng-click="switchForceNodeLabel()"> &nbsp;+<input type="range" value="10" max="10" style="width: 80px; display: inline-block;" ng-model="nodelabelthreshold">
 - &nbsp; labels on nodes &nbsp;&nbsp;  <input type="checkbox" ng-model="tagel" > labels on edges -->
 <div>Display label on nodes: None &nbsp;  <div id="node-label-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All</div>
-<div>Co-occurrence intensity: Weak &nbsp; <div id="cooccurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
+<div>Co-occurrence intensity: Weak &nbsp; <div id="coocurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
                     <div>
                         <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
                         <button id="interactorInformation" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" data-title="Show details about the elements" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
                         <button id="interactorNeighbourhood" class="btn btn-default" title="Show direct neighbourhood of the element" data-title="Show direct neighbourhood of the element (reset with <i class='fa fa-trash'></i>)" ng-click="setInteractorNeighbourhood()"><i class="fa fa-compass"></i></button>
                         <button id="interactorDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorDragNode()"><i class="fa fa-arrows"></i></button>
                         <label id="interactorDescriptionLabel">Navigate the graph</label>
-                        <button id="operationCleanRefresh" class="btn btn-default pull-right" title="Discard neighbourhood visual changes" ng-click="cleanRefreshSigmaDecorator()" ng-model="clean_refresh_sigma_decorator"><i class="fa fa-trash"></i></button>
+                        <button id="operationCleanRefresh" class="btn btn-default pull-right" title="" ng-click="cleanRefreshSigmaDecorator()" ng-model="clean_refresh_sigma_decorator"><i class="fa fa-trash"></i></button>
 <div class="dropdown pull-right">
  <button id="" class="btn btn-default pull-right dropdown-toggle"  data-toggle="dropdown" title="" ><i class="fa fa-cog"></i> <span class="caret"></span></button>
     <ul class="dropdown-menu pull-right">
@@ -36,7 +36,9 @@
                             <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
                         </select>
                         Filter by number of co-occurrences:
-                        <input id="cooccurrence-draw-graph-spinner" style="width: 50px; display: inline-block;" value="2">
+                        <select ng-model="filter_occurence_min">
+                            <option ng-repeat="filter in ['1','2','3','4','5','6','7','8']" value="{{filter}}">{{filter}}</option>
+                        </select>
                         <input type="submit" value="Go" />
                     </form></li>
       <li class="divider"></li>
@@ -56,8 +58,8 @@
                             edge-labels="tagel"
                             threshold={{nodelabelthreshold}}
                             metric-filter="occ"
-                            metric-min-filter={{filter_occurrence_min}}
-                            metric-max-filter={{filter_occurrence_max}}
+                            metric-min-filter={{filter_occurence_min}}
+                            metric-max-filter={{filter_occurence_max}}
                             event-catcher="eventCatcher"
                             locate="locate"
                             time-filter="filter"

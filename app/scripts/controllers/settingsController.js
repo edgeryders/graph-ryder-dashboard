@@ -10,13 +10,12 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('SettingsCtrl', function ($scope, $rootScope, $resource, config, $q, $compile) {
+    .controller('SettingsCtrl', function ($scope, $resource, config, $q, $compile) {
 
         $scope.warning = {color: 'orange'};
         $scope.danger = {color: 'red'};
         $scope.success = {color: '#39b500'};
         $scope.infoPanelParent = "infoPanelParent";
-        $rootScope.resetSuggestions(false, false, false, false);
 
         /***** Load api infos *****/
         $scope.refresh = function () {

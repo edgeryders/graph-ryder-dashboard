@@ -29,7 +29,6 @@ angular.module('sbAdminApp')
                 getStatus();
                 //refreshPostType();
                 $scope.refreshWordcloud();
-                $rootScope.resetSuggestions(true, true, true, true);
             }
         });
 
@@ -289,17 +288,15 @@ angular.module('sbAdminApp')
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
             if(newVal != undefined) {
-                if( newVal.user_id != undefined) {
-                    $scope.openInfoPanel('user',  newVal.user_id );
+                if( newVal.uid != undefined) {
+                    locateTmp.push(newVal.uid);
+                    postTypeAddUser(newVal.uid, newVal.name, false);
                 }
-                else if( newVal.post_id != undefined) {
-                    $scope.openInfoPanel('post',  newVal.post_id );
+                else if( newVal.pid != undefined) {
+                    locateTmp.push(newVal.pid);
                 }
-                else if( newVal.comment_id != undefined) {
-                    $scope.openInfoPanel('comment',  newVal.comment_id );
-                }
-                else if( newVal.tag_id != undefined) {
-                    $scope.openInfoPanel('tag',  newVal.tag_id );
+                else if( newVal.cid != undefined) {
+                    locateTmp.push(newVal.cid);
                 }
                 /*if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
                     $timeout(function() {$scope.locate = locateTmp;}, 5000);
