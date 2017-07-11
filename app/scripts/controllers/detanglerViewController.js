@@ -149,7 +149,7 @@
 
            //We will display only the selected users and the nodes that are connected to the selection.
            if ($scope.lasso_user.selectedNodes.length != 0){
-             
+
            }
 
            //We filter the tags and we change the color.

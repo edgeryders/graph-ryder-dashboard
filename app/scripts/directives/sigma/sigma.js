@@ -279,7 +279,7 @@ angular.module('sbAdminApp')
 
             scope.$watch('interactor', function() {
                 if (scope.interactor == 'dragNode') {
-                    console.log('change to drag')
+                    //console.log('change to drag')
                     // Instanciate the ActiveState plugin:
                     var activeState = sigma.plugins.activeState(s);
 
@@ -290,15 +290,15 @@ angular.module('sbAdminApp')
                 }
 
                 if (scope.interactor == 'lasso') {
-                  console.log('change to lasso');
                   lasso.activate();
                 }
                 else{
                   lasso.deactivate();
                 }
 
+                //console.log('change to lasso');
                 if (scope.interactor == 'navigate') {
-                    console.log('change to navigate')
+                    //console.log('change to navigate')
                 }
                 //var dragListener = new sigma.plugins.dragNodes(sigmaInstance, renderer, activeState);
 
