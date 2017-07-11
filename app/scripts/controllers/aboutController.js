@@ -10,6 +10,6 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('AboutCtrl', function ($scope, $resource, config, $q) {
-
+    .controller('AboutCtrl', function ($scope, $rootScope, $resource, config, $q) {
+      $rootScope.resetSuggestions(false, false, false, false);
 });

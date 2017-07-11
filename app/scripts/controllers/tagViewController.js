@@ -36,6 +36,7 @@ angular.module('sbAdminApp')
                 $scope.tableSizeChoice = 10;
                 $scope.selected.start= new Date(0);
                 $scope.selected.end= new Date(Date.now());
+                $rootScope.resetSuggestions(false, false, false, true);
                 //load tags then create the graph
                 var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/"+$scope.tableSizeChoice).query().$promise;
                 Tags.then(function (result) {
@@ -118,8 +119,11 @@ angular.module('sbAdminApp')
         var timeLinePromises = [];
 
         // Create promises array to wait all data until load
-        timeLinePromises.push($resource(config.apiUrl + 'posts/count/timestamp').query().$promise);
-        timeLinePromises.push($resource(config.apiUrl + 'comments/count/timestamp').query().$promise);
+        var now = new Date(Date.now())
+        var date_init = new Date(Date.now())
+        date_init.setFullYear(date_init.getFullYear()-3)
+        timeLinePromises.push($resource(config.apiUrl + 'count/'+'post'+'/'+ date_init.getTime()+'/'+now.getTime()).query().$promise);
+        timeLinePromises.push($resource(config.apiUrl + 'count/'+'comment'+'/'+ date_init.getTime()+'/'+now.getTime()).query().$promise);
 
         $q.all(timeLinePromises).then(function(results) {
             var tmp = {"users": [], "posts": [], "comments": []};
@@ -177,6 +181,10 @@ angular.module('sbAdminApp')
             });
             //$scope.$apply();
         };
+
+        $scope.getDate = function(timestamp) {
+            return $rootScope.getDate(timestamp);
+        }
 
         /*** Sigma Event Catcher ***/
         $scope.eventCatcher = function (e) {
@@ -325,23 +333,22 @@ angular.module('sbAdminApp')
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
             if(newVal != undefined) {
-                if( newVal.uid != undefined) {
-                    locateTmp.push(newVal.uid);
-                    postTypeAddUser(newVal.uid, newVal.name, false);
+                if( newVal.user_id != undefined) {
+                    $scope.openInfoPanel('user',  newVal.user_id );
                 }
-                else if( newVal.pid != undefined) {
-                    locateTmp.push(newVal.pid);
+                else if( newVal.post_id != undefined) {
+                    $scope.openInfoPanel('post',  newVal.post_id );
                 }
-                else if( newVal.cid != undefined) {
-                    locateTmp.push(newVal.cid);
+                else if( newVal.comment_id != undefined) {
+                    $scope.openInfoPanel('comment',  newVal.comment_id );
                 }
                 else if( newVal.tag_id != undefined) {
                     $scope.generateGraph(newVal.tag_id);
                 }
-                if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
+                /*if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
                     $timeout(function() {$scope.locate = locateTmp;}, 5000);
                 else
-                    $scope.locate = locateTmp;
+                    $scope.locate = locateTmp;*/
             }
         });
         $scope.$on("$destroy", function(){
