@@ -21,7 +21,10 @@ angular.module('sbAdminApp')
             metricMaxFilter: '@?',
             metricNEutralFilter: '@?',
             interactor: '@?',
-            cleanRefresh: '@?'
+            cleanRefresh: '@?',
+            s: '=?',
+            lasso: '=?',
+            maxNodeSize: '=?'
         },
         link: function (scope, element) {
             // default values
@@ -52,13 +55,15 @@ angular.module('sbAdminApp')
                     labelSize: "fixed",
                     drawEdgeLabels: scope.edgeLabels,
                     minArrowSize: 5,
-                    enableEdgeHovering: true,
+                    enableEdgeHovering: false,
                     edgeHoverColor: '#000',
                     defaultEdgeHoverColor: '#000',
                     edgeHoverSizeRatio: 2,
                     edgeHoverExtremities: true,
+                    maxNodeSize: scope.maxNodeSize
                 }
             });
+            scope.s = s;
             /**** Plugins ****/
 
             /**** Interactions ****/
@@ -202,7 +207,7 @@ angular.module('sbAdminApp')
                 filter
                   .undo('nodeFilter')
                   .nodesBy(function(n) {
-                    return ((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter));
+                    return (((n.couldAppear != undefined) ? n.couldAppear : true) && ((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter)));
                   }, 'nodeFilter')
                   .apply();
                 filter
@@ -212,6 +217,8 @@ angular.module('sbAdminApp')
                   }, 'edgeFilter')
                   .apply();
             }
+
+
 
             /**** Watch for update ****/
             scope.$watch('metricMinFilter', function(newVal) {
@@ -223,6 +230,9 @@ angular.module('sbAdminApp')
             scope.$watch('graph', function() {
                 s.graph.clear();
                 s.graph.read(scope.graph);
+                if (s.graph.nodes().length > 0){
+                  s.ready = true;
+                }
                 s.refresh();
             });
             scope.$watch('edgeLabels', function(newVal) {
@@ -255,6 +265,18 @@ angular.module('sbAdminApp')
                 resetHighlight();
                 s.refresh();
             });
+
+
+            var lasso = new sigma.plugins.lasso(s, s.renderers[0], {
+              'strokeStyle': 'black',
+              'lineWidth': 2,
+              'fillWhileDrawing': true,
+              'fillStyle': 'rgba(41, 41, 41, 0.2)',
+              'cursor': 'crosshair'
+            });
+            scope.lasso = lasso;
+
+
             scope.$watch('interactor', function() {
                 if (scope.interactor == 'dragNode') {
                     console.log('change to drag')
@@ -264,13 +286,25 @@ angular.module('sbAdminApp')
                     // Initialize the dragNodes plugin:
                     var dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
                 } else {
-                    console.log('smt else')
                     sigma.plugins.killDragNodes(s);
+                }
+
+                if (scope.interactor == 'lasso') {
+                  console.log('change to lasso');
+                  lasso.activate();
+                }
+                else{
+                  lasso.deactivate();
+                }
+
+                if (scope.interactor == 'navigate') {
+                    console.log('change to navigate')
                 }
                 //var dragListener = new sigma.plugins.dragNodes(sigmaInstance, renderer, activeState);
 
 
             });
+
             element.on('$destroy', function() {
                 s.graph.clear();
             });

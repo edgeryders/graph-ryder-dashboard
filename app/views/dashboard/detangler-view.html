@@ -1,0 +1,138 @@
+<div>
+    <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
+      &nbsp; <!-- Space above the main Panel -->
+    </div-->
+    <div class="row">
+        <div class="col-lg-6" >
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div>Display label on nodes: None &nbsp;  <div id="node-label-user-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All </div>
+                    <div>
+                        <button id="interactorUserNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorUserNavigate()"><i class="fa fa-mouse-pointer"></i></button>
+
+                        <!--<button id="interactorUserSelectNode" class="btn btn-default" title="Selection of a node" data-title="Selection of a node" ng-click="setInteractorUserNodeSelection()"><i class="fa  fa-hand-o-up" aria-hidden="true"></i></button>-->
+
+                        <button id="interactorUserLasso" class="btn btn-default" title="Selection of multiples nodes" data-title="Selection of multiple nodes" ng-click="setInteractorUserLasso()"><i class="fa fa-circle-thin" aria-hidden="true"></i></button>
+
+                        <button id="interactorUserDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorUserDragNode()"><i class="fa fa-arrows"></i></button>
+
+                        <label id="interactorUserDescriptionLabel">Navigate the graph</label>
+                    </div>
+                    <div>
+                      <button id="interactorUserUnion" class="btn btn-primary" title="Match any selected users" data-title="Match any selected users" ng-click="setInteractorUserUnion()">&cup;</button>
+
+                      <button id="interactorUserIntersect" class="btn btn-default" title="Match all selected users" data-title="Match all selected users" ng-click="setInteractorUserIntersect()">&cap;</button>
+
+                      <label style="float:right;">Remove community managers <input type="checkbox" value="" ng-model="isCheckedUser" ng-change="setInteractorUserRemoveManagers(isCheckedUser)"></label>
+
+                      <div>
+
+                      </div>
+
+                      <div> Change Layout
+                        <button id="interactorUserLayoutPlay" class="btn btn-default" title="Play the algorithm" ng-click="setInteractorUserLayoutPlay()"><i class="fa fa-play" aria-hidden="true"></i></button>
+
+                        <button id="interactorUserLayoutStop" class="btn btn-primary" title="Stop the algorithm" ng-click="setInteractorUserLayoutStop()"><i class="fa fa-stop" aria-hidden="true"></i></button>
+
+                        <button id="interactorUserLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorUserLayoutReset()"><i class="fa fa-undo" aria-hidden="true"></i></button>
+
+                      </div>
+
+                    </div>
+
+
+
+
+
+
+
+                </div> <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <sigma-js
+                          graph="usersGraphSigma"
+                          s = "s_user"
+                          lasso = "lasso_user"
+                          id="user-graph"
+                          width="100%" height="400px"
+                          threshold={{nodeUserelThreshold}}
+                          edge-labels="userel"
+                          metric-min-filter={{filter_occurence_min}}
+                          metric-max-filter={{filter_occurence_max}}
+                          show-node-filter={{toShow}}
+                          interactor={{userinteractor}}
+                          event-catcher="eventCatcher"
+                          max-node-size=4
+                           >
+                    </sigma-js>
+                </div> <!-- /.panel-body -->
+
+            </div> <!-- /.panel -->
+        </div> <!-- /.col-lg-6 -->
+
+        <div class="col-lg-6" >
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div>Display label on nodes: None &nbsp;  <div id="node-label-tag-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All </div>
+                    <div>Co-occurrence intensity: Weak &nbsp; <div id="coocurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
+                    <div>
+                        <button id="interactorTagNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorTagNavigate()"><i class="fa fa-mouse-pointer"></i></button>
+
+                        <!--<button id="interactorTagSelectNode" class="btn btn-default" title="Selection of a node" data-title="Selection of a node" ng-click="setInteractorTagNodeSelection()"><i class="fa  fa-hand-o-up" aria-hidden="true"></i></button>-->
+
+                        <button id="interactorTagLasso" class="btn btn-default" title="Selection of multiples nodes" data-title="Selection of multiple nodes" ng-click="setInteractorTagLasso()"><i class="fa fa-circle-thin" aria-hidden="true"></i></button>
+
+                        <button id="interactorTagDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorTagDragNode()"><i class="fa fa-arrows"></i></button>
+
+                        <label id="interactorTagDescriptionLabel">Navigate the graph</label>
+                    </div>
+
+                    <div>
+                      <button id="interactorTagUnion" class="btn btn-primary" title="Match any selected tags" data-title="Match any selected tags" ng-click="setInteractorTagUnion()">&cup;</button>
+
+                      <button id="interactorTagIntersect" class="btn btn-default" title="Match all selected tags" data-title="Match all selected tags" ng-click="setInteractorTagIntersect()">&cap;</button>
+                      <!--class="set set-intersect"-->
+                    </div>
+
+                    <div> Change Layout
+                      <button id="interactorTagLayoutPlay" class="btn btn-default" title="Play the algorithm" ng-click="setInteractorTagLayoutPlay()"><i class="fa fa-play" aria-hidden="true"></i></button>
+
+                      <button id="interactorTagLayoutStop" class="btn btn-primary" title="Stop the algorithm" ng-click="setInteractorTagLayoutStop()"><i class="fa fa-stop" aria-hidden="true"></i></button>
+
+                      <button id="interactorTagLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorTagLayoutReset()"><i class="fa fa-undo" aria-hidden="true"></i></button>
+                    </div>
+
+
+
+                </div> <!-- /.panel-heading -->
+                <div class="panel-body">
+                  <!-- /.Graphe des tags -->
+                  <sigma-js
+                          graph="tagsGraphSigma"
+                          s="s_tag"
+                          lasso = "lasso_tag"
+                          id="comment-graph"
+                          width="100%" height="400px"
+                          threshold={{nodeTagelThreshold}}
+                          metric-filter="occ"
+                          metric-min-filter={{filter_occurence_tag_min}}
+                          metric-max-filter={{filter_occurence_tag_max}}
+                          event-catcher="eventCatcher"
+                          edge-labels="tagel"
+                          interactor={{taginteractor}}
+                          max-node-size=6
+                          >
+
+                  </sigma-js>
+                </div> <!-- /.panel-body -->
+
+            </div> <!-- /.panel -->
+        </div> <!-- /.col-lg-6 -->
+
+
+
+
+
+    </div> <!-- /.row -->
+
+
+</div>
