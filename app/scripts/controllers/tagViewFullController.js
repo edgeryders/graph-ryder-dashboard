@@ -21,15 +21,16 @@ angular.module('sbAdminApp')
         $scope.locate = "";
         $scope.clean_refresh_sigma_decorator = 0;
         $scope.requestFullTagGraph = false;
-        $scope.filter_occurence_min = "2";
-        $scope.filter_occurence_max = "100";
-        $scope.filterLevels = ["1","2","3","4","5","6","7","8"];
+        $scope.filter_occurrence_min = "2";
+        $scope.filter_occurrence_max = "100";
+        $scope.filter_occurrence_request = "2";
         $scope.sigma_instance = undefined;
         $scope.interactor = "navigate";
         $scope.showTagCommonContent = false;
         $scope.tag_src = {id: -1, label:""};
         $scope.tag_dst = {id: -1, label:""};
         $scope.infoPanelParent = "infoPanelParent";
+        $("#download_link_dialog").dialog({ autoOpen: false });
         // When rootScope is ready load the graph
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
@@ -38,6 +39,7 @@ angular.module('sbAdminApp')
                 $scope.selected.start= new Date(0);
                 $scope.selected.end= new Date(Date.now());
                 $scope.generateGraph();
+                $rootScope.resetSuggestions(false, false, false, true);
                 //load tags then create the graph
                 /*var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/10").query().$promise;
                 Tags.then(function (result) {
@@ -58,16 +60,24 @@ angular.module('sbAdminApp')
       }
     });
 
-    $( "#coocurrence-intensity-slider-range" ).slider({
+    $( "#cooccurrence-intensity-slider-range" ).slider({
       range: true,
       min: 1,
-      max: $scope.filter_occurence_max,
-      values: [ $scope.filter_occurence_min, $scope.filter_occurence_max ],
+      max: $scope.filter_occurrence_max,
+      values: [ $scope.filter_occurrence_min, $scope.filter_occurrence_max ],
       slide: function( event, ui ) {
-        $scope.filter_occurence_min = ui.values[0];
-        $scope.filter_occurence_max = ui.values[1];
+        $scope.filter_occurrence_min = ui.values[0];
+        $scope.filter_occurrence_max = ui.values[1];
         $scope.$apply();
       }
+    });
+
+    $("#cooccurrence-draw-graph-spinner").spinner({
+        min: 1,
+        value: $scope.filter_occurrence_request,
+        spin: function(event, ui) {
+            $scope.filter_occurrence_request = ui.value;
+        }
     });
 
         $scope.switchForceNodeLabel = function() {
@@ -91,7 +101,7 @@ angular.module('sbAdminApp')
 
         $scope.generateGraph = function () {
             //$scope.filter_occ = filter_occ;
-            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filter_occurence_min + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
+            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filter_occurrence_request + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
             //var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + $scope.tag_id);
             var createGraphPromise = createGraph.get();
             createGraphPromise.$promise.then(function (result) {
@@ -99,6 +109,12 @@ angular.module('sbAdminApp')
                 //console.log($scope.sigma_instance.graph.nodes())
             });
         };
+
+        $scope.generateDownloadLink = function () {
+            $("#download_link_dialog").html($rootScope.generateDownloadLinkForSigma( $scope.tagGraphSigma.nodes, $scope.tagGraphSigma.edges, 'tag_full_view'));
+            $("#download_link_dialog").attr('title', 'Download a copy of the graph');
+            $("#download_link_dialog").dialog("open");
+        }
 
 /*
     Generate full tag-to-tag network once when loading then compute the filtering during the drawGraph function*/
@@ -290,20 +306,18 @@ angular.module('sbAdminApp')
         $rootScope.$watch('search', function(newVal) {
             var locateTmp = [];
             if(newVal != undefined) {
-                if( newVal.uid != undefined) {
-                    locateTmp.push(newVal.uid);
-                    postTypeAddUser(newVal.uid, newVal.name, false);
+                if( newVal.user_id != undefined) {
+                    $scope.openInfoPanel('user',  newVal.user_id );
                 }
-                else if( newVal.pid != undefined) {
-                    locateTmp.push(newVal.pid);
+                else if( newVal.post_id != undefined) {
+                    $scope.openInfoPanel('post',  newVal.post_id );
                 }
-                else if( newVal.cid != undefined) {
-                    locateTmp.push(newVal.cid);
+                else if( newVal.comment_id != undefined) {
+                    $scope.openInfoPanel('comment',  newVal.comment_id );
                 }
-                if (!$scope.drawGraphPromise.$resolved) // todo do not wait but cancel the promise
-                    $timeout(function() {$scope.locate = locateTmp;}, 5000);
-                else
-                    $scope.locate = locateTmp;
+                else if( newVal.tag_id != undefined) {
+                    $scope.openInfoPanel('tag',  newVal.tag_id );
+                }
             }
         });
         $scope.$on("$destroy", function(){

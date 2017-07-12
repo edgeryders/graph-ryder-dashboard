@@ -11,14 +11,16 @@ angular.module('sbAdminApp')
 
       $scope.type = "neighbours";
       $scope.infoPanelParent = "infoPanelParent";
+      $("#download_link_dialog").dialog({ autoOpen: false });
 
       /***** Init ******/
       // When rootScope is ready load the graph
       $rootScope.$watch('ready', function(newVal) {
-          if(newVal) {
-              $scope.layoutChoice = $rootScope.layout[40];
-              $scope.drawDoiGraph();
-          }
+        $rootScope.resetSuggestions(true, true, true, true);
+        if(newVal) {
+            $scope.layoutChoice = $rootScope.layout[40];
+            $scope.drawDoiGraph();
+        }
       });
 
       /***** Graph creation *****/
@@ -70,6 +72,12 @@ angular.module('sbAdminApp')
               });
           });
       };
+
+      $scope.generateDownloadLink = function () {
+          $("#download_link_dialog").html($rootScope.generateDownloadLinkForSigma( $scope.graphSigma.nodes, $scope.graphSigma.edges, 'doi_view'));
+          $("#download_link_dialog").attr('title', 'Download a copy of the graph');
+          $("#download_link_dialog").dialog("open");
+      }
 
       /*** Sigma Event Catcher  ***/
       $scope.eventCatcher = function (e) {
