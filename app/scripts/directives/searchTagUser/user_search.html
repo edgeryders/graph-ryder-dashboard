@@ -1,0 +1,18 @@
+<div class="user-search">
+    <div class="input-group custom-search-form">
+        <form ng-submit="submit()" >
+            <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search a User..."
+                    uib-typeahead="sugess as sugess.label for sugess in suggestionsUser | filter:{label:$viewValue} | limitTo:8"
+                    ng-model="tag_search"
+                    ng-disabled="suggestionsUser.length == 0" >
+        </form>
+        <span class="input-group-btn">
+                <button class="btn btn-default" type="button">
+                    <i class="fa fa-search" ng-click="submit()" ></i>
+                </button>
+        </span>
+    </div>
+</div>
