@@ -42,6 +42,8 @@ angular.module('sbAdminApp')
 
     /***** Load all data *****/
     $rootScope.suggestions = [];
+    $rootScope.suggestionsUser_temp = [];
+    $rootScope.suggestionsTag_temp = [];
 
     $rootScope.resetSuggestions = function (users, posts, comments, tags) {
         var collectPromises = [];
@@ -56,7 +58,9 @@ angular.module('sbAdminApp')
                 angular.forEach(results[0], function (user) {
                     user.label = user.label;
                     $rootScope.suggestions.push(user);
+                    $rootScope.suggestionsUser_temp.push(user);
                 });
+                $rootScope.suggestionsUser = $rootScope.suggestionsUser_temp;
             }
             if(posts) {
                 angular.forEach(results[1], function (post) {
@@ -73,7 +77,9 @@ angular.module('sbAdminApp')
             if(tags) {
                 angular.forEach(results[3], function (tag) {
                     $rootScope.suggestions.push(tag);
+                    $rootScope.suggestionsTag_temp.push(tag);
                 });
+                $rootScope.suggestionsTag = $rootScope.suggestionsTag_temp;
             }
         }, function (reject) {
             console.log(reject);
