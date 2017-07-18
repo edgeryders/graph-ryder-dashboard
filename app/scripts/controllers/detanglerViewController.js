@@ -64,12 +64,11 @@
                  $scope.tagGraphRessource = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
 
                  $scope.drawUserGraph(true);
-                 $scope.drawTagGraph(true);
+                 //$scope.drawTagGraph(true);
+                 $scope.generateTagGraph();
+                 //$scope.generateUserGraph();
                  $rootScope.resetSuggestions(false, false, false, false);
                  $rootScope.resetDetanglerSuggestions(true, true);
-                 //$scope.generateTagGraph();
-                 //$scope.generateUserGraph();
-
              }
          });
 
@@ -341,13 +340,14 @@
 
 
          /*** user view ***/
-         $scope.usersGraphSigma = [];
+
 
          $scope.drawUserGraph = function (suggestions) {
+             $scope.usersGraphSigmaDetangler = [];
              $scope.drawUserGraphPromise = $scope.userGraphRessource.get();
              $scope.drawUserGraphPromise.$promise.then(function (result) {
-                 $scope.usersGraphSigma = result;
-                 $scope.defaultUserNodeColor = $scope.usersGraphSigma.nodes[0].color
+                 $scope.usersGraphSigmaDetangler = result;
+                 $scope.defaultUserNodeColor = $scope.usersGraphSigmaDetangler.nodes[0].color
                  /*
                  if(suggestions) {
                      $rootScope.suggestions = [];
@@ -362,13 +362,14 @@
              });
          };
 
-         $scope.tagsGraphSigma = [];
+
 
          $scope.drawTagGraph = function (result) {
+             $scope.tagsGraphSigmaDetangler = [];
              $scope.drawTagGraphPromise = $scope.tagGraphRessource.get();
              $scope.drawTagGraphPromise.$promise.then(function (result) {
-                 $scope.tagsGraphSigma = result;
-                  $scope.defaultTagNodeColor = $scope.tagsGraphSigma.nodes[0].color
+                 $scope.tagsGraphSigmaDetangler = result;
+                  $scope.defaultTagNodeColor = $scope.tagsGraphSigmaDetangler.nodes[0].color
              });
          };
 

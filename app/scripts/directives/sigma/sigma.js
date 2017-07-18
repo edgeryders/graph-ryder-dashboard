@@ -228,28 +228,35 @@ angular.module('sbAdminApp')
                 metricFilter(scope.metricMinFilter, newVal);
             });
             scope.$watch('graph', function() {
-                s.graph.clear();
-                s.graph.read(scope.graph);
-                if (s.graph.nodes().length > 0){
-                  s.ready = true;
+                if (scope.graph != undefined && scope.graph != []){
+                  s.graph.clear();
+                  s.graph.read(scope.graph);
+                  if (s.graph.nodes().length > 0){
+                    s.ready = true;
+                  }
+                  s.refresh();
                 }
-                s.refresh();
+
             });
             scope.$watch('edgeLabels', function(newVal) {
-                s.graph.clear();
-                s.settings({
-                    drawEdgeLabels: newVal
-                });
-                s.graph.read(scope.graph);
-                s.refresh();
+                if (scope.graph != undefined && scope.graph != []){
+                  s.graph.clear();
+                  s.settings({
+                      drawEdgeLabels: newVal
+                  });
+                  s.graph.read(scope.graph);
+                  s.refresh();
+                }
             });
             scope.$watch('threshold', function(newVal) {
-                s.graph.clear();
-                s.settings({
-                    labelThreshold: newVal
-                });
-                s.graph.read(scope.graph);
-                s.refresh();
+                if (scope.graph != undefined && scope.graph != []){
+                  s.graph.clear();
+                  s.settings({
+                      labelThreshold: newVal
+                  });
+                  s.graph.read(scope.graph);
+                  s.refresh();
+                }
             });
             scope.$watch('width', function() {
                 element.children().css("width",scope.width);
