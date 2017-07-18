@@ -65,6 +65,8 @@
 
                  $scope.drawUserGraph(true);
                  $scope.drawTagGraph(true);
+                 $rootScope.resetSuggestions(false, false, false, false);
+                 $rootScope.resetDetanglerSuggestions(true, true);
                  //$scope.generateTagGraph();
                  //$scope.generateUserGraph();
 

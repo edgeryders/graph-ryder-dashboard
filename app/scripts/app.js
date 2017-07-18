@@ -40,12 +40,10 @@ angular
                       'scripts/directives/header/header.js',
                       'scripts/directives/header/header-notification/header-notification.js',
                       'scripts/directives/sidebar/sidebar.js',
-                      'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
+                      'scripts/directives/search/search_directive.js',
                       'scripts/directives/sigma/sigma.js',
                       'scripts/directives/timeLine/timeLine.js',
-                      'scripts/directives/panelInfo/panelInfo.js',
-                      'scripts/directives/searchTagUser/search_tag.js',
-                      'scripts/directives/searchTagUser/search_user.js'
+                      'scripts/directives/panelInfo/panelInfo.js'
                   ]
               });
               var prom2 = $ocLazyLoad.load({
@@ -213,7 +211,8 @@ angular
                     files:[
                         'scripts/controllers/main.js',
                         'scripts/controllers/detanglerViewController.js',
-                        'scripts/controllers/modalInstanceController.js'
+                        'scripts/controllers/modalInstanceController.js',
+                        'scripts/directives/search/search_directive.js'
                     ]
                 })
             }

@@ -1,7 +1,11 @@
 <div class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav navbar-collapse">
         <ul class="nav in" id="side-menu">
-            <sidebar-search></sidebar-search>
+          <general-search
+            template-url="scripts/directives/search/sidebar-search.html"
+            sugest = "suggestions"
+            >
+          </general-search>
             <li ui-sref-active="active">
                 <a ui-sref="dashboard.globalView"><i class="fa fa-globe fa-fw"></i> Conversation</a>
             </li>
