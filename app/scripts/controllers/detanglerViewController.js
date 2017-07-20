@@ -74,7 +74,7 @@
                  //$scope.drawTagGraph(true);
                  $scope.generateTagGraph();
                  //$scope.generateUserGraph();
-                 $rootScope.resetSuggestions(false, false, false, false);
+                 $rootScope.resetSuggestions(false, true, false, false); // We can search post in the main search bar
                  $rootScope.resetDetanglerSuggestions(true, true);
              }
          });
@@ -101,6 +101,15 @@
 
           $scope.selectTagNodesVennfct = $scope.fctUnion;
           $scope.selectUserNodesVennfct = $scope.fctUnion;
+
+          //To Do : select the users and the tag in the choosen post.
+          $rootScope.$watch("search", function() {
+            if ($rootScope.search != undefined){
+              //$scope.wichSelection = "main_search_bar";
+              console.log($rootScope.search);
+              $rootScope.search = undefined;
+            }
+          });
 
 
          $rootScope.$watch("user_search", function() {
@@ -439,6 +448,7 @@
              //document.getElementById("interactorUserSelectNode").className="btn btn-default";
              document.getElementById("interactorUserDragNode").className="btn btn-default";
              document.getElementById("interactorUserLasso").className="btn btn-default";
+             document.getElementById("interactorUserInfo").className="btn btn-default";
              document.getElementById("interactorUserDescriptionLabel").innerHTML = "";
          }
 
@@ -468,6 +478,12 @@
              $scope.userinteractor="lasso";
              document.getElementById("interactorUserLasso").className="btn btn-primary";
              document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserLasso").attr("data-title");
+         }
+         $scope.setInteractorUserInfo = function () {
+             $scope.clearUserInteractor();
+             $scope.userinteractor="information";
+             document.getElementById("interactorUserInfo").className="btn btn-primary";
+             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserInfo").attr("data-title");
          }
 
 
@@ -502,6 +518,7 @@
              //document.getElementById("interactorTagSelectNode").className="btn btn-default";
              document.getElementById("interactorTagDragNode").className="btn btn-default";
              document.getElementById("interactorTagLasso").className="btn btn-default";
+             document.getElementById("interactorTagInfo").className="btn btn-default";
              document.getElementById("interactorTagDescriptionLabel").innerHTML = "";
          }
 
@@ -531,6 +548,13 @@
              $scope.taginteractor="lasso";
              document.getElementById("interactorTagLasso").className="btn btn-primary";
              document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagLasso").attr("data-title");
+         }
+
+         $scope.setInteractorTagInfo = function () {
+             $scope.clearTagInteractor();
+             $scope.taginteractor="information";
+             document.getElementById("interactorTagInfo").className="btn btn-primary";
+             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagInfo").attr("data-title");
          }
 
          $scope.clearTagVennInteractor = function() {
@@ -683,10 +707,48 @@
            $scope.s_tag.refresh();
          }
 
+         $scope.openInfoPanel = function(elementType, elementId) {
+             var mod = document.createElement("panel-info");
+             mod.setAttribute("type", elementType);
+             mod.setAttribute("id", elementId);
+             mod.setAttribute("parent", $scope.infoPanelParent);
+             jQuery("#"+ $scope.infoPanelParent).append(mod);
+             $compile(mod)($scope);
+         };
 
 
          /*** Sigma Event Catcher ***/
-         $scope.eventCatcher = function (e) {};
+         $scope.eventCatcher = function (e) {
+             switch(e.type) {
+                 case 'clickNode':
+                         if(e.data.node.user_id != undefined && (e.data.captor.ctrlKey || $scope.userinteractor == "information")) {
+                             $scope.elementType = "user";
+                             $scope.elementId = e.data.node.user_id
+                             $scope.openInfoPanel($scope.elementType, $scope.elementId);
+                         }
+                         else if (e.data.node.post_id != undefined) {
+                             $scope.elementType = "post";
+                             $scope.elementId = e.data.node.post_id;
+                         }
+                         else if (e.data.node.comment_id != undefined) {
+                             $scope.elementType = "comment";
+                             $scope.elementId = e.data.node.comment_id;
+                         }
+                         else if (e.data.node.tag_id != undefined && (e.data.captor.ctrlKey || $scope.taginteractor == "information")) {
+                             $scope.elementType = "tag";
+                             $scope.elementId = e.data.node.tag_id;
+                             $scope.openInfoPanel($scope.elementType, $scope.elementId);
+                         }
+                         else if (e.data.node.annotation_id != undefined) {
+                             $scope.elementType = "annotation";
+                             $scope.elementId = e.data.node.annotation_id;
+                         }
+                         else {
+                             console.log("Unexpected node: "+e.data.node);
+                         }
+                     break;
+            }
+        }
 
          $scope.$on("$destroy", function(){
              //todo stop all active request
