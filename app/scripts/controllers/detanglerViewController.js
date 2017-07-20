@@ -50,11 +50,15 @@
          $scope.lasso_user = {};
          $scope.lasso_tag = {};
          $scope.isCheckedUser = false;
-         $scope.tab_users = [];
-         $scope.tab_tags = [];
+         $scope.wichSelection = undefined;
          $scope.communityManagers = ["Alberto", "Nadia", "Noemi"];
          $scope.metricFilter = "occ";
          $scope.configAtlasForceAlgo = {scalingRatio:1,strongGravityMode:false,gravity:3,adjustSizes:true};
+         $scope.selectionColor = 'rgb(42, 187, 155)';
+         $scope.tag_selection_ID = [];
+         $scope.user_selection_ID = [];
+         $scope.corresponding_users_ID = [];
+         $scope.corresponding_tags_ID = [];
 
          // When rootScope is ready load the graph
          $rootScope.$watch('ready', function(newVal) {
@@ -117,6 +121,32 @@
            }
          });
 
+         $rootScope.$watch("user_search", function() {
+           if ($rootScope.user_search != undefined){
+             $scope.wichSelection = "user";
+             $scope.s_user.graph.nodes().filter(function (node){
+               return node.user_id == $rootScope.user_search.user_id
+             }).forEach(function (node){
+               $scope.user_selection_ID = [parseInt(node.id)];
+             });
+             $scope.refreshUserView();
+             $scope.refreshTagView();
+           }
+         });
+
+         $rootScope.$watch("tag_search", function() {
+           if ($rootScope.tag_search != undefined){
+             $scope.wichSelection = "tag";
+             $scope.s_tag.graph.nodes().filter(function (node){
+               return node.tag_id == $rootScope.tag_search.tag_id
+             }).forEach(function (node){
+               $scope.tag_selection_ID = [parseInt(node.id)];
+             });
+             $scope.refreshTagView();
+             $scope.refreshUserView();
+           }
+         });
+
          $scope.refreshTagView = function(){
 
            //Set the default properties
@@ -127,64 +157,69 @@
            $scope.s_tag.graph.nodes().forEach(function (node) {
              node.color = $scope.defaultTagNodeColor;
              node.hidden = true;
-             node.couldAppear = false;
            });
 
-           $scope.s_user.graph.nodes().forEach(function (node) {
-             node.color = $scope.defaultUserNodeColor;
-           });
-
-           //We search what are the tags that must be colored
-           $scope.tab_tags = undefined;
-           $scope.lasso_user.selectedNodes.forEach(function (node) {
-              node.color = 'rgb(42, 187, 155)';
-              if (node.tagsAssociateNodeTlp != undefined) {
-                var text = node.tagsAssociateNodeTlp
-                var tab_few_tag = eval("[" + text.substring(1,text.length-1) + "]")
-              }
-              else{
-                var tab_few_tag = [];
-              }
-              $scope.tab_tags = $scope.selectTagNodes($scope.tab_tags,tab_few_tag);
-           });
-
-           //We will display only the selected users and the nodes that are connected to the selection.
-           if ($scope.lasso_user.selectedNodes.length != 0){
-
+           //We color what is selected and we keep those nodes + the nodes that are connected to the selection.
+           if ($scope.wichSelection == "tag" && $scope.tag_selection_ID.length != 0){
+             $scope.tag_selection_ID.forEach(function (node_id) {
+               var node = $scope.s_tag.graph.nodes(node_id);
+               node.hidden = false;
+               node.color = $scope.selectionColor;
+             });
+             //We display what is connected to the selection
+             $scope.s_tag.graph.edges().forEach(function (edge) {
+               if ($scope.tag_selection_ID.indexOf(parseInt($scope.s_tag.graph.nodes(edge.target).id)) > -1){
+                 $scope.s_tag.graph.nodes(edge.source).hidden = false;
+               }
+               if ($scope.tag_selection_ID.indexOf(parseInt($scope.s_tag.graph.nodes(edge.source).id)) > -1){
+                 $scope.s_tag.graph.nodes(edge.target).hidden = false;
+               }
+             });
            }
 
-           //We filter the tags and we change the color.
-           if ($scope.tab_tags != undefined){
-             $scope.s_tag.graph.nodes().filter( function (node){
-                return $scope.tab_tags.indexOf(parseInt(node.tag_id)) > -1
-             }).forEach( function (node){
-                node.color = 'rgb(42, 187, 155)';
-                if (Number(node[$scope.metricFilter]) >= Number($scope.filter_occurence_tag_min) && Number(node[$scope.metricFilter]) <= Number($scope.filter_occurence_tag_max)){
-                  node.hidden = false;
+           // if some user nodes are selected we will display only the tag nodes corresponding to the selecteion.
+           $scope.corresponding_tags_ID = [];
+           if ($scope.wichSelection == "user" && $scope.user_selection_ID.length != 0){
+
+             $scope.s_user.graph.nodes().filter(function (node) {
+               return $scope.user_selection_ID.indexOf(parseInt(node.id)) > -1
+             }).forEach(function (node) {
+                if (node.tagsAssociateNodeTlp != undefined) {
+                  var text = node.tagsAssociateNodeTlp
+                  var tab_few_tag = eval("[" + text.substring(1,text.length-1) + "]")
                 }
                 else{
-                  node.hidden = true;
+                  var tab_few_tag = [];
                 }
-                node.couldAppear = true;
+                $scope.corresponding_tags_ID = $scope.selectTagNodes($scope.corresponding_tags_ID,tab_few_tag);
+             });
+
+             if ($scope.corresponding_tags_ID.length != 0){
+               $scope.s_tag.graph.nodes().filter(function (node) {
+                  return $scope.corresponding_tags_ID.indexOf(parseInt(node.tag_id)) > -1
+               }).forEach( function (node){
+                 node.hidden = false;
+                 node.color = $scope.selectionColor;
+               });
+             }
+           }
+
+           //if there is no selection or nothing has been match with the selection. We display all the graph.
+           if ($scope.wichSelection == undefined || ($scope.wichSelection == "user" && ($scope.user_selection_ID.length == 0 || $scope.corresponding_tags_ID.length == 0)) || ($scope.wichSelection == "tag" && $scope.tag_selection_ID.length == 0)){
+
+             $scope.s_tag.graph.nodes().forEach(function (node) {
+               node.hidden = false;
              });
            }
 
-           if (($scope.tab_tags != undefined && $scope.tab_tags.length == 0) || $scope.tab_tags == undefined){
-             $scope.s_tag.graph.nodes().forEach(function (node) {
-               if (Number(node[$scope.metricFilter]) >= Number($scope.filter_occurence_tag_min) && Number(node[$scope.metricFilter]) <= Number($scope.filter_occurence_tag_max)){
-                 node.hidden = false;
-               }
-               else{
-                 node.hidden = true;
-               }
-               node.couldAppear = true;
-             });
-           }
+           //Now we filter with the co-occurence intensity
+           $scope.s_tag.graph.nodes().forEach(function (node){
+             if (Number(node[$scope.metricFilter]) < Number($scope.filter_occurence_tag_min) || Number(node[$scope.metricFilter]) > Number($scope.filter_occurence_tag_max)){
+               node.hidden = true;
+             }
+           });
 
            $scope.s_tag.refresh();
-           $scope.s_user.refresh();
-           $scope.lasso_user.deactivate();
-           $scope.lasso_user.activate();
          }
 
          $scope.refreshUserView = function(){
@@ -197,59 +232,71 @@
            $scope.s_user.graph.nodes().forEach(function (node) {
              node.color = $scope.defaultUserNodeColor;
              node.hidden = true;
-             node.couldAppear = false;
            });
 
-           $scope.s_tag.graph.nodes().forEach(function (node) {
-             node.color = $scope.defaultTagNodeColor;
-           });
-
-           //We search what are the users that must be colored
-           $scope.tab_users = undefined;
-           $scope.lasso_tag.selectedNodes.forEach(function (node) {
-              node.color = 'rgb(42, 187, 155)';
-              if (node.usersAssociateNodeTlp != undefined) {
-                var text = node.usersAssociateNodeTlp
-                var tab_few_user = eval("[" + text.substring(1,text.length-1) + "]")
-              }
-              else{
-                var tab_few_user = [];
-              }
-              $scope.tab_users = $scope.selectUserNodes($scope.tab_users,tab_few_user);
-           });
-
-           //We filter the users and we change the color.
-           if ($scope.tab_users != undefined){
-             $scope.s_user.graph.nodes().filter( function (node){
-                return $scope.tab_users.indexOf(parseInt(node.user_id)) > -1
-             }).forEach( function (node){
-                node.color = 'rgb(42, 187, 155)';
-                node.hidden = false;
-                if ($scope.isCheckedUser){
-                  if ($scope.communityManagers.indexOf(node.name) > -1){
-                    node.hidden = true;
-                  }
-                }
-                node.couldAppear = true;
-             });
-          }
-           if (($scope.tab_users != undefined && $scope.tab_users.length == 0) || $scope.tab_users == undefined){
-             $scope.s_user.graph.nodes().forEach(function (node) {
+           //We color what is selected and we keep those nodes + the nodes that are connected to the selection.
+           if ($scope.wichSelection == "user" && $scope.user_selection_ID.length != 0){
+             $scope.user_selection_ID.forEach(function (node_id) {
+               var node = $scope.s_user.graph.nodes(node_id);
                node.hidden = false;
-               if ($scope.isCheckedUser){
-                 if ($scope.communityManagers.indexOf(node.name) > -1){
-                   node.hidden = true;
-                 }
+               node.color = $scope.selectionColor;
+             });
+             //We display what is connected to the selection
+             $scope.s_user.graph.edges().forEach(function (edge) {
+               if ($scope.user_selection_ID.indexOf(parseInt($scope.s_user.graph.nodes(edge.target).id)) > -1){
+                 $scope.s_user.graph.nodes(edge.source).hidden = false;
                }
-               node.couldAppear = true;
+               if ($scope.user_selection_ID.indexOf(parseInt($scope.s_user.graph.nodes(edge.source).id)) > -1){
+                 $scope.s_user.graph.nodes(edge.target).hidden = false;
+               }
              });
            }
 
+           // if some tag nodes are selected we will display only the user nodes corresponding to the selecteion.
+           $scope.corresponding_users_ID = [];
+           if ($scope.wichSelection == "tag" && $scope.tag_selection_ID.length != 0){
 
-           $scope.s_tag.refresh();
+             $scope.s_tag.graph.nodes().filter(function (node) {
+               return $scope.tag_selection_ID.indexOf(parseInt(node.id)) > -1
+             }).forEach(function (node) {
+                if (node.usersAssociateNodeTlp != undefined) {
+                  var text = node.usersAssociateNodeTlp
+                  var tab_few_user = eval("[" + text.substring(1,text.length-1) + "]")
+                }
+                else{
+                  var tab_few_user = [];
+                }
+                $scope.corresponding_users_ID = $scope.selectUserNodes($scope.corresponding_users_ID,tab_few_user);
+             });
+
+             if ($scope.corresponding_users_ID.length != 0){
+               $scope.s_user.graph.nodes().filter( function (node){
+                  return $scope.corresponding_users_ID.indexOf(parseInt(node.user_id)) > -1
+               }).forEach( function (node){
+                 node.hidden = false;
+                 node.color = $scope.selectionColor;
+               });
+             }
+           }
+
+           //if there is no selection or nothing has been match with the selection. We display all the graph.
+           if ($scope.wichSelection == undefined || ($scope.wichSelection == "tag" && ($scope.tag_selection_ID.length == 0 || $scope.corresponding_users_ID.length == 0)) || ($scope.wichSelection == "user" && $scope.user_selection_ID.length == 0)){
+
+             $scope.s_user.graph.nodes().forEach(function (node) {
+               node.hidden = false;
+             });
+           }
+
+           //Now we hide the community Managers if the box is cheched
+           if ($scope.isCheckedUser == true){
+             $scope.s_user.graph.nodes().filter(function (node){
+               return $scope.communityManagers.indexOf(node.name) > -1
+             }).forEach(function (node){
+               node.hidden = true;
+             });
+           }
+
            $scope.s_user.refresh();
-           $scope.lasso_tag.deactivate();
-           $scope.lasso_tag.activate();
          }
 
 
@@ -258,11 +305,17 @@
            if ($scope.s_tag != undefined) {
              //When the lasso_user catch new nodes
              $scope.lasso_user.bind('selectedNodes', function (event) {
+               $scope.wichSelection = "user";
+               $scope.user_selection_ID = $scope.lasso_user.selectedNodes.map(function(node) {return parseInt(node.id);});
+               $scope.refreshUserView();
                $scope.refreshTagView();
              });
 
              //When the lasso_tag catch new nodes
              $scope.lasso_tag.bind('selectedNodes', function (event) {
+               $scope.wichSelection = "tag";
+               $scope.tag_selection_ID = $scope.lasso_tag.selectedNodes.map(function(node) {return parseInt(node.id);});
+               $scope.refreshTagView();
                $scope.refreshUserView();
              });
 
@@ -295,8 +348,6 @@
                  toUnBind3();
                }
              });
-
-
 
              toUnBind1(); //We stop the watcher wich is useless now.
            }
@@ -333,7 +384,7 @@
              slide: function( event, ui ) {
                  $scope.filter_occurence_tag_min = ui.values[0];
                  $scope.filter_occurence_tag_max = ui.values[1];
-                 $scope.$apply();
+                 $scope.refreshTagView();
              }
          });
 

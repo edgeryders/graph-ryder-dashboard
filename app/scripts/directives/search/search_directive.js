@@ -33,19 +33,16 @@ angular.module('sbAdminApp')
         if ($scope.sugest === "suggestionsUser"){
           $scope.submit = function() {
             $rootScope.user_search = $scope.search;
-            console.log($rootScope.user_search);
           }
         }
         else if ($scope.sugest === "suggestionsTag") {
           $scope.submit = function() {
             $rootScope.tag_search = $scope.search;
-            console.log($rootScope.tag_search);
           }
         }
         else if ($scope.sugest === "suggestions") {
           $scope.submit = function() {
             $rootScope.search = $scope.search;
-            console.log($rootScope.search);
           }
         }
         else{

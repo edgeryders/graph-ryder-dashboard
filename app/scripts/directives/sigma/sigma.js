@@ -207,7 +207,7 @@ angular.module('sbAdminApp')
                 filter
                   .undo('nodeFilter')
                   .nodesBy(function(n) {
-                    return (((n.couldAppear != undefined) ? n.couldAppear : true) && ((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter)));
+                    return (((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter)));
                   }, 'nodeFilter')
                   .apply();
                 filter
