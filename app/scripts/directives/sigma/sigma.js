@@ -250,11 +250,11 @@ angular.module('sbAdminApp')
             });
             scope.$watch('threshold', function(newVal) {
                 if (scope.graph != undefined && scope.graph != []){
-                  s.graph.clear();
+                  //s.graph.clear();
                   s.settings({
                       labelThreshold: newVal
                   });
-                  s.graph.read(scope.graph);
+                  //s.graph.read(scope.graph);
                   s.refresh();
                 }
             });
