@@ -16,7 +16,7 @@ angular
     'ngSanitize'
   ])
   .constant('config', {
-        apiUrl: 'http://localhost:5000/'
+        apiUrl: 'http://164.132.58.138:5000/'
     })
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
 

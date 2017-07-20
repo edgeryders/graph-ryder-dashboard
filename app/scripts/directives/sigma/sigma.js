@@ -55,7 +55,7 @@ angular.module('sbAdminApp')
                     labelSize: "fixed",
                     drawEdgeLabels: scope.edgeLabels,
                     minArrowSize: 5,
-                    enableEdgeHovering: false,
+                    enableEdgeHovering: true,
                     edgeHoverColor: '#000',
                     defaultEdgeHoverColor: '#000',
                     edgeHoverSizeRatio: 2,
