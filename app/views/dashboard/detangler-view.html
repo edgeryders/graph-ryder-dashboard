@@ -14,6 +14,8 @@
 
                         <button id="interactorUserLasso" class="btn btn-default" title="Selection of multiples nodes" data-title="Selection of multiple nodes" ng-click="setInteractorUserLasso()"><i class="fa fa-circle-thin" aria-hidden="true"></i></button>
 
+                        <button id="interactorUserInfo" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" data-title="Show details about the elements" ng-click="setInteractorUserInfo()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+
                         <button id="interactorUserDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorUserDragNode()"><i class="fa fa-arrows"></i></button>
 
                         <label id="interactorUserDescriptionLabel">Navigate the graph</label>
@@ -25,24 +27,35 @@
 
                       <label style="float:right;">Remove community managers <input type="checkbox" value="" ng-model="isCheckedUser" ng-change="setInteractorUserRemoveManagers(isCheckedUser)"></label>
 
-                      <div>
-
-                      </div>
-
-                      <div> Change Layout
-                        <button id="interactorUserLayoutPlay" class="btn btn-default" title="Play the algorithm" ng-click="setInteractorUserLayoutPlay()"><i class="fa fa-play" aria-hidden="true"></i></button>
-
-                        <button id="interactorUserLayoutStop" class="btn btn-primary" title="Stop the algorithm" ng-click="setInteractorUserLayoutStop()"><i class="fa fa-stop" aria-hidden="true"></i></button>
-
-                        <button id="interactorUserLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorUserLayoutReset()"><i class="fa fa-undo" aria-hidden="true"></i></button>
-
-                      </div>
-
                     </div>
+
+                      <div class="row">
+                        <div class="col-lg-6" >
+                            Change Layout
+                            <button id="interactorUserLayoutPlay" class="btn btn-primary" title="Play the algorithm" ng-click="setInteractorUserLayoutPlay()"><i class="fa fa-play" aria-hidden="true"></i></button>
+
+                            <button id="interactorUserLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorUserLayoutReset()"><i class="fa fa-undo" aria-hidden="true"></i></button>
+                        </div>
+
+                        <div class="col-lg-6" >
+                          <general-search
+                            template-url="scripts/directives/search/user_search.html"
+                            sugest = "suggestionsUser"
+                            >
+                          </general-search>
+                        </div>
+                      </div>
+
+
+
+
+
+
+
                 </div> <!-- /.panel-heading -->
                 <div class="panel-body">
                     <sigma-js
-                          graph="usersGraphSigma"
+                          graph="usersGraphSigmaDetangler"
                           s = "s_user"
                           lasso = "lasso_user"
                           id="user-graph"
@@ -74,6 +87,8 @@
 
                         <button id="interactorTagLasso" class="btn btn-default" title="Selection of multiples nodes" data-title="Selection of multiple nodes" ng-click="setInteractorTagLasso()"><i class="fa fa-circle-thin" aria-hidden="true"></i></button>
 
+                        <button id="interactorTagInfo" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" data-title="Show details about the elements" ng-click="setInteractorTagInfo()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+
                         <button id="interactorTagDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorTagDragNode()"><i class="fa fa-arrows"></i></button>
 
                         <label id="interactorTagDescriptionLabel">Navigate the graph</label>
@@ -86,12 +101,21 @@
                       <!--class="set set-intersect"-->
                     </div>
 
-                    <div> Change Layout
-                      <button id="interactorTagLayoutPlay" class="btn btn-default" title="Play the algorithm" ng-click="setInteractorTagLayoutPlay()"><i class="fa fa-play" aria-hidden="true"></i></button>
+                    <div class="row">
+                      <div class="col-lg-6" >
+                        Change Layout
+                        <button id="interactorTagLayoutPlay" class="btn btn-primary" title="Play the algorithm" ng-click="setInteractorTagLayoutPlay()"><i class="fa fa-play" aria-hidden="true"></i></button>
 
-                      <button id="interactorTagLayoutStop" class="btn btn-primary" title="Stop the algorithm" ng-click="setInteractorTagLayoutStop()"><i class="fa fa-stop" aria-hidden="true"></i></button>
+                        <button id="interactorTagLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorTagLayoutReset()"><i class="fa fa-undo" aria-hidden="true"></i></button>
 
-                      <button id="interactorTagLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorTagLayoutReset()"><i class="fa fa-undo" aria-hidden="true"></i></button>
+                      </div>
+                      <div class="col-lg-6" >
+                        <general-search
+                          template-url="scripts/directives/search/tag_search.html"
+                          sugest = "suggestionsTag"
+                          >
+                        </general-search>
+                      </div>
                     </div>
 
 
@@ -100,15 +124,13 @@
                 <div class="panel-body">
                   <!-- /.Graphe des tags -->
                   <sigma-js
-                          graph="tagsGraphSigma"
+                          graph="tagsGraphSigmaDetangler"
                           s="s_tag"
                           lasso = "lasso_tag"
-                          id="comment-graph"
+                          id="tag-graph"
                           width="100%" height="400px"
                           threshold={{nodeTagelThreshold}}
                           metric-filter="occ"
-                          metric-min-filter={{filter_occurence_tag_min}}
-                          metric-max-filter={{filter_occurence_tag_max}}
                           event-catcher="eventCatcher"
                           edge-labels="tagel"
                           interactor={{taginteractor}}

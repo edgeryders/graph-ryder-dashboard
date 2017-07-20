@@ -207,7 +207,7 @@ angular.module('sbAdminApp')
                 filter
                   .undo('nodeFilter')
                   .nodesBy(function(n) {
-                    return (((n.couldAppear != undefined) ? n.couldAppear : true) && ((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter)));
+                    return (((Number(n[scope.metricFilter]) >= Number(metricMin) && Number(n[scope.metricFilter]) <= Number(metricMax)) || Number(n[scope.metricFilter]) == Number(scope.metricNeutralFilter)));
                   }, 'nodeFilter')
                   .apply();
                 filter
@@ -228,28 +228,35 @@ angular.module('sbAdminApp')
                 metricFilter(scope.metricMinFilter, newVal);
             });
             scope.$watch('graph', function() {
-                s.graph.clear();
-                s.graph.read(scope.graph);
-                if (s.graph.nodes().length > 0){
-                  s.ready = true;
+                if (scope.graph != undefined && scope.graph != []){
+                  s.graph.clear();
+                  s.graph.read(scope.graph);
+                  if (s.graph.nodes().length > 0){
+                    s.ready = true;
+                  }
+                  s.refresh();
                 }
-                s.refresh();
+
             });
             scope.$watch('edgeLabels', function(newVal) {
-                s.graph.clear();
-                s.settings({
-                    drawEdgeLabels: newVal
-                });
-                s.graph.read(scope.graph);
-                s.refresh();
+                if (scope.graph != undefined && scope.graph != []){
+                  s.graph.clear();
+                  s.settings({
+                      drawEdgeLabels: newVal
+                  });
+                  s.graph.read(scope.graph);
+                  s.refresh();
+                }
             });
             scope.$watch('threshold', function(newVal) {
-                s.graph.clear();
-                s.settings({
-                    labelThreshold: newVal
-                });
-                s.graph.read(scope.graph);
-                s.refresh();
+                if (scope.graph != undefined && scope.graph != []){
+                  //s.graph.clear();
+                  s.settings({
+                      labelThreshold: newVal
+                  });
+                  //s.graph.read(scope.graph);
+                  s.refresh();
+                }
             });
             scope.$watch('width', function() {
                 element.children().css("width",scope.width);
