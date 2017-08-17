@@ -28,13 +28,17 @@
                       <label style="float:right;">Remove community managers <input type="checkbox" value="" ng-model="isCheckedUser" ng-change="setInteractorUserRemoveManagers(isCheckedUser)"></label>
 
                     </div>
+                    <label>Show neighbourhood <input type="checkbox" value="" ng-model="isCheckedShowNeighbourUser" ng-change="setInteractorShowNeighbour(s_user, isCheckedShowNeighbourUser)"></label>
+                    <div>
+
+                    </div>
 
                       <div class="row">
                         <div class="col-lg-6" >
                             Change Layout
-                            <button id="interactorUserLayoutPlay" class="btn btn-primary" title="Play the algorithm" ng-click="setInteractorUserLayoutPlay()"><i class="fa fa-play" aria-hidden="true"></i></button>
+                            <button id="interactorUserLayoutPlay" class="btn btn-primary" title="Play the algorithm" ng-click="setInteractorLayoutPlayFruchterman(s_user)"><i class="fa fa-play" aria-hidden="true"></i></button>
 
-                            <button id="interactorUserLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorUserLayoutReset()"><i class="fa fa-undo" aria-hidden="true"></i></button>
+                            <button id="interactorUserLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorLayoutReset(s_user)"><i class="fa fa-undo" aria-hidden="true"></i></button>
                         </div>
 
                         <div class="col-lg-6" >
@@ -101,12 +105,16 @@
                       <!--class="set set-intersect"-->
                     </div>
 
+                  <div>
+                    <label>Show neighbourhood <input type="checkbox" value="" ng-model="isCheckedShowNeighbourTag" ng-change="setInteractorShowNeighbour(s_tag, isCheckedShowNeighbourTag)"></label>
+                  </div>
+
                     <div class="row">
                       <div class="col-lg-6" >
                         Change Layout
-                        <button id="interactorTagLayoutPlay" class="btn btn-primary" title="Play the algorithm" ng-click="setInteractorTagLayoutPlay()"><i class="fa fa-play" aria-hidden="true"></i></button>
+                        <button id="interactorTagLayoutPlay" class="btn btn-primary" title="Play the algorithm" ng-click="setInteractorLayoutPlayFruchterman(s_tag)"><i class="fa fa-play" aria-hidden="true"></i></button>
 
-                        <button id="interactorTagLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorTagLayoutReset()"><i class="fa fa-undo" aria-hidden="true"></i></button>
+                        <button id="interactorTagLayoutReset"class="btn btn-success" title="Reset the layout" ng-click="setInteractorLayoutReset(s_tag)"><i class="fa fa-undo" aria-hidden="true"></i></button>
 
                       </div>
                       <div class="col-lg-6" >
