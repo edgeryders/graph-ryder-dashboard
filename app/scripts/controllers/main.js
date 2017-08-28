@@ -92,15 +92,21 @@ angular.module('sbAdminApp')
         });
     };
 
-    $rootScope.resetDetanglerSuggestions = function (users, tags) {
+    $rootScope.resetDetanglerSuggestions = function (users, tags, posts) {
         var collectPromises = [];
+        // We use temp arrays so that the watcher corresponding to the suggestions will be trigered only when all the data are loaded.
         $rootScope.suggestionsUser_temp = [];
         $rootScope.suggestionsTag_temp = [];
+        $rootScope.suggestionsPost_temp = [];
+        $rootScope.suggestionsComment_temp = [];
         $rootScope.suggestionsUser = [];
         $rootScope.suggestionsTag = [];
+        $rootScope.suggestionsPost = [];
         // Create promises array to wait all data until load
         collectPromises.push($resource(config.apiUrl + 'users').query().$promise);
         collectPromises.push($resource(config.apiUrl + 'tags').query().$promise);
+        collectPromises.push($resource(config.apiUrl + 'posts').query().$promise);
+        collectPromises.push($resource(config.apiUrl + 'comments').query().$promise);
 
         $q.all(collectPromises).then(function (results) {
             if(users) {
@@ -113,8 +119,21 @@ angular.module('sbAdminApp')
             if(tags) {
                 angular.forEach(results[1], function (tag) {
                     $rootScope.suggestionsTag_temp.push(tag);
+                    //console.log(tag)
                 });
                 $rootScope.suggestionsTag = $rootScope.suggestionsTag_temp;
+            }
+            if(posts) {
+              //comments and post are put together
+                angular.forEach(results[2], function (post) {
+                    $rootScope.suggestionsPost_temp.push(post);
+                    //console.log(post)
+                });
+                angular.forEach(results[3], function (comment) {
+                    $rootScope.suggestionsPost_temp.push(comment);
+                    //console.log(comment)
+                });
+                $rootScope.suggestionsPost = $rootScope.suggestionsPost_temp;
             }
         }, function (reject) {
             console.log(reject);

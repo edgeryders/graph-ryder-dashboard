@@ -14,15 +14,12 @@
      .controller('DetanglerViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $q, $location, $timeout, $compile) {
 
          /**** Init ****/
-         //edge label default
-         $scope.tagel = false;
-         $scope.tagnl = false;
-         $scope.userel = false;
-         $scope.usernl = false;
          $scope.nodeTagelThreshold = 10;
          $scope.nodeTagelThresholdMax = 10;
          $scope.nodeUserelThresholdMax = 10;
          $scope.nodeUserelThreshold = 10;
+         $scope.nodePostelThresholdMax = 10;
+         $scope.nodePostelThreshold = 10;
          $scope.locate = "";
          $scope.filter_occurence_tag_min = "2";
          $scope.filter_occurence_tag_max = "100";
@@ -31,6 +28,7 @@
          $scope.tableSizeChoice = '10';
          $scope.userinteractor = "navigate";
          $scope.taginteractor = "navigate";
+         $scope.postinteractor = "navigate";
          $scope.infoPanelParent = "infoPanelParent";
          $scope.selected = {}; //test
          $scope.selected.start= new Date(0);
@@ -38,13 +36,14 @@
          $scope.layoutChoice = 'Circular';
          $scope.s_user = undefined;
          $scope.s_tag = undefined;
+         $scope.s_post = undefined;
          $scope.lasso_user = {};
          $scope.lasso_tag = {};
-         $scope.wichSelection = undefined;
+         $scope.lass_post = {};
          $scope.communityManagers = ["Alberto", "Nadia", "Noemi"];
          $scope.metricFilter = "occ";
          //$scope.configAtlasForceAlgo = {scalingRatio:1,strongGravityMode:false,gravity:3,adjustSizes:true};
-         $scope.configFruchtermanReingoldAlgo = {iterations:1000, easing:"quadraticInOut", duration:2000}
+         $scope.configFruchtermanReingoldAlgo = {iterations:1000, easing:"quadraticInOut", duration:1300}
          $scope.selectionColor = 'rgb(128, 0, 128)';
          $scope.correspondingColor = 'rgb(42, 187, 155)';
          $scope.corresponding_users_ID = [];
@@ -58,13 +57,16 @@
                  $scope.layoutChoice = $rootScope.layout[12];
                  $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/' + $scope.layoutChoice);
                  $scope.tagGraphRessource = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
-
+                 $scope.postGraphRessource = $resource(config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoice);
+                 //$scope.postGraphRessource = $resource(config.apiUrl + 'draw/complete/'+ $scope.layoutChoice);
                  $scope.drawUserGraph(true);
-                 //$scope.drawTagGraph(true);
-                 $scope.generateTagGraph();
+                 $scope.drawCommentAndPostGraph(true);
+                 $scope.drawTagGraph(true);
+                 //$scope.generateTagGraph();
                  //$scope.generateUserGraph();
-                 $rootScope.resetSuggestions(false, true, false, false); // We can search post in the main search bar
-                 $rootScope.resetDetanglerSuggestions(true, true);
+                 //$scope.generateCommentAndPostGraph();
+                 //$rootScope.resetSuggestions(false, true, false, false); // We can search post in the main search bar
+                 $rootScope.resetDetanglerSuggestions(true, true, true); // the suggestions of users, tags and posts are loaded.
              }
          });
 
@@ -96,7 +98,6 @@
           //To Do : select the users and the tag in the choosen post.
           $rootScope.$watch("search", function() {
             if ($rootScope.search != undefined){
-              //$scope.wichSelection = "main_search_bar";
               console.log($rootScope.search);
               var drawGraph = $resource(config.apiUrl + 'post/hydrate/'+ $rootScope.search.post_id);
               var drawgraph = drawGraph.get();
@@ -170,7 +171,7 @@
            // edge.hidden = false;
            //})
            sigmaIns.graph.nodes().forEach(function (node) {
-             node.color = sigmaIns.defaultNodeColor;
+             node.color = node.defaultNodeColor;
              node.hidden = true;
              node.status = "hide";
            });
@@ -179,9 +180,19 @@
              sigmaIns.graph.nodes().forEach(function (node) {
 
                var to_show = true;
-               sigmaIns.filters.forEach(function (filter) {
-                 to_show = to_show && filter.apply(node);
+
+               sigmaIns.filtersWhenAll.forEach(function (filter) {
+                 if (to_show){
+                   to_show = to_show && filter.apply(node);
+                 }
                });
+
+               sigmaIns.filters.forEach(function (filter) {
+                 if (to_show){
+                   to_show = to_show && filter.apply(node);
+                 }
+               });
+
                if (to_show){
                   node.hidden = false;
                }
@@ -196,7 +207,9 @@
                  var node = sigmaIns.graph.nodes(node_id);
                  var to_show = true;
                  sigmaIns.filters.forEach(function (filter) {
-                   to_show = to_show && filter.apply(node);
+                   if (to_show){
+                     to_show = to_show && filter.apply(node);
+                   }
                  });
                  if (to_show){
                     node.hidden = false;
@@ -224,7 +237,9 @@
 
                      var to_show = true;
                      sigmaIns.filters.forEach(function (filter) {
-                       to_show = to_show && filter.apply(node_source);
+                       if (to_show){
+                         to_show = to_show && filter.apply(node_source);
+                       }
                      });
 
                      if (to_show){node_source.hidden = false;}
@@ -235,7 +250,9 @@
 
                      var to_show = true;
                      sigmaIns.filters.forEach(function (filter) {
-                       to_show = to_show && filter.apply(node_target);
+                       if (to_show){
+                         to_show = to_show && filter.apply(node_target);
+                       }
                      });
 
                      if (to_show){node_target.hidden = false;}
@@ -247,166 +264,6 @@
            sigmaIns.refresh();
            if (layout === "fruchtermanReingold"){$scope.setInteractorLayoutPlayFruchterman(sigmaIns);}
          }
-
-         /*
-         $scope.refreshTagView = function(){
-           //to delete
-           $scope.user_selection_ID = $scope.s_user.selection_ID;
-            $scope.tag_selection_ID = $scope.s_tag.selection_ID;
-           //Set the default properties
-           $scope.s_tag.graph.edges().forEach(function (edge) {
-             edge.hidden = false;
-           });
-           $scope.s_tag.graph.nodes().forEach(function (node) {
-             node.color = $scope.s_tag.defaultNodeColor;
-             node.hidden = true;
-           });
-
-           //We color what is selected and we keep those nodes + the nodes that are connected to the selection.
-           if ($scope.wichSelection == "tag" && $scope.tag_selection_ID.length != 0){
-             $scope.tag_selection_ID.forEach(function (node_id) {
-               var node = $scope.s_tag.graph.nodes(node_id);
-               node.hidden = false;
-               node.color = $scope.selectionColor;
-             });
-             //We display what is connected to the selection
-             $scope.s_tag.graph.edges().forEach(function (edge) {
-               if ($scope.tag_selection_ID.indexOf(parseInt($scope.s_tag.graph.nodes(edge.target).id)) > -1){
-                 $scope.s_tag.graph.nodes(edge.source).hidden = false;
-               }
-               if ($scope.tag_selection_ID.indexOf(parseInt($scope.s_tag.graph.nodes(edge.source).id)) > -1){
-                 $scope.s_tag.graph.nodes(edge.target).hidden = false;
-               }
-             });
-           }
-
-           // if some user nodes are selected we will display only the tag nodes corresponding to the selecteion.
-           $scope.corresponding_tags_ID = undefined;
-           if ($scope.wichSelection == "user" && $scope.user_selection_ID.length != 0){
-             $scope.s_user.graph.nodes().filter(function (node) {
-               return $scope.user_selection_ID.indexOf(parseInt(node.id)) > -1
-             }).forEach(function (node) {
-                if (node.tagsAssociateNodeTlp != undefined) {
-                  var text = node.tagsAssociateNodeTlp
-                  var tab_few_tag = eval("[" + text.substring(1,text.length-1) + "]")
-                }
-                else{
-                  var tab_few_tag = [];
-                }
-                $scope.corresponding_tags_ID = $scope.selectUserNodesVennfct($scope.corresponding_tags_ID,tab_few_tag);
-             });
-
-             if ($scope.corresponding_tags_ID.length != 0){
-               $scope.s_tag.graph.nodes().filter(function (node) {
-                  return $scope.corresponding_tags_ID.indexOf(parseInt(node.tag_id)) > -1
-               }).forEach( function (node){
-                 node.hidden = false;
-                 node.color = $scope.selectionColor;
-               });
-             }
-           }
-
-           //if there is no selection or nothing has been match with the selection. We display all the graph.
-           if ($scope.wichSelection == undefined || ($scope.wichSelection == "user" && ($scope.user_selection_ID.length == 0 || $scope.corresponding_tags_ID == undefined || $scope.corresponding_tags_ID.length == 0)) || ($scope.wichSelection == "tag" && $scope.tag_selection_ID.length == 0)){
-
-             $scope.s_tag.graph.nodes().forEach(function (node) {
-               node.hidden = false;
-             });
-           }
-
-           //Now we filter with the co-occurence intensity
-           $scope.s_tag.graph.nodes().forEach(function (node){
-             if (Number(node[$scope.metricFilter]) < Number($scope.filter_occurence_tag_min) || Number(node[$scope.metricFilter]) > Number($scope.filter_occurence_tag_max)){
-               node.hidden = true;
-             }
-           });
-
-           $scope.s_tag.refresh();
-         }
-         */
-
-         /*
-         $scope.refreshUserView = function(){
-           console.log("user")
-           $scope.user_selection_ID = $scope.s_user.selection_ID;
-           $scope.tag_selection_ID = $scope.s_tag.selection_ID;
-
-           //Set the default properties
-           $scope.s_user.graph.edges().forEach(function (edge) {
-             edge.hidden = false;
-           });
-
-           $scope.s_user.graph.nodes().forEach(function (node) {
-             node.color = $scope.s_user.defaultNodeColor;
-             node.hidden = true;
-           });
-
-           //We color what is selected and we keep those nodes + the nodes that are connected to the selection.
-           if ($scope.wichSelection == "user" && $scope.user_selection_ID.length != 0){
-             $scope.user_selection_ID.forEach(function (node_id) {
-               var node = $scope.s_user.graph.nodes(node_id);
-               node.hidden = false;
-               node.color = $scope.selectionColor;
-             });
-             //We display what is connected to the selection
-             $scope.s_user.graph.edges().forEach(function (edge) {
-               if ($scope.user_selection_ID.indexOf(parseInt($scope.s_user.graph.nodes(edge.target).id)) > -1){
-                 $scope.s_user.graph.nodes(edge.source).hidden = false;
-               }
-               if ($scope.user_selection_ID.indexOf(parseInt($scope.s_user.graph.nodes(edge.source).id)) > -1){
-                 $scope.s_user.graph.nodes(edge.target).hidden = false;
-               }
-             });
-           }
-
-           // if some tag nodes are selected we will display only the user nodes corresponding to the selecteion.
-           $scope.corresponding_users_ID = undefined;
-           if ($scope.wichSelection == "tag" && $scope.tag_selection_ID.length != 0){
-
-             $scope.s_tag.graph.nodes().filter(function (node) {
-               return $scope.tag_selection_ID.indexOf(parseInt(node.id)) > -1
-             }).forEach(function (node) {
-                if (node.usersAssociateNodeTlp != undefined) {
-                  var text = node.usersAssociateNodeTlp
-                  var tab_few_user = eval("[" + text.substring(1,text.length-1) + "]")
-                }
-                else{
-                  var tab_few_user = [];
-                }
-                $scope.corresponding_users_ID = $scope.selectTagNodesVennfct($scope.corresponding_users_ID,tab_few_user);
-             });
-
-             if ($scope.corresponding_users_ID.length != 0){
-               $scope.s_user.graph.nodes().filter( function (node){
-                  return $scope.corresponding_users_ID.indexOf(parseInt(node.user_id)) > -1
-               }).forEach( function (node){
-                 node.hidden = false;
-                 node.color = $scope.selectionColor;
-               });
-             }
-           }
-
-           //if there is no selection or nothing has been match with the selection. We display all the graph.
-           if ($scope.wichSelection == undefined || ($scope.wichSelection == "tag" && ($scope.tag_selection_ID.length == 0 || $scope.corresponding_users_ID == undefined || $scope.corresponding_users_ID.length == 0)) || ($scope.wichSelection == "user" && $scope.user_selection_ID.length == 0)){
-
-             $scope.s_user.graph.nodes().forEach(function (node) {
-               node.hidden = false;
-             });
-           }
-
-           //Now we hide the community Managers if the box is cheched
-           if ($scope.isCheckedUser == true){
-             $scope.s_user.graph.nodes().filter(function (node){
-               return $scope.communityManagers.indexOf(node.name) > -1
-             }).forEach(function (node){
-               node.hidden = true;
-             });
-           }
-
-           $scope.s_user.refresh();
-         }
-         */
-
 
          $scope.setLayoutBind = function(listener,sigmaIns){
 
@@ -552,18 +409,214 @@
            $scope.refreshView($scope.s_tag,false);
 
           }
+          else if ($scope.sigmaInstances.length == 3) {
+            // sigmaIns.l1 correspond to the user that may be display
+            // sigmaIns.l2 correspond to the tags that may be display
+            // sigmaIns.l3 correspond to the posts that may be display
+            $scope.s_user.l1 = $scope.removeForbiddenNodes($scope.s_user, $scope.s_user.selection_ID);
+            if ($scope.s_user.l1.length != 0){
+              var tagNodeTlp = undefined;
+              var postNodeTlp = undefined;
+              $scope.s_user.l1.forEach( function (node_id) {
+                var node = $scope.s_user.graph.nodes(node_id);
+
+                if (node.tagsAssociateNodeTlp != undefined) {
+                  var text = node.tagsAssociateNodeTlp;
+                  var tab_few_tag = eval("[" + text.substring(1,text.length-1) + "]")
+                }
+                else{
+                  var tab_few_tag = [];
+                }
+
+                if (node.postsOrCommentsAssociateNodeTlp != undefined) {
+                  var text = node.postsOrCommentsAssociateNodeTlp;
+                  var tab_few_post = eval("[" + text.substring(1,text.length-1) + "]")
+                }
+                else{
+                  var tab_few_post = [];
+                }
+
+                postNodeTlp = $scope.s_user.selectNodesVennfct(postNodeTlp,tab_few_post);
+                tagNodeTlp = $scope.s_user.selectNodesVennfct(tagNodeTlp,tab_few_tag);
+              });
+
+              //We search the corresponding tag nodes
+              $scope.s_user.l2 = [];
+              if (tagNodeTlp.length != 0){
+                $scope.s_tag.graph.nodes().filter( function (node) {
+                   return tagNodeTlp.indexOf(parseInt(node.tag_id)) > -1
+                }).forEach( function (node){
+                  $scope.s_user.l2.push(parseInt(node.id));
+                });
+              }
+
+              //We search the corresponding post or comment nodes
+              $scope.s_user.l3 = [];
+              if (postNodeTlp.length != 0){
+                $scope.s_post.graph.nodes().filter( function (node) {
+                  if(node.post_id != undefined){
+                    return postNodeTlp.indexOf(parseInt(node.post_id)) > -1
+                  }
+                  else{
+                    return postNodeTlp.indexOf(parseInt(node.comment_id)) > -1
+                  }
+                }).forEach( function (node){
+                  $scope.s_user.l3.push(parseInt(node.id));
+                });
+              }
+
+            }
+            else{
+              $scope.s_user.l1 = "all";
+              $scope.s_user.l2 = "all";
+              $scope.s_user.l3 = "all";
+            }
+
+          $scope.s_tag.l2 = $scope.removeForbiddenNodes($scope.s_tag, $scope.s_tag.selection_ID);
+
+          if ($scope.s_tag.l2.length != 0){
+            var userNodeTlp = undefined;
+            var postNodeTlp = undefined;
+            $scope.s_tag.l2.forEach( function (node_id) {
+              var node = $scope.s_tag.graph.nodes(node_id);
+
+              if (node.usersAssociateNodeTlp != undefined) {
+                var text = node.usersAssociateNodeTlp;
+                var tab_few_user = eval("[" + text.substring(1,text.length-1) + "]")
+              }
+              else{
+                var tab_few_user = [];
+              }
+
+              if (node.postsOrCommentsAssociateNodeTlp != undefined) {
+                var text = node.postsOrCommentsAssociateNodeTlp;
+                var tab_few_post = eval("[" + text.substring(1,text.length-1) + "]")
+              }
+              else{
+                var tab_few_post = [];
+              }
+
+              postNodeTlp = $scope.s_tag.selectNodesVennfct(postNodeTlp,tab_few_post);
+              userNodeTlp = $scope.s_tag.selectNodesVennfct(userNodeTlp,tab_few_user);
+            });
+
+            //We search the corresponding user nodes
+            $scope.s_tag.l1 = []
+            if (userNodeTlp.length != 0){
+              $scope.s_user.graph.nodes().filter( function (node){
+                 return userNodeTlp.indexOf(parseInt(node.user_id)) > -1
+              }).forEach( function (node){
+                $scope.s_tag.l1.push(parseInt(node.id));
+              });
+            }
+
+            //We search the corresponding post nodes
+            $scope.s_tag.l3 = [];
+            if (postNodeTlp.length != 0){
+              $scope.s_post.graph.nodes().filter( function (node) {
+                if(node.post_id != undefined){
+                  return postNodeTlp.indexOf(parseInt(node.post_id)) > -1
+                }
+                else{
+                  return postNodeTlp.indexOf(parseInt(node.comment_id)) > -1
+                }
+              }).forEach( function (node){
+                $scope.s_tag.l3.push(parseInt(node.id));
+              });
+            }
+
+          }
+          else{
+            $scope.s_tag.l1 = "all";
+            $scope.s_tag.l2 = "all";
+            $scope.s_tag.l3 = "all";
+          }
+
+          $scope.s_post.l3 = $scope.removeForbiddenNodes($scope.s_post, $scope.s_post.selection_ID);
+
+          if ($scope.s_post.l3.length != 0){
+            var userNodeTlp = undefined;
+            var tagNodeTlp = undefined;
+            $scope.s_post.l3.forEach( function (node_id) {
+              var node = $scope.s_post.graph.nodes(node_id);
+
+              if (node.usersAssociateNodeTlp != undefined) {
+                var text = node.usersAssociateNodeTlp;
+                var tab_few_user = eval("[" + text.substring(1,text.length-1) + "]")
+              }
+              else{
+                var tab_few_user = [];
+              }
+
+              if (node.tagsAssociateNodeTlp != undefined) {
+                var text = node.tagsAssociateNodeTlp;
+                var tab_few_tag = eval("[" + text.substring(1,text.length-1) + "]")
+              }
+              else{
+                var tab_few_tag = [];
+              }
+
+              userNodeTlp = $scope.s_post.selectNodesVennfct(userNodeTlp,tab_few_user);
+              tagNodeTlp = $scope.s_post.selectNodesVennfct(tagNodeTlp,tab_few_tag);
+            });
+
+            //We search the corresponding user nodes
+            $scope.s_post.l1 = []
+            if (userNodeTlp.length != 0){
+              $scope.s_user.graph.nodes().filter( function (node){
+                 return userNodeTlp.indexOf(parseInt(node.user_id)) > -1
+              }).forEach( function (node){
+                $scope.s_post.l1.push(parseInt(node.id));
+              });
+            }
+
+            //We search the corresponding tag nodes
+            $scope.s_post.l2 = [];
+            if (tagNodeTlp.length != 0){
+              $scope.s_tag.graph.nodes().filter( function (node) {
+                 return tagNodeTlp.indexOf(parseInt(node.tag_id)) > -1
+              }).forEach( function (node){
+                $scope.s_post.l2.push(parseInt(node.id));
+              });
+            }
+
+          }
+          else{
+            $scope.s_post.l1 = "all";
+            $scope.s_post.l2 = "all";
+            $scope.s_post.l3 = "all";
+          }
+
+
+
+          //We remove the nodes that are not respecting the filters.
+          var temp =  $scope.fctIntersect($scope.s_user.l1, $scope.s_tag.l1);
+          $scope.s_user.toDisplay_ID = $scope.fctIntersect(temp, $scope.s_post.l1);
+
+          var temp = $scope.fctIntersect($scope.s_user.l2, $scope.s_tag.l2);
+          $scope.s_tag.toDisplay_ID = $scope.fctIntersect(temp, $scope.s_post.l2);
+
+          var temp = $scope.fctIntersect($scope.s_user.l3, $scope.s_tag.l3);
+          $scope.s_post.toDisplay_ID = $scope.fctIntersect(temp, $scope.s_post.l3);
+
+
+          //$scope.refreshView($scope.s_user,"fruchtermanReingold");
+          $scope.refreshView($scope.s_user,false);
+          $scope.refreshView($scope.s_tag,false);
+          $scope.refreshView($scope.s_post,"fruchtermanReingold");
+          }
         }
 
          $scope.initializeSigmaInstance = function (sigmaIns, lasso, checkUnique) {
            sigmaIns.filters = []; // We initialize the filters.
+           sigmaIns.filtersWhenAll = []; // In case you don't want to display all the graph
            sigmaIns.selection_ID = [];
-           sigmaIns.toDisplay_ID = [];
+           sigmaIns.toDisplay_ID = "all";
            sigmaIns.selectNodesVennfct = $scope.fctUnion;
            $scope.sigmaInstances.push(sigmaIns);
 
            //When the lasso_tag catch new nodes
            lasso.bind('selectedNodes', function (event) {
-             $scope.wichSelection = "user";
              var lasso_selection_id = lasso.selectedNodes.map(function(node) {return parseInt(node.id);});
              if (sigmaIns.selection_ID != "all" && $scope.cntrlIsPressed){
                sigmaIns.selection_ID = [...new Set([...sigmaIns.selection_ID ,...lasso_selection_id])]; //Union
@@ -576,17 +629,19 @@
              //$scope.refreshUserView();
            });
 
-           //We want to now the xmin, xmax, ymin, ymax of the nodes.
+           //We want to now the xmin, xmax, ymin, ymax of the nodes. Needed for the layout algorithm
            var xmin = Number.POSITIVE_INFINITY;
            var xmax = Number.NEGATIVE_INFINITY;
            var ymin = Number.POSITIVE_INFINITY;
            var ymax = Number.NEGATIVE_INFINITY;
 
+           //This is for the user graph. Many nodes are duplicated. We remove them.
            if (checkUnique){
              var nodes_id = [];
              var nodesToAdd = [];
 
              sigmaIns.graph.nodes().forEach(function (node) {
+               node.defaultNodeColor = node.color;
                if (nodes_id.indexOf(parseInt(node.user_id)) <= -1){
                  node.hidden = false;
                  nodes_id.push(node.user_id);
@@ -625,6 +680,7 @@
            }
            else{
              sigmaIns.graph.nodes().forEach(function (node) {
+               node.defaultNodeColor = node.color;
                node.hidden = false;
                if (node.x < xmin){xmin = node.x;}
                if (node.x > xmax){xmax = node.x;}
@@ -652,9 +708,10 @@
            sigmaIns.refresh();
          }
 
-         //s_tag is the last to be ready so the other sigma instances are ready too.
-         var toUnBind1 = $scope.$watch("s_tag", function() {
-           if ($scope.s_tag != undefined) {
+         //s_post is the last to be ready so the other sigma instances are ready too.
+         var toUnBind1 = $scope.$watch("s_post", function() {
+
+           if ($scope.s_post != undefined) {
 
              var toUnBind2 = $scope.$watch("s_tag.ready", function (){
                if ($scope.s_tag.ready == true){
@@ -699,6 +756,86 @@
                  toUnBind3();
                }
              });
+
+             var toUnBind4 = $scope.$watch("s_post.ready", function (){
+               if ($scope.s_post.ready == true){
+                 $scope.initializeSigmaInstance($scope.s_post, $scope.lasso_post, true); //We want the nodes and the edges to be unique
+                 //posts size is too small. We double it.
+                 $scope.s_post.graph.nodes().forEach( function (node){
+                   if (node.post_id != undefined){
+                     node.size = node.size * 3;
+                   }
+                 });
+                 $scope.configFruchtermanReingoldAlgoPost = jQuery.extend(true,{}, $scope.configFruchtermanReingoldAlgo);
+                 $scope.configFruchtermanReingoldAlgoPost.iterations = 8000;
+                 var listener_post = sigma.layouts.fruchtermanReingold.configure($scope.s_post, $scope.configFruchtermanReingoldAlgoPost);
+                 $scope.setLayoutBind(listener_post,$scope.s_post);
+
+                 var displayMainPostAndComment = {}
+                 //We take the most recent posts.
+                 displayMainPostAndComment.allowedPosts = $scope.s_post.graph.nodes().sort( function compare(node1, node2) {
+                   if (node1.post_id == undefined){
+                     return 1;
+                   }
+                   else if (node2.post_id == undefined){
+                     return -1;
+                   }
+                   else{
+                     return parseInt(node2.timestamp) - parseInt(node1.timestamp);
+                   }
+                 })
+                .slice(0, 5) // the 5 lasts posts
+                .map( function (node){
+                   if (node.post_id != undefined){
+                     return parseInt(node.post_id);
+                   }
+                   else{
+                     return parseInt(node.comment_id)
+                   }
+                 });
+
+                 //We search the comments linked to the allowed posts
+                 displayMainPostAndComment.allowedComments = []
+
+                 $scope.s_post.graph.edges().forEach(function (edge) {
+                   if (displayMainPostAndComment.allowedPosts.indexOf(parseInt($scope.s_post.graph.nodes(edge.source).post_id)) > -1){
+                     displayMainPostAndComment.allowedComments.push(parseInt($scope.s_post.graph.nodes(edge.target).comment_id));
+                   }
+                   else if (displayMainPostAndComment.allowedPosts.indexOf(parseInt($scope.s_post.graph.nodes(edge.target).post_id)) > -1){
+                     displayMainPostAndComment.allowedComments.push(parseInt($scope.s_post.graph.nodes(edge.source).comment_id));
+                   }
+                 });
+
+                 //We remove dupplicated Comments
+                 displayMainPostAndComment.allowedComments = [...new Set(displayMainPostAndComment.allowedComments)];
+                 displayMainPostAndComment.apply = function (node) {
+                   if (node.post_id != undefined){
+                     if (this.allowedPosts.indexOf(parseInt(node.post_id)) > -1){
+                       return true;
+                     }
+                     else{
+                       return false;
+                     }
+                   }
+                   else{
+                     if (this.allowedComments.indexOf(parseInt(node.comment_id)) > -1){
+                       return true;
+                     }
+                     else{
+                       return false;
+                     }
+                   }
+                 }
+
+                 $scope.s_post.filtersWhenAll.push(displayMainPostAndComment);
+
+                 $scope.refreshView($scope.s_post,"fruchtermanReingold");
+
+                 toUnBind4();
+               }
+             });
+
+
              toUnBind1(); //We stop the watcher wich is useless now.
            }
          });
@@ -726,6 +863,17 @@
              }
          });
 
+         //Jquery handle post sliders
+         $( "#node-label-post-intensity-slider" ).slider({
+             min: 0,
+             max: $scope.nodePostelThresholdMax-1,
+             value: $scope.nodePostelThresholdMax-$scope.nodePostelThreshold ,
+             slide: function( event, ui ) {
+                 $scope.nodePostelThreshold = $scope.nodePostelThresholdMax-ui.value;
+                 $scope.$apply();
+             }
+         });
+
          $( "#coocurrence-intensity-slider-range" ).slider({
              range: true,
              min: 1,
@@ -740,7 +888,7 @@
 
 
 
-         /*** user view ***/
+         /*** Graphes ***/
 
 
          $scope.drawUserGraph = function (suggestions) {
@@ -748,18 +896,7 @@
              $scope.drawUserGraphPromise = $scope.userGraphRessource.get();
              $scope.drawUserGraphPromise.$promise.then(function (result) {
                  $scope.usersGraphSigmaDetangler = result;
-                 $scope.s_user.defaultNodeColor = $scope.usersGraphSigmaDetangler.nodes[0].color
-                 /*
-                 if(suggestions) {
-                     $rootScope.suggestions = [];
-                     angular.forEach($scope.nodes, function (node) {
-                         if (node.name != undefined) {
-                             node.label = node.name;
-                             $rootScope.suggestions.push(node);
-                         }
-                     });
-                 }
-                 */
+                 //$scope.s_user.defaultNodeColor = $scope.usersGraphSigmaDetangler.nodes[0].color
              });
          };
 
@@ -770,12 +907,20 @@
              $scope.drawTagGraphPromise = $scope.tagGraphRessource.get();
              $scope.drawTagGraphPromise.$promise.then(function (result) {
                  $scope.tagsGraphSigmaDetangler = result;
-                  $scope.s_tag.defaultNodeColor = $scope.tagsGraphSigmaDetangler.nodes[0].color
+                  //$scope.s_tag.defaultNodeColor = $scope.tagsGraphSigmaDetangler.nodes[0].color
+             });
+         };
+
+         $scope.drawCommentAndPostGraph = function (result) {
+             $scope.postGraphSigmaDetangler = [];
+             $scope.drawPostGraphPromise = $scope.postGraphRessource.get();
+             $scope.drawPostGraphPromise.$promise.then(function (result) {
+                 $scope.postGraphSigmaDetangler = result;
+                 //$scope.s_post.defaultNodeColor = $scope.postGraphSigmaDetangler.nodes[0].color
              });
          };
 
          $scope.generateTagGraph = function () {
-             //$scope.filter_occ = filter_occ;
              var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filter_occurence_tag_min + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
              var createGraphPromise = createGraph.get();
              createGraphPromise.$promise.then(function (result) {
@@ -784,11 +929,19 @@
          };
 
          $scope.generateUserGraph = function () {
-             //$scope.filter_occ = filter_occ;
              var createGraph = $resource(config.apiUrl + 'generateUserGraph');
              var createGraphPromise = createGraph.get();
              createGraphPromise.$promise.then(function (result) {
                  $scope.drawUserGraph();
+             });
+         };
+
+         $scope.generateCommentAndPostGraph = function () {
+             var createGraph = $resource(config.apiUrl + 'generateCommentAndPostGraph');
+             //var createGraph = $resource(config.apiUrl + 'generateFullGraph');
+             var createGraphPromise = createGraph.get();
+             createGraphPromise.$promise.then(function (result) {
+                 $scope.drawCommentAndPostGraph();
              });
          };
 
@@ -808,12 +961,6 @@
              document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserNavigate").attr("data-title");
          }
 
-         $scope.setInteractorUserNodeSelection = function () {
-             $scope.clearUserInteractor();
-             $scope.userinteractor="nodeSelection";
-             document.getElementById("interactorUserSelectNode").className="btn btn-primary";
-             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserSelectNode").attr("data-title");
-         }
 
          $scope.setInteractorUserDragNode = function () {
              $scope.clearUserInteractor();
@@ -864,7 +1011,6 @@
 
          $scope.clearTagInteractor = function() {
              document.getElementById("interactorTagNavigate").className="btn btn-default";
-             //document.getElementById("interactorTagSelectNode").className="btn btn-default";
              document.getElementById("interactorTagDragNode").className="btn btn-default";
              document.getElementById("interactorTagLasso").className="btn btn-default";
              document.getElementById("interactorTagInfo").className="btn btn-default";
@@ -878,12 +1024,6 @@
              document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagNavigate").attr("data-title");
          }
 
-         $scope.setInteractorTagNodeSelection = function () {
-             $scope.clearTagInteractor();
-             $scope.taginteractor="nodeSelection";
-             document.getElementById("interactorTagSelectNode").className="btn btn-primary";
-             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagSelectNode").attr("data-title");
-         }
 
          $scope.setInteractorTagDragNode = function () {
              $scope.clearTagInteractor();
@@ -924,6 +1064,64 @@
              document.getElementById("interactorTagIntersect").className="btn btn-primary";
              $scope.searchWhatToDisplay();
          }
+
+         $scope.clearPostInteractor = function() {
+             document.getElementById("interactorPostNavigate").className="btn btn-default";
+             document.getElementById("interactorPostDragNode").className="btn btn-default";
+             document.getElementById("interactorPostLasso").className="btn btn-default";
+             document.getElementById("interactorPostInfo").className="btn btn-default";
+             document.getElementById("interactorPostDescriptionLabel").innerHTML = "";
+         }
+
+         $scope.setInteractorPostNavigate = function () {
+             $scope.clearPostInteractor();
+             $scope.postinteractor="navigate";
+             document.getElementById("interactorPostNavigate").className="btn btn-primary";
+             document.getElementById("interactorPostDescriptionLabel").innerHTML = $("#interactorPostNavigate").attr("data-title");
+         }
+
+
+         $scope.setInteractorPostDragNode = function () {
+             $scope.clearPostInteractor();
+             $scope.postinteractor="dragNode";
+             document.getElementById("interactorPostDragNode").className="btn btn-primary";
+             document.getElementById("interactorPostDescriptionLabel").innerHTML = $("#interactorPostDragNode").attr("data-title");
+         }
+
+         $scope.setInteractorPostLasso = function () {
+             $scope.clearPostInteractor();
+             $scope.postinteractor="lasso";
+             document.getElementById("interactorPostLasso").className="btn btn-primary";
+             document.getElementById("interactorPostDescriptionLabel").innerHTML = $("#interactorPostLasso").attr("data-title");
+         }
+
+         $scope.setInteractorPostInfo = function () {
+             $scope.clearPostInteractor();
+             $scope.postinteractor="information";
+             document.getElementById("interactorPostInfo").className="btn btn-primary";
+             document.getElementById("interactorPostDescriptionLabel").innerHTML = $("#interactorTagInfo").attr("data-title");
+         }
+
+         $scope.clearPostVennInteractor = function() {
+             document.getElementById("interactorPostUnion").className="btn btn-default";
+             document.getElementById("interactorPostIntersect").className="btn btn-default";
+         }
+
+         $scope.setInteractorPostUnion = function () {
+             $scope.clearPostVennInteractor();
+             $scope.s_post.selectNodesVennfct = $scope.fctUnion;
+             document.getElementById("interactorPostUnion").className="btn btn-primary";
+             $scope.searchWhatToDisplay();
+         }
+
+         $scope.setInteractorPostIntersect = function () {
+             $scope.clearPostVennInteractor();
+             $scope.s_post.selectNodesVennfct = $scope.fctIntersect;
+             document.getElementById("interactorPostIntersect").className="btn btn-primary";
+             $scope.searchWhatToDisplay();
+         }
+
+
 
 
          //General function that change the layout of the not hidden node.
@@ -1009,19 +1207,25 @@
              switch(e.type) {
                  case 'clickNode':
                          if(e.data.node.user_id != undefined && (e.data.captor.ctrlKey || $scope.userinteractor == "information")) {
+                             console.log(e.data.node)
                              $scope.elementType = "user";
                              $scope.elementId = e.data.node.user_id
                              $scope.openInfoPanel($scope.elementType, $scope.elementId);
                          }
-                         else if (e.data.node.post_id != undefined) {
+                         else if (e.data.node.post_id != undefined && (e.data.captor.ctrlKey || $scope.postinteractor == "information")) {
+                           console.log(e.data.node)
                              $scope.elementType = "post";
                              $scope.elementId = e.data.node.post_id;
+                             $scope.openInfoPanel($scope.elementType, $scope.elementId);
                          }
-                         else if (e.data.node.comment_id != undefined) {
+                         else if (e.data.node.comment_id != undefined && (e.data.captor.ctrlKey || $scope.postinteractor == "information")) {
+                             console.log(e.data.node)
                              $scope.elementType = "comment";
                              $scope.elementId = e.data.node.comment_id;
+                             $scope.openInfoPanel($scope.elementType, $scope.elementId);
                          }
                          else if (e.data.node.tag_id != undefined && (e.data.captor.ctrlKey || $scope.taginteractor == "information")) {
+                             console.log(e.data.node)
                              $scope.elementType = "tag";
                              $scope.elementId = e.data.node.tag_id;
                              $scope.openInfoPanel($scope.elementType, $scope.elementId);
