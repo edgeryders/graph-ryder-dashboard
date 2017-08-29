@@ -20,20 +20,15 @@
          $scope.nodeUserelThreshold = 10;
          $scope.nodePostelThresholdMax = 10;
          $scope.nodePostelThreshold = 10;
-         $scope.locate = "";
          $scope.filter_occurence_tag_min = "2";
          $scope.filter_occurence_tag_max = "100";
-         $scope.requestFullTagGraph = false;
-         $scope.showTagCommonContent = false;
-         $scope.tableSizeChoice = '10';
          $scope.userinteractor = "navigate";
          $scope.taginteractor = "navigate";
          $scope.postinteractor = "navigate";
          $scope.infoPanelParent = "infoPanelParent";
-         $scope.selected = {}; //test
+         $scope.selected = {};
          $scope.selected.start= new Date(0);
          $scope.selected.end= new Date(Date.now());
-         $scope.layoutChoice = 'Circular';
          $scope.s_user = undefined;
          $scope.s_tag = undefined;
          $scope.s_post = undefined;
@@ -42,34 +37,32 @@
          $scope.lass_post = {};
          $scope.communityManagers = ["Alberto", "Nadia", "Noemi"];
          $scope.metricFilter = "occ";
-         //$scope.configAtlasForceAlgo = {scalingRatio:1,strongGravityMode:false,gravity:3,adjustSizes:true};
          $scope.configFruchtermanReingoldAlgo = {iterations:1000, easing:"quadraticInOut", duration:1300}
          $scope.selectionColor = 'rgb(128, 0, 128)';
          $scope.correspondingColor = 'rgb(42, 187, 155)';
-         $scope.corresponding_users_ID = [];
-         $scope.corresponding_tags_ID = [];
          $scope.sigmaInstances = [];
          $scope.cntrlIsPressed = false;
 
          // When rootScope is ready load the graph
          $rootScope.$watch('ready', function(newVal) {
              if(newVal) {
-                 $scope.layoutChoice = $rootScope.layout[12];
+                 $scope.layoutChoice = $rootScope.layout[12]; // FM 3
                  $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/' + $scope.layoutChoice);
                  $scope.tagGraphRessource = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
                  $scope.postGraphRessource = $resource(config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoice);
-                 //$scope.postGraphRessource = $resource(config.apiUrl + 'draw/complete/'+ $scope.layoutChoice);
+                 //We don't generate the graphs each time. Use the settings Pannel to generate the graphs if they don't appear.
                  $scope.drawUserGraph(true);
                  $scope.drawCommentAndPostGraph(true);
                  $scope.drawTagGraph(true);
                  //$scope.generateTagGraph();
                  //$scope.generateUserGraph();
                  //$scope.generateCommentAndPostGraph();
-                 //$rootScope.resetSuggestions(false, true, false, false); // We can search post in the main search bar
+                 //$rootScope.resetSuggestions(false, true, false, false); // Activate the main search bar.
                  $rootScope.resetDetanglerSuggestions(true, true, true); // the suggestions of users, tags and posts are loaded.
              }
          });
 
+         // Return the Union of two arrays with no duplicate item. The tab_ini can be undefined.
          $scope.fctUnion = function (tab_ini, tab_to_merge){
            if (tab_ini == undefined){
              tab_ini = [];
@@ -77,6 +70,8 @@
            return [...new Set([...tab_ini ,...tab_to_merge])];
          }
 
+         // Return the Intersection of two arrays with no duplicate item. The tab_ini can be undefined
+         // Return "all" if tab_ini and tab_to_merge are equal to "all"
          $scope.fctIntersect = function (tab_ini, tab_to_merge){
             if (tab_ini == undefined || tab_ini === "all"){
               return tab_to_merge;
@@ -92,10 +87,7 @@
             }
           }
 
-          $scope.selectTagNodesVennfct = $scope.fctUnion;
-          $scope.selectUserNodesVennfct = $scope.fctUnion;
-
-          //To Do : select the users and the tag in the choosen post.
+          // To modify if you want to customize the main search bar
           $rootScope.$watch("search", function() {
             if ($rootScope.search != undefined){
               console.log($rootScope.search);
@@ -108,8 +100,8 @@
             }
           });
 
-
-
+         // We define the behaviour of the 3 search bar.
+         // You can use the Ctrl key if you want to add the searched item to the selection.
          $rootScope.$watch("user_search", function() {
            if ($rootScope.user_search != undefined){
              $scope.s_user.graph.nodes().filter(function (node){
@@ -124,7 +116,7 @@
                }
                $scope.searchWhatToDisplay();
              });
-             $rootScope.user_search = undefined;
+             $rootScope.user_search = undefined; // undefined must be set by default. The watcher will then not be trigered by accident.
            }
          });
 
@@ -165,25 +157,30 @@
          });
 
 
+         // Display what must be displayed in the sigmaIns.
+         // The searchWhatToDisplay function has to be call first.
+         // If layout = "fruchtermanReingold", the fruchtermanReingold Algorithm is launch at the end of this function.
          $scope.refreshView = function(sigmaIns,layout){
-           //Set the default properties
-           //$scope.s_tag.graph.edges().forEach(function (edge) {
-           // edge.hidden = false;
-           //})
            sigmaIns.graph.nodes().forEach(function (node) {
              node.color = node.defaultNodeColor;
              node.hidden = true;
+             // The status value is used whith the "show neighbourhood" functionality.
+             // It is necessary because the hidden value is changed during the process of searching the neighbourhood.
+             // Without that we risk to show a neighbour of a neighbour by accident.
              node.status = "hide";
            });
 
            if (sigmaIns.toDisplay_ID === "all"){
              sigmaIns.graph.nodes().forEach(function (node) {
 
+               // When the toDisplay_ID value is all. We normaly must display all the nodes.
+               // But still, if a node does not match a filter, we will not display it.
+               // FiltersWhenAll is an array of filters that are trigered only when toDisplay_ID is set to "all"
+               // Indeed, displaying all the graph can be useless.
                var to_show = true;
-
                sigmaIns.filtersWhenAll.forEach(function (filter) {
                  if (to_show){
-                   to_show = to_show && filter.apply(node);
+                   to_show = to_show && filter.apply(node); // && is a logical operation between two boolean.
                  }
                });
 
@@ -213,8 +210,8 @@
                  });
                  if (to_show){
                     node.hidden = false;
-
-                    //if the node is selected we color it with the selectionColor. Otherwise we use the correspondingColor.
+                    // If the node is selected we color it with the selectionColor. Otherwise we use the correspondingColor.
+                    // The trick ""array.indexOf(item) > -1" is true when the item is in the array
                     if (sigmaIns.selection_ID.indexOf(node_id) > -1){
                       node.color = $scope.selectionColor;
                       node.status = "display";
@@ -224,17 +221,18 @@
                       node.status = "display";
                     }
                  }
-
                });
 
-
-               //We display what is connected to the selection
+               // We display what is connected to the selection if the showNeighbour is true.
                if (sigmaIns.showNeighbour){
                  sigmaIns.graph.edges().forEach(function (edge) {
                    var node_source = sigmaIns.graph.nodes(edge.source);
                    var node_target = sigmaIns.graph.nodes(edge.target);
-                   if (node_target.status == "display"){
 
+                   // We still have to verify if the adjacent nodes Match the filters.
+                   // The color is not modify. We know this way that the node is a Neighbour, not a selection or a corresponding node.
+
+                   if (node_target.status == "display"){
                      var to_show = true;
                      sigmaIns.filters.forEach(function (filter) {
                        if (to_show){
@@ -243,7 +241,6 @@
                      });
 
                      if (to_show){node_source.hidden = false;}
-
 
                    }
                    if (node_source.status == "display"){
@@ -267,9 +264,12 @@
 
          $scope.setLayoutBind = function(listener,sigmaIns){
 
+           // This event is trigered at this end of the layout Algorithm.
            listener.bind('stop', function(event){
-               //We want to rescale what is hidden. The refresh methode will then have a good behaviour.
-               //We search what a the new camera bounds of the not hidden nodes.
+               // We want to rescale what is hidden. The refresh methode will then have a good behaviour.
+               // We search what a the new camera bounds of the not hidden nodes.
+               // This way the hidden nodes follow in the background the nodes that are displayed during the layout Algorithm.
+               // This trick is necessary because we can't active the layout algorithm on a subset of nodes. See $scope.setInteractorLayoutPlayFruchterman
 
                var mx2 = Number.POSITIVE_INFINITY;
                var Mx2 = Number.NEGATIVE_INFINITY;
@@ -277,6 +277,8 @@
                var My2 = Number.NEGATIVE_INFINITY;
 
                sigmaIns.graph.nodes().forEach(function (node){
+                 // m for min and M for Max.
+                 // 1 for the old bounds of the sigmaIns. 2 for the new.
                  if (node.x < mx2){mx2 = node.x;}
                  if (node.x > Mx2){Mx2 = node.x;}
                  if (node.y < my2){my2 = node.y;}
@@ -294,11 +296,12 @@
                sigmaIns.ymin = my2;
 
                //Then we we do a translation and an homothétie of the hidden nodes.
+               // Rx and Ry are values that correspond to the deformation of the x and y axis that must be done on the new sigmaIns.
                var Rx = (Mx1 - mx1 != 0 ? (Mx2 - mx2) / (Mx1 - mx1) : 1); // We avoid division by 0;
                var Ry = (My1 - my1 != 0 ? (My2 - my2) / (My1 - my1) : 1);
 
                sigmaIns.nodeNotToChange.forEach(function (node) {
-                 node.x = (node.x - mx1)*Rx + mx2;
+                 node.x = (node.x - mx1)*Rx + mx2; // *R is the homothétie And + m is the translation
                  node.y = (node.y - my1)*Ry + my2;
                  sigmaIns.graph.addNode(node);
                });
@@ -309,6 +312,7 @@
          }
 
 
+         // Usefull function that return an array with the nodes that match the filters of the sigmaIns.
          $scope.removeForbiddenNodes = function (sigmaIns, tab_to_filter) {
            return tab_to_filter.filter(function (node_id) {
              var node = sigmaIns.graph.nodes(node_id);
@@ -320,13 +324,28 @@
            });
         }
 
-
-
+        // Search the nodes that must be displayed on each sigmaIns depending on what is selected on each sigmaIns.
+        // Currently the function is not general. Work only with a maximum of 3 sigmaIns
+        // If you want to customize : change the name s_user, s_tag, s_post and the associate node name like "tagsAssociateNodeTlp".
          $scope.searchWhatToDisplay = function () {
-           if ($scope.sigmaInstances.length == 2){
+           // For each sigmaInstances we compute the sigmaIns.l1, sigmaIns.l2 (,sigmaIns.l3) arrays.
+           // They correspond of the nodes that can be display on each sigmaIns (the 1st, the 2nd and the 3rd), only if we look at this current sigmaIns.
+             // Exemple : In our case the s_user is the 1st sigmaIns, s-tag the 2nd and s_post the 3rd.
+             // sigmaInstance.l1 are users, sigmaInstance.l2 are tags and sigmaInstance.l3 are posts (or comments)
+             // s_user.l1 are the user that are selected. s_user.l2 are the corresponding Tags, s_user.l3 are the corresponding posts.
+             // s_tag.l2 are the tags that are selected. s_tag.l1 are the corresponding user, s_tag.l3 are the corresponding posts.
+             // s_post.l3 are the posts that are selected. s_post.l1 are the corresponding user, s_post.l2 are the corresponding tags.
+          // At the end, we compute the intersection of each .l1, each .l2 and each .l3
+          // The then have what must be display for each sigmaIns.
 
+           // The corresponding data are stored in each nodes in the tagsAssociateNodeTlp, usersAssociateNodeTlp and postsOrCommentsAssociateNodeTlp.
+
+           // The .selectNodesVennfct value contain the function that must be use to compute the corresponding nodes. Union or Intersection.
+           // The question is : Must the corresponding nodes match all the selection (intersection) or any of the selected nodes (Union).
+           if ($scope.sigmaInstances.length == 2){
              // sigmaIns.l1 correspond to the user that may be display
              // sigmaIns.l2 correspond to the tags that may be display
+
              $scope.s_user.l1 = $scope.removeForbiddenNodes($scope.s_user, $scope.s_user.selection_ID);
              if ($scope.s_user.l1.length != 0){
                var nodeTlp = undefined;
@@ -334,7 +353,7 @@
                  var node = $scope.s_user.graph.nodes(node_id);
                  if (node.tagsAssociateNodeTlp != undefined) {
                    var text = node.tagsAssociateNodeTlp;
-                   var tab_few_tag = eval("[" + text.substring(1,text.length-1) + "]")
+                   var tab_few_tag = eval("[" + text.substring(1,text.length-1) + "]") // We convert the python tuple into a js array.
                  }
                  else{
                    var tab_few_tag = [];
@@ -384,28 +403,19 @@
                });
              }
 
-
-
-
            }
            else{
              $scope.s_tag.l1 = "all";
              $scope.s_tag.l2 = "all";
            }
 
+           // We compute the intersection of each arrays.
            $scope.s_user.toDisplay_ID = $scope.fctIntersect($scope.s_user.l1, $scope.s_tag.l1);
            //We remove the nodes that are not respecting the filters.
            $scope.s_tag.toDisplay_ID = $scope.fctIntersect($scope.s_user.l2, $scope.s_tag.l2);
 
-           //The current lasso selection must correspond to what is displayed.
-           //if ($scope.s_user.toDisplay_ID != "all"){$scope.s_user.selection_ID = $scope.s_user.toDisplay_ID;}
-           //if ($scope.s_tag.selection_ID != "all"){$scope.s_tag.selection_ID = $scope.s_tag.toDisplay_ID;}
-
-
-           //$scope.s_user.toDisplay_ID = $scope.s_user.selection_ID;
            //$scope.refreshView($scope.s_user,"fruchtermanReingold");
            $scope.refreshView($scope.s_user,false);
-           //$scope.s_tag.toDisplay_ID = $scope.s_tag.selection_ID;
            $scope.refreshView($scope.s_tag,false);
 
           }
@@ -588,8 +598,7 @@
           }
 
 
-
-          //We remove the nodes that are not respecting the filters.
+          // We compute the intersection of each arrays.
           var temp =  $scope.fctIntersect($scope.s_user.l1, $scope.s_tag.l1);
           $scope.s_user.toDisplay_ID = $scope.fctIntersect(temp, $scope.s_post.l1);
 
@@ -599,7 +608,6 @@
           var temp = $scope.fctIntersect($scope.s_user.l3, $scope.s_tag.l3);
           $scope.s_post.toDisplay_ID = $scope.fctIntersect(temp, $scope.s_post.l3);
 
-
           //$scope.refreshView($scope.s_user,"fruchtermanReingold");
           $scope.refreshView($scope.s_user,false);
           $scope.refreshView($scope.s_tag,false);
@@ -607,6 +615,9 @@
           }
         }
 
+         // In this function, we set the default value of the sigmaIns and we bind the lasso to the sigmaIns.
+         // We compute the bounds of the sigmaIns too.
+         // If checkUnique is true, we remove the dupplicated nodes. This happen with the user graph.
          $scope.initializeSigmaInstance = function (sigmaIns, lasso, checkUnique) {
            sigmaIns.filters = []; // We initialize the filters.
            sigmaIns.filtersWhenAll = []; // In case you don't want to display all the graph
@@ -615,7 +626,6 @@
            sigmaIns.selectNodesVennfct = $scope.fctUnion;
            $scope.sigmaInstances.push(sigmaIns);
 
-           //When the lasso_tag catch new nodes
            lasso.bind('selectedNodes', function (event) {
              var lasso_selection_id = lasso.selectedNodes.map(function(node) {return parseInt(node.id);});
              if (sigmaIns.selection_ID != "all" && $scope.cntrlIsPressed){
@@ -625,8 +635,6 @@
                sigmaIns.selection_ID = lasso_selection_id;
              }
              $scope.searchWhatToDisplay();
-             //$scope.refreshTagView();
-             //$scope.refreshUserView();
            });
 
            //We want to now the xmin, xmax, ymin, ymax of the nodes. Needed for the layout algorithm
@@ -697,16 +705,22 @@
            sigmaIns.xmax = xmax;
            sigmaIns.ymin = ymin;
            sigmaIns.ymax = ymax;
+
+           // We store the behaviour of the sigmaIns at the beginning.
+           // Needed for the reset functionality
            sigmaIns.xmin_intact = xmin;
            sigmaIns.xmax_intact = xmax;
            sigmaIns.ymin_intact = ymin;
            sigmaIns.ymax_intact = ymax;
 
            sigmaIns.graph_intact = {};
-           sigmaIns.graph_intact.nodes = jQuery.extend(true,[], sigmaIns.graph.nodes());
+           sigmaIns.graph_intact.nodes = jQuery.extend(true,[], sigmaIns.graph.nodes()); //jQuery.extend make a deepcopy.
            sigmaIns.graph_intact.edges = jQuery.extend(true,[], sigmaIns.graph.edges());
            sigmaIns.refresh();
          }
+
+         // Here we initialize each sigmaIns when they are loaded. The watcher are used only once. They are unbind after the first utilisation.
+         // The filters must be coded Here too. Each filter is an object that must have a .apply(node) function. This return true if the node can be display.
 
          //s_post is the last to be ready so the other sigma instances are ready too.
          var toUnBind1 = $scope.$watch("s_post", function() {
@@ -760,14 +774,14 @@
              var toUnBind4 = $scope.$watch("s_post.ready", function (){
                if ($scope.s_post.ready == true){
                  $scope.initializeSigmaInstance($scope.s_post, $scope.lasso_post, true); //We want the nodes and the edges to be unique
-                 //posts size is too small. We double it.
+                 //posts size is too small. We triple it.
                  $scope.s_post.graph.nodes().forEach( function (node){
                    if (node.post_id != undefined){
                      node.size = node.size * 3;
                    }
                  });
                  $scope.configFruchtermanReingoldAlgoPost = jQuery.extend(true,{}, $scope.configFruchtermanReingoldAlgo);
-                 $scope.configFruchtermanReingoldAlgoPost.iterations = 8000;
+                 $scope.configFruchtermanReingoldAlgoPost.iterations = 8000; // More iterations are needed because the graph is wide.
                  var listener_post = sigma.layouts.fruchtermanReingold.configure($scope.s_post, $scope.configFruchtermanReingoldAlgoPost);
                  $scope.setLayoutBind(listener_post,$scope.s_post);
 
@@ -890,13 +904,11 @@
 
          /*** Graphes ***/
 
-
          $scope.drawUserGraph = function (suggestions) {
              $scope.usersGraphSigmaDetangler = [];
              $scope.drawUserGraphPromise = $scope.userGraphRessource.get();
              $scope.drawUserGraphPromise.$promise.then(function (result) {
                  $scope.usersGraphSigmaDetangler = result;
-                 //$scope.s_user.defaultNodeColor = $scope.usersGraphSigmaDetangler.nodes[0].color
              });
          };
 
@@ -907,7 +919,6 @@
              $scope.drawTagGraphPromise = $scope.tagGraphRessource.get();
              $scope.drawTagGraphPromise.$promise.then(function (result) {
                  $scope.tagsGraphSigmaDetangler = result;
-                  //$scope.s_tag.defaultNodeColor = $scope.tagsGraphSigmaDetangler.nodes[0].color
              });
          };
 
@@ -916,7 +927,6 @@
              $scope.drawPostGraphPromise = $scope.postGraphRessource.get();
              $scope.drawPostGraphPromise.$promise.then(function (result) {
                  $scope.postGraphSigmaDetangler = result;
-                 //$scope.s_post.defaultNodeColor = $scope.postGraphSigmaDetangler.nodes[0].color
              });
          };
 
@@ -938,7 +948,6 @@
 
          $scope.generateCommentAndPostGraph = function () {
              var createGraph = $resource(config.apiUrl + 'generateCommentAndPostGraph');
-             //var createGraph = $resource(config.apiUrl + 'generateFullGraph');
              var createGraphPromise = createGraph.get();
              createGraphPromise.$promise.then(function (result) {
                  $scope.drawCommentAndPostGraph();
@@ -1001,7 +1010,6 @@
              document.getElementById("interactorUserIntersect").className="btn btn-primary";
              $scope.searchWhatToDisplay();
          }
-
 
          $scope.setInteractorUserRemoveManagers = function (check) {
            $scope.s_user.filters[0].isChecked = check;
@@ -1121,17 +1129,18 @@
              $scope.searchWhatToDisplay();
          }
 
-
-
-
          //General function that change the layout of the not hidden node.
+         // Those step are followed :
+         // Step 1 : Remove all the nodes and add only the nodes and edges that must be display.
+         // Step 2 : Activate the layout Algorithm on the current sigmaIns
+         // Step 3 : Add the hidden nodes and change their position so that they are behind the displayed nodes. Done in the "stop" event of the listener of the layout Algorithm.
+         //We don't activate the Algorithm if there are more than 300 nodes because the Algorithm is in O(N² + E).
          $scope.setInteractorLayoutPlayFruchterman = function(sigma_instance){
            var nodeToChange = [];
            var edgeToChange = [];
            sigma_instance.nodeNotToChange = [];
            sigma_instance.edgeNotToChange = [];
            var nb_node = 0;
-
 
            sigma_instance.graph.nodes().forEach(function (node) {
              if (node.hidden == false){
@@ -1164,10 +1173,10 @@
             if (nb_node <= 300){
               sigma.layouts.fruchtermanReingold.start(sigma_instance);
             }
-
             sigma_instance.refresh();
          }
 
+         //Remove all the graph and add the initial state of the nodes and edges.
          $scope.setInteractorLayoutReset = function (sigma_instance){
            sigma_instance.graph.clear();
 
@@ -1184,7 +1193,6 @@
            sigma_instance.ymax = sigma_instance.ymax_intact;
 
            $scope.searchWhatToDisplay();
-
          }
 
          $scope.setInteractorShowNeighbour = function(sigma_instance, isCheckedShowNeighbour){
@@ -1207,25 +1215,21 @@
              switch(e.type) {
                  case 'clickNode':
                          if(e.data.node.user_id != undefined && (e.data.captor.ctrlKey || $scope.userinteractor == "information")) {
-                             console.log(e.data.node)
                              $scope.elementType = "user";
                              $scope.elementId = e.data.node.user_id
                              $scope.openInfoPanel($scope.elementType, $scope.elementId);
                          }
                          else if (e.data.node.post_id != undefined && (e.data.captor.ctrlKey || $scope.postinteractor == "information")) {
-                           console.log(e.data.node)
                              $scope.elementType = "post";
                              $scope.elementId = e.data.node.post_id;
                              $scope.openInfoPanel($scope.elementType, $scope.elementId);
                          }
                          else if (e.data.node.comment_id != undefined && (e.data.captor.ctrlKey || $scope.postinteractor == "information")) {
-                             console.log(e.data.node)
                              $scope.elementType = "comment";
                              $scope.elementId = e.data.node.comment_id;
                              $scope.openInfoPanel($scope.elementType, $scope.elementId);
                          }
                          else if (e.data.node.tag_id != undefined && (e.data.captor.ctrlKey || $scope.taginteractor == "information")) {
-                             console.log(e.data.node)
                              $scope.elementType = "tag";
                              $scope.elementId = e.data.node.tag_id;
                              $scope.openInfoPanel($scope.elementType, $scope.elementId);
@@ -1238,16 +1242,14 @@
             }
         }
 
+        //This event handle the Ctrl functionality.
         $(document).keydown(function(event) {
-
             if (event.which == "17"){$scope.cntrlIsPressed = true;}
         });
 
         $(document).keyup(function(event) {
             if (event.which == "17"){$scope.cntrlIsPressed = false;}
         });
-
-
 
 
          $scope.$on("$destroy", function(){
@@ -1259,6 +1261,5 @@
                  }
              });
          });
-
 
     });
