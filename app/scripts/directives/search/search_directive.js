@@ -40,6 +40,11 @@ angular.module('sbAdminApp')
             $rootScope.tag_search = $scope.search;
           }
         }
+        else if ($scope.sugest === "suggestionsPost") {
+          $scope.submit = function() {
+            $rootScope.post_search = $scope.search;
+          }
+        }
         else if ($scope.sugest === "suggestions") {
           $scope.submit = function() {
             $rootScope.search = $scope.search;
