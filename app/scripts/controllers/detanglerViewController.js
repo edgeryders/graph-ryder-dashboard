@@ -290,19 +290,24 @@
                var My1 = sigmaIns.ymax;
                var my1 = sigmaIns.ymin;
 
-               sigmaIns.xmax = Mx2;
-               sigmaIns.xmin = mx2;
-               sigmaIns.ymax = My2;
-               sigmaIns.ymin = my2;
-
                //Then we we do a translation and an homothétie of the hidden nodes.
                // Rx and Ry are values that correspond to the deformation of the x and y axis that must be done on the new sigmaIns.
                var Rx = (Mx1 - mx1 != 0 ? (Mx2 - mx2) / (Mx1 - mx1) : 1); // We avoid division by 0;
                var Ry = (My1 - my1 != 0 ? (My2 - my2) / (My1 - my1) : 1);
 
+               //This can happen when a single node is selected.
+               if (Rx != 0 && Ry != 0){
+                 sigmaIns.xmax = Mx2;
+                 sigmaIns.xmin = mx2;
+                 sigmaIns.ymax = My2;
+                 sigmaIns.ymin = my2;
+               }
+
                sigmaIns.nodeNotToChange.forEach(function (node) {
-                 node.x = (node.x - mx1)*Rx + mx2; // *R is the homothétie And + m is the translation
-                 node.y = (node.y - my1)*Ry + my2;
+                 if (Rx != 0 && Ry != 0){
+                   node.x = (node.x - mx1)*Rx + mx2; // *R is the homothétie And + m is the translation
+                   node.y = (node.y - my1)*Ry + my2;
+                 }
                  sigmaIns.graph.addNode(node);
                });
                sigmaIns.edgeNotToChange.forEach(function (edge) {
@@ -601,13 +606,13 @@
           // We compute the intersection of each arrays.
           var temp =  $scope.fctIntersect($scope.s_user.l1, $scope.s_tag.l1);
           $scope.s_user.toDisplay_ID = $scope.fctIntersect(temp, $scope.s_post.l1);
-
+          console.log($scope.s_user.toDisplay_ID)
           var temp = $scope.fctIntersect($scope.s_user.l2, $scope.s_tag.l2);
           $scope.s_tag.toDisplay_ID = $scope.fctIntersect(temp, $scope.s_post.l2);
-
+          console.log($scope.s_tag.toDisplay_ID)
           var temp = $scope.fctIntersect($scope.s_user.l3, $scope.s_tag.l3);
           $scope.s_post.toDisplay_ID = $scope.fctIntersect(temp, $scope.s_post.l3);
-
+          console.log($scope.s_post.toDisplay_ID)
           //$scope.refreshView($scope.s_user,"fruchtermanReingold");
           $scope.refreshView($scope.s_user,false);
           $scope.refreshView($scope.s_tag,false);
@@ -773,13 +778,16 @@
 
              var toUnBind4 = $scope.$watch("s_post.ready", function (){
                if ($scope.s_post.ready == true){
-                 $scope.initializeSigmaInstance($scope.s_post, $scope.lasso_post, true); //We want the nodes and the edges to be unique
+
                  //posts size is too small. We triple it.
                  $scope.s_post.graph.nodes().forEach( function (node){
                    if (node.post_id != undefined){
                      node.size = node.size * 3;
                    }
                  });
+
+                 $scope.initializeSigmaInstance($scope.s_post, $scope.lasso_post, true); //We want the nodes and the edges to be unique
+
                  $scope.configFruchtermanReingoldAlgoPost = jQuery.extend(true,{}, $scope.configFruchtermanReingoldAlgo);
                  $scope.configFruchtermanReingoldAlgoPost.iterations = 8000; // More iterations are needed because the graph is wide.
                  var listener_post = sigma.layouts.fruchtermanReingold.configure($scope.s_post, $scope.configFruchtermanReingoldAlgoPost);

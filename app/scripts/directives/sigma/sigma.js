@@ -283,17 +283,18 @@ angular.module('sbAdminApp')
             });
             scope.lasso = lasso;
 
-
             scope.$watch('interactor', function() {
                 if (scope.interactor == 'dragNode') {
                     //console.log('change to drag')
                     // Instanciate the ActiveState plugin:
                     var activeState = sigma.plugins.activeState(s);
 
-                    // Initialize the dragNodes plugin:
-                    var dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
-                } else {
-                    sigma.plugins.killDragNodes(s);
+                    if (s.dragListener){
+                      delete s.dragListener;
+                    }
+                    s.dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
+                } else if (s.dragActive == true){
+                    s.dragListener.unbindAll();
                 }
 
                 if (scope.interactor == 'lasso') {
