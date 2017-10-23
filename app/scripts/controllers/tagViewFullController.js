@@ -74,10 +74,7 @@ angular.module('sbAdminApp')
 
     $("#cooccurrence-draw-graph-spinner").spinner({
         min: 1,
-        value: $scope.filter_occurrence_request,
-        spin: function(event, ui) {
-            $scope.filter_occurrence_request = ui.value;
-        }
+        value: $scope.filter_occurrence_request
     });
 
         $scope.switchForceNodeLabel = function() {
@@ -101,7 +98,7 @@ angular.module('sbAdminApp')
 
         $scope.generateGraph = function () {
             //$scope.filter_occ = filter_occ;
-            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $scope.filter_occurrence_request + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
+            var createGraph = $resource(config.apiUrl + 'generateTagFullGraph/' + $("#cooccurrence-draw-graph-spinner").spinner("value") + "/" + $scope.selected.start.getTime() + "/" + $scope.selected.end.getTime()+"/0");
             //var createGraph = $resource(config.apiUrl + 'generateTagGraph/' + $scope.tag_id);
             var createGraphPromise = createGraph.get();
             createGraphPromise.$promise.then(function (result) {
