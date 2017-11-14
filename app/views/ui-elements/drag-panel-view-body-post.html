@@ -2,9 +2,9 @@
     <div class="panel-body">
         <uib-tabset justified="true">
             <uib-tab index="0" heading="Body" >
-                <div class="tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" ng-bind-html="::post.content"></div>
+                <div class="tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" ng-bind-html="::content.content"></div>
             </uib-tab>
-            <uib-tab index="1" heading="Comments ({{::post.comments.length}})" disable="::post.comments.length == 0" >
+            <uib-tab index="1" heading="Comments ({{::content.comments.length}})" disable="::content.comments.length == 0" >
                 <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" >
                 <table class="table table-striped">
                     <thead>
@@ -17,7 +17,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="comment in ::post.comments" >
+                    <tr ng-repeat="comment in ::content.comments" >
                         <td>
                             <button data-click-id="{{ ::comment.comment_id }}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" data-click-id="{{ ::comment.comment_id }}" aria-hidden="true"></i></button>
                         </td>
@@ -30,7 +30,7 @@
                 </table>
                 </div>
             </uib-tab>
-            <uib-tab index="2" heading="Tags ({{::post.annotations.length}})" disable="::post.annotations.length == 0" >
+            <uib-tab index="2" heading="Tags ({{::content.annotations.length}})" disable="::content.annotations.length == 0" >
                 <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" >
                 <table class="table table-striped">
                     <thead>
@@ -42,7 +42,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="annotation in ::post.annotations" >
+                    <tr ng-repeat="annotation in ::content.annotations" >
                         <td><button data-click-id="{{ ::annotation.tag_id }}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" data-click-id="{{ ::annotation.tag_id }}" aria-hidden="true"></i></button></td>
                         <td>{{ ::annotation.tag_label }}</td>
                         <td>{{ getDate(annotation.annotation_timestamp) }}</td>
@@ -52,7 +52,7 @@
                 </table>
                 </div>
             </uib-tab>
-            <uib-tab index="3" heading="Innovations ({{::post.innovations.length}})" disable="::post.innovations.length == 0" >
+            <uib-tab index="3" heading="Innovations ({{::content.innovations.length}})" disable="::content.innovations.length == 0" >
                 <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" >
                 <table class="table table-striped">
                     <thead>
@@ -64,7 +64,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="innovation in ::post.innovations" >
+                    <tr ng-repeat="innovation in ::content.innovations" >
                         <td><button data-click-id="{{ ::innovation.tag_id }}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" data-click-id="{{ ::innovation.tag_id }}" aria-hidden="true"></i></button></td>
                         <td>{{ ::innovation.tag_label }}</td>
                         <td><button data-click-id="{{ ::innovation.comment_id }}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)"><i class="fa fa-comments-o" data-click-id="{{ ::innovation.comment_id }}" aria-hidden="true"></i></button></td>

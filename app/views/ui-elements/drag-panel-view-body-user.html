@@ -11,7 +11,7 @@
                 Age : {{::user.age}}<br>
             </uib-tab>
             <uib-tab index="1" heading="Biography" disable="!user.biography" ><div style="max-height: 400px; overflow: auto;">{{::user.biography}}</div></uib-tab>-->
-            <uib-tab index="0" heading="Posts ({{::user.posts.length}})" disable="::user.posts.length == 0">
+            <uib-tab index="0" heading="Posts ({{::content.posts.length}})" disable="::content.posts.length == 0">
                 <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;">
                 <table class="table table-striped">
                     <thead>
@@ -22,7 +22,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="post in ::user.posts" >
+                    <tr ng-repeat="post in ::content.posts" >
                         <td>
                             <button data-click-id="{{::post.post_id}}" class="btn btn-success btn-sm" ng-click="::openInfoPanel('post', $event)" ><i class="fa fa-commenting-o" data-click-id="{{::post.post_id}}" aria-hidden="true"></i></button>
                         </td>
@@ -33,7 +33,7 @@
                 </table>
                 </div>
             </uib-tab>
-            <uib-tab index="1" heading="Comments ({{::user.comments.length}})" disable="::user.comments.length == 0" >
+            <uib-tab index="1" heading="Comments ({{::content.comments.length}})" disable="::content.comments.length == 0" >
                 <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;">
                 <table class="table table-striped">
                     <thead>
@@ -46,7 +46,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="comment in ::user.comments" >
+                    <tr ng-repeat="comment in ::content.comments" >
                         <td>
                             <button data-click-id="{{::comment.comment_id}}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" data-click-id="{{::comment.comment_id}}" aria-hidden="true"></i></button>
                         </td>

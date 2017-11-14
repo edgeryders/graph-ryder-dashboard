@@ -2,9 +2,9 @@
     <div class="panel-body">
         <uib-tabset justified="true">
             <uib-tab index="0" heading="Content" >
-                <div class="tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" ng-bind-html="::comment.content"></div>
+                <div class="tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" ng-bind-html="::content.content"></div>
             </uib-tab>
-            <uib-tab index="1" heading="Responses ({{::comment.comments.length}})" disable="::comment.comments.length == 0" >
+            <uib-tab index="1" heading="Responses ({{::content.comments.length}})" disable="::content.comments.length == 0" >
                 <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" >
                 <table class="table table-striped">
                     <thead>
@@ -17,7 +17,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="response in ::comment.comments" >
+                    <tr ng-repeat="response in ::content.comments" >
                         <td><button data-click-id="{{::response.comment_id}}" class="btn btn-warning btn-sm" ng-click="::openInfoPanel('comment', $event)"><i class="fa fa-comments-o" data-click-id="{{::response.comment_id}}" aria-hidden="true"></i></button></td>
                         <td>{{ ::response.comment_label }}</td>
                         <td>{{ getDate(response.comment_timestamp) }}</td>
@@ -28,7 +28,7 @@
                 </table>
                 </div>
             </uib-tab>
-              <uib-tab index="2" heading="Tags ({{::comment.annotations.length}})" disable="::comment.annotations.length == 0" >
+              <uib-tab index="2" heading="Tags ({{::content.annotations.length}})" disable="::content.annotations.length == 0" >
                 <div class="table-responsive tab_{{::type}}_{{::id}}" style="height: 300px; width: 500px; overflow: auto;" >
                 <table class="table table-striped">
                     <thead>
@@ -40,7 +40,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="annotation in ::comment.annotations" >
+                    <tr ng-repeat="annotation in ::content.annotations" >
                         <td><button data-click-id="{{::annotation.tag_id}}" class="btn btn-danger btn-sm" ng-click="::openInfoPanel('tag', $event)"><i class="fa fa-tag" data-click-id="{{::annotation.tag_id}}" aria-hidden="true"></i></button></td>
                         <td>{{ ::annotation.tag_label }}</td>
                         <td>{{ getDate(annotation.annotation_timestamp) }}</td>

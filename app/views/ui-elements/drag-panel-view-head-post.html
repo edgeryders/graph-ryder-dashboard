@@ -1,7 +1,7 @@
 <!-- panel for post -->
 <div class="panel-title">
-    <h4 class="modal-title" ><button class="btn btn-success" data-click-id="{{::post.post_id}}" ng-click="openInfoPanel('post', $event)"><i class="fa fa-commenting-o" data-click-id="{{::post.post_id}}" aria-hidden="true"></i></button>&nbsp;{{::post.title}}</h4>
-    {{ getDate(post.timestamp) }} &ndash; <button class="btn btn-primary btn-sm" data-click-id="{{::post.author.user_id}}" ng-click="openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{::post.author.user_id}}" aria-hidden="true"></i></button> {{::post.author.name}}<br>
-    <a href="https://legacy.edgeryders.eu/node/{{::post.post_id}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i> Original content on Edgeryders</a>
+    <h4 class="modal-title" ><button class="btn btn-success" data-click-id="{{::content.post_id}}" ng-click="openInfoPanel('post', $event)"><i class="fa fa-commenting-o" data-click-id="{{::content.post_id}}" aria-hidden="true"></i></button>&nbsp;{{::content.title}}</h4>
+    {{ getDate(content.timestamp) }} &ndash; <button class="btn btn-primary btn-sm" data-click-id="{{::content.author.user_id}}" ng-click="openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{::content.author.user_id}}" aria-hidden="true"></i></button> {{::content.author.name}}<br>
+    <a href="https://legacy.edgeryders.eu/node/{{::content.post_id}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i> Original content on Edgeryders</a>
 </div>
 <!-- /.panel-content -->

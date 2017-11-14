@@ -1,8 +1,8 @@
 <!-- panel for comment -->
 <div class="panel-title">
-    <h4 class="modal-title" ><button class="btn btn-warning" data-click-id="{{::comment.comment_id}}" ng-click="openInfoPanel('comment', $event)"><i class="fa fa-comments-o" data-click-id="{{::comment.comment_id}}" aria-hidden="true"></i></button>&nbsp;&nbsp;{{::comment.title}}</h4>
-    {{ getDate(comment.timestamp) }} &ndash; <button class="btn btn-primary btn-sm" data-click-id="{{::comment.author.user_id}}" ng-click="openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{::comment.author.user_id}}" aria-hidden="true"></i> </button> {{::comment.author.user_name}}<br>
-    <button class="btn btn-success btn-sm" data-click-id="{{::comment.post.post_id}}" ng-click="openInfoPanel('post', $event)"><i class="fa fa-commenting-o" data-click-id="{{::comment.post.post_id}}" aria-hidden="true"></i></button> {{::comment.post.post_title}}<br>
-    <a href="https://legacy.edgeryders.eu/comment/{{::comment.comment_id}}#comment-{{::comment.comment_id}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i> Original content on Edgeryders</a>
+    <h4 class="modal-title" ><button class="btn btn-warning" data-click-id="{{::content.comment_id}}" ng-click="openInfoPanel('comment', $event)"><i class="fa fa-comments-o" data-click-id="{{::content.comment_id}}" aria-hidden="true"></i></button>&nbsp;&nbsp;{{::content.title}}</h4>
+    {{ getDate(content.timestamp) }} &ndash; <button class="btn btn-primary btn-sm" data-click-id="{{::content.author.user_id}}" ng-click="openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{::content.author.user_id}}" aria-hidden="true"></i> </button> {{::content.author.user_name}}<br>
+    <button class="btn btn-success btn-sm" data-click-id="{{::content.post.post_id}}" ng-click="openInfoPanel('post', $event)"><i class="fa fa-commenting-o" data-click-id="{{::content.post.post_id}}" aria-hidden="true"></i></button> {{::content.post.post_title}}<br>
+    <a href="https://legacy.edgeryders.eu/comment/{{::content.comment_id}}#comment-{{::content.comment_id}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i> Original content on Edgeryders</a>
 </div>
 <!-- /.panel-content -->

@@ -72,68 +72,25 @@ return {
                 return;
             }
 
+            scope.content = "";
             scope.comment = "";
             scope.post = "";
             scope.tag = "";
             scope.user = "";
             switch(scope.type) {
-                case "user":
-                    //$scope.user={user_id: "", name: "", active: "", url_facebook: "", url_twitter: "", url_website: "", email: "", location: "", age: "", biography: "", posts: "", comments: ""};
-                    var User = $resource(config.apiUrl + "users/hydrate/" + scope.id);
-                    var userP = User.get();
-                    userP.$promise.then(function (result) {
-                        //$scope.loading = false;
-                        scope.user = result;
-                    });
-                    break;
-                case "post":
-                    //$scope.post={post_id: "", title: "", timestamp: "", author: "", content: "", comments: "", annotations: ""};
-                    var Post = $resource(config.apiUrl + "post/hydrate/" + scope.id);
-                    var postP = Post.get();
-                    postP.$promise.then(function (result) {
-                        //$scope.loading = false;
-                        scope.post = result;
-                    });
-                    break;
-                case "comment":
-                    //$scope.comment={comment_id: "", title: "", timestamp: "", author: "", post: "", content: "", annotations: ""};
-                    var Comment = $resource(config.apiUrl + "comment/hydrate/" + scope.id);
-                    var commentP = Comment.get();
-                    commentP.$promise.then(function (result) {
-                        //$scope.loading = false;
-                        scope.comment = result;
-                    });
-                    break;
-                case "tag":
-                    //$scope.tag={tag_id: "", label: "", posts: "", comments: ""};
-                    var Tag = $resource(config.apiUrl + "tag/hydrate/" + scope.id);
-                    var tagP = Tag.get();
-                    tagP.$promise.then(function (result) {
-                        //$scope.loading = false;
-                        scope.tag = result;
-                    });
-                    break;
-                case "annotation":
-                    //$scope.annotation={"annotation_id": "", "entity_timestamp": "", "entity_type": "", "entity_title": "", "entity_id": "", "timestamp": "", "user_id": "", "quote": "", "user_name": ""}
-                    var Annotation = $resource(config.apiUrl + "annotation/hydrate/" + scope.id);
-                    var annotationP = Annotation.get();
-                    annotationP.$promise.then(function (result) {
-                        //$scope.loading = false;
-                        scope.annotation = result;
-                    });
-                    break;
                 case "nottagged":
-                    var Content = $resource(config.apiUrl + "content/nottagged");
-                    var contentP = Content.get();
-                    contentP.$promise.then(function (result) {
-                        //$scope.loading = false;
-                        scope.posts = result.posts;
-                        scope.comments = result.comments;
-                    });
+                    var resource = $resource(config.apiUrl + "content/nottagged");
+                    break;
+                case "double-tag":
+                    var resource = $resource(config.apiUrl + "tags/common/content/" + scope.id);
                     break;
                 default:
-                    console.log("error with panelView directive unknow type");
+                    var resource = $resource(config.apiUrl + scope.type + "/hydrate/" + scope.id);
             }
+            var resourceP = resource.get();
+            resourceP.$promise.then(function (result) {
+                scope.content = result;
+            });
 
             var mod = element[0];
             mod.className = "panel panel-default";

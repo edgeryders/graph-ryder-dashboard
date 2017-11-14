@@ -14,21 +14,14 @@ angular.module('sbAdminApp')
 
         /**** Init ****/
         //edge label default
-        $scope.sigma_instance;
-        $scope.tagel = false;
         $scope.tagnl = false;
         $scope.nodelabelthreshold = 10;
-        $scope.locate = "";
         $scope.clean_refresh_sigma_decorator = 0;
         $scope.requestFullTagGraph = false;
         $scope.filter_occurrence_min = "2";
         $scope.filter_occurrence_max = "100";
         $scope.filter_occurrence_request = "2";
-        $scope.sigma_instance = undefined;
         $scope.interactor = "navigate";
-        $scope.showTagCommonContent = false;
-        $scope.tag_src = {id: -1, label:""};
-        $scope.tag_dst = {id: -1, label:""};
         $scope.infoPanelParent = "infoPanelParent";
         $("#download_link_dialog").dialog({ autoOpen: false });
         // When rootScope is ready load the graph
@@ -40,13 +33,6 @@ angular.module('sbAdminApp')
                 $scope.selected.end= new Date(Date.now());
                 $scope.generateGraph();
                 $rootScope.resetSuggestions(false, false, false, true);
-                //load tags then create the graph
-                /*var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+$scope.selected.end.getTime()+"/10").query().$promise;
-                Tags.then(function (result) {
-                    $scope.tags = result;
-                    if($scope.tags[0])
-
-                });*/
             }
         });
 
@@ -187,32 +173,9 @@ angular.module('sbAdminApp')
                     break;
                 case 'clickEdges':
                     if(e.data.edge != undefined && e.data.edge.length > 0 && ((e.data.captor.ctrlKey || $scope.interactor == "information") || (e.data.captor.shiftKey || $scope.interactor == "focus"))) {
-                        $scope.content = [];
-                        $scope.showTagCommonContent = true;
-                        var tagPromises = [];
-                        // Create promises array to wait all data until load
-                        tagPromises.push($resource(config.apiUrl + "tags/common/content/"+e.data.edge[0].tag_1+"/"+e.data.edge[0].tag_2+"/"+ $scope.selected.start.getTime()+"/"+ $scope.selected.end.getTime()).query().$promise);
-                        tagPromises.push($resource(config.apiUrl + 'tag/'+e.data.edge[0].tag_1).get().$promise);
-                        tagPromises.push($resource(config.apiUrl + 'tag/'+e.data.edge[0].tag_2).get().$promise);
-                        tagPromises[0].then(function(result) {
-                            //console.log(result);
-                            $scope.content = result;
-                        });
-                        tagPromises[1].then(function(result) {
-                            //console.log(result);
-                            $scope.tag_src.id = result.tag_id;
-                            $scope.tag_src.label = result.label;
-                          //  $scope.tag_src = result;
-                        });
-                        tagPromises[2].then(function(result) {
-                            $scope.tag_dst.id = result.tag_id;
-                            $scope.tag_dst.label = result.label;
-                        });
-                        e.data.edge[0].color = 'rgb(0,0,0)';
-                        e.target.refresh()
-                        //TODO tweek sigma renderer for immediate response
-                        //var s = e.data.renderer;
-                        //s.refresh();
+                        $scope.elementType = "double-tag";
+                        $scope.elementId = e.data.edge[0].tag_1+"-"+e.data.edge[0].tag_2;
+                        $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     }
                     break;
             }
