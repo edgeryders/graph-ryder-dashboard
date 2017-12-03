@@ -23,7 +23,7 @@
                         </td>
                         <td>{{ ::comment.title }}</td>
                         <td><button data-click-id="{{ ::comment.author.user_id }}" class="btn btn-primary btn-sm" ng-click="::openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{ ::comment.author.user_id }}" aria-hidden="true"></i></button></td>
-                        <td>{{ ::comment.author.name }}</td>
+                        <td>{{ ::comment.author.label }}</td>
                         <td>{{ getDate(comment.timestamp) }}</td>
                     </tr>
                     </tbody>
