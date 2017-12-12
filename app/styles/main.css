@@ -1,6 +1,7 @@
 /* Space out content a bit */
 body {
-    padding-bottom: 20px;
+    padding-bottom: 0px;
+    height: 100%;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -112,4 +113,8 @@ background-color: #eee;
   stroke: #fff;
   fill-opacity: .125;
   shape-rendering: crispEdges;
+}
+
+.panel-option.dropdown-menu>li {
+  padding: 0 5px 0 5px;
 }

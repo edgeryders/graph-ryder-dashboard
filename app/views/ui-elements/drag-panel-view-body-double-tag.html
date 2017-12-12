@@ -13,13 +13,13 @@
       <tbody>
         <tr ng-repeat="elem in content.list" >
           <td>
-            <button ng-show="elem.entity_type=='comment'" class="btn btn-warning" data-click-id="{{::elem.id}}" ng-click="openInfoPanel('comment', $event)" ><i class="fa fa-comments-o"></i></button>
-            <button ng-show="elem.entity_type=='post'" class="btn btn-success" data-click-id="{{::elem.id}}" ng-click="openInfoPanel('post', $event)" ><i class="fa fa-commenting"></i></button>
+            <button ng-show="elem.entity_type=='comment'" class="btn btn-warning" data-click-id="{{::elem.id}}" ng-click="openInfoPanel('comment', $event)" ><i class="fa fa-comments-o" data-click-id="{{::elem.id}}"></i></button>
+            <button ng-show="elem.entity_type=='post'" class="btn btn-success" data-click-id="{{::elem.id}}" ng-click="openInfoPanel('post', $event)" ><i class="fa fa-commenting" data-click-id="{{::elem.id}}"></i></button>
           </td>
           <td>{{ elem.label }}</td>
           <td>{{ getDate(elem.timestamp) }}</td>
           <td>
-            <button class="btn btn-primary" data-click-id="{{::elem.user_id}}" ng-click="openInfoPanel('user', $event)" ><i class="fa fa-user"></i></button>
+            <button class="btn btn-primary" data-click-id="{{::elem.user_id}}" ng-click="openInfoPanel('user', $event)" ><i class="fa fa-user" data-click-id="{{::elem.user_id}}"></i></button>
           </td>
           <td>{{ elem.user_label }}</td>
         </tr>
