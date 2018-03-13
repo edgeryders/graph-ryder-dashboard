@@ -1,42 +1,54 @@
-<div>
-    <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
-    &nbsp;
-    <div class="row">
-        <div class="col-lg-12" >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Display:
-                    <input type="radio" ng-model="type" value="neighbours" /> Neighbours
-                    <input type="radio" ng-model="type" value="doi" /> DOI
-                    <input type="checkbox" ng-model="el" /> labels on edges
-                    <div class="dropdown pull-right">
-                      <button id="" class="btn btn-default pull-right dropdown-toggle"  data-toggle="dropdown" title="" ><i class="fa fa-cog"></i> <span class="caret"></span></button>
-                      <ul class="dropdown-menu pull-right">
-                        <li><button class="btn btn-default" title="Download file" ng-click="generateDownloadLink()">Download Graph</button><div id="download_link_dialog" title="Download a copy of the graph"></div></li>
-                      </ul>
-                    </div>
-                    <form ng-submit="drawDoiGraph()">
-                        Doi size : <input type="number" ng-model="doiSize" ng-hide="type != 'doi'" />
-                        algo :
-                        <select ng-model="layoutChoice">
-                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
-                        </select>
-                        <input type="submit" value="go" />
-                    </form>
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <sigma-js
-                            graph="graphSigma"
-                            width="100%" height="600px"
-                            event-catcher="eventCatcher"
-                            edge-labels="el">
-                    </sigma-js>
-                </div>
-                <!-- /.panel-body -->
+<div class="animated fadeIn">
+  <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
+  <div class="row">
+    <div class="col">
+        <div class="card bg-gray-800">
+            <div class="card-header card-header-compact">
+            <div class="dropdown pull-right">
+              <button id="" class="btn btn-default pull-right" data-toggle="dropdown" title="" aria-expanded="false"><i class="fa fa-cog"></i> <span class="caret"></span></button>
+              <ul class="dropdown-menu pull-right">
+                <li><button class="btn btn-primary" title="Download file" ng-click="generateDownloadLink()">Download Graph</button><div id="download_link_dialog" title="Download a copy of the graph"></div></li>
+              </ul>
             </div>
-            <!-- /.panel -->
+            </div>
+            <div class="card-body">
+              <sigma-js
+                      graph="graphSigma"
+                      width="100%" height="600px"
+                      event-catcher="eventCatcher"
+                      edge-labels="el"
+                      default-edge-hover-color="#20a8d8"
+                      default-label-color="#20a8d8">
+              </sigma-js>
+            </div>
+            <div class="card-footer">
+              <form ng-submit="drawDoiGraph()">
+              <div class="form-inline">
+                <div class="form-group mb-2">
+                  <b>Display</b>&nbsp;
+                  <input type="radio" ng-model="type" value="neighbours" class="form-control form-control-sm">&nbsp;Neighbours&nbsp;
+                  <input type="radio" ng-model="type" value="doi" class="form-control form-control-sm">&nbsp;DOI&nbsp;                          
+                </div>
+                <div class="form-group mb-2">
+                  <input type="checkbox" ng-model="el" class="form-control form-control-sm">&nbsp;labels&nbsp;on&nbsp;edges&nbsp;
+                </div>
+                <div class="form-group  mb-2">
+                  Doi size:&nbsp;<input type="number" ng-model="doiSize" ng-hide="type != 'doi'"  class="form-control form-control-sm" />&nbsp;
+                </div>
+                <div class="form-group  mb-2">
+                Algorithm:&nbsp;
+                <select ng-model="layoutChoice" class="form-control form-control-sm">
+                    <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                </select>&nbsp;
+                </div>
+                <div class="form-group mb-2 ">
+                  <input class="btn btn-sm btn-primary" type="submit" value="go">
+                </div>                
+              </div>
+              </form>
+            </div>                    
         </div>
     </div>
-    <!-- /.row -->
+  </div>
 </div>
+

@@ -1,179 +1,202 @@
-<div>
-    <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
-    <br>
-    <div class="row">
-        <div class="col-lg-7">
-            <div class="btn-group btn-group-justified" role="group">
-                <div class="btn-group" role="group">
-                    <button class="btn btn-primary disabled btn-lg" style="opacity: 1;"><i class="fa fa-users fa-lg" ></i><br>{{ DBStatus['Users'] }} Users</button>
+<div class="animated fadeIn">
+  <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card bg-gray-800">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12 col-lg-12">
+              <div class="row">
+                <div class="col">
+                  <div class="callout callout-cyan">
+                    <small class="text-muted">Users</small>
+                    <br>
+                    <strong class="h2">{{ DBStatus['Users'] }}</strong>
+                  </div>
                 </div>
-                <div class="btn-group" role="group">
-                    <button class="btn btn-success disabled btn-lg" style="opacity: 1;"><i class="fa fa-commenting-o fa-lg" ></i><br>{{ DBStatus['Posts'] }} Posts</button>
+                <!--/.col-->
+                <div class="col">
+                  <div class="callout callout-green">
+                    <small class="text-muted">Posts</small>
+                    <br>
+                    <strong class="h2">{{ DBStatus['Posts'] }}</strong>
+                  </div>
                 </div>
-                <div class="btn-group" role="group">
-                    <button class="btn btn-warning disabled btn-lg" style="opacity: 1;"><i class="fa fa-comments-o fa-lg" ></i><br>{{ DBStatus['Comments'] }} Comments</button>
+                <!--/.col-->
+                <div class="col">
+                  <div class="callout callout-yellow">
+                    <small class="text-muted">Comments</small>
+                    <br>
+                    <strong class="h2">{{ DBStatus['Comments'] }}</strong>
+                  </div>
                 </div>
-                <div class="btn-group" role="group">
-                    <button class="btn btn-info disabled btn-lg" style="opacity: 1;"><i class="fa fa-sticky-note-o fa-lg" ></i><br>{{ DBStatus['Annotations'] }} Annotations</button>
+                <!--/.col-->
+                <div class="col">
+                  <div class="callout callout-indigo">
+                    <small class="text-muted">Annotations</small>
+                    <br>
+                    <strong class="h2">{{ DBStatus['Annotations'] }}</strong>
+                  </div>
                 </div>
-                <div class="btn-group" role="group">
-                    <button class="btn btn-danger disabled btn-lg" style="opacity: 1;"><i class="fa fa-tags fa-lg" ></i><br>{{ DBStatus['Tags'] }} Tags</button>
+                <!--/.col-->
+                <div class="col">
+                  <div class="callout callout-red">
+                    <small class="text-muted">Tags</small>
+                    <br>
+                    <strong class="h2">{{ DBStatus['Tags'] }}</strong>
+                  </div>
                 </div>
+                <!--/.col-->
+              </div>
+              <!--/.row-->
+              <hr class="mt-0">
+              <div class="activity-container">
+                <time-line height="200" data="time_data" call-back="extent" ></time-line>
+                <div class="activity-footer d-flex  flex-row">
+                  <div class="p-2">
+                    <b>Start Date</b>: {{selected.start}}
+                  </div>
+                  <div class="p-2">
+                    <b>End Date</b>: {{selected.end}}
+                  </div>
+                  <div class="ml-auto p-2"><button class="btn btn-primary btn-sm" ng-click="resetTimeLine()">Reset</button></div>
+                </div>
+              </div>
             </div>
-            <br>
+          </div>
+          <!--/.row-->
+          <br>
+          <div id="word_cloud_container" class="wordcloud">
+            <canvas id="word_cloud" class="word_cloud"></canvas>
+          </div>
+          
+          <!--br>
+          <div id="radar-chart">
             <div class="panel panel-default">
-                <!-- /.panel-heading -->
-                <div class="panel-heading">
-                    <label><i class="fa fa-clock-o" ></i> Activity</label>
-                </div>
-                <div class="panel-body">
-                    <time-line height="200" data="time_data" call-back="extent" ></time-line>
-                    <div class="pull-left">Start date: {{selected.start}}
-                    &nbsp;&nbsp;End date: {{selected.end}}</div>
-                    <div class="pull-right"><button class="btn btn-default text-right" ng-click="resetTimeLine()" >Reset</button></div>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <div class="col-lg-5">
-            <div class="panel panel-default">
-                <div class="panel-body"><canvas id="word_cloud" class="word_cloud" width="590%" height="400%"></canvas>
-                </div>
-            </div>
-        </div>
-        <!--div class="col-lg-4" id="radar-chart">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <canvas id="area" class="chart chart-radar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
-                </div>
-            </div>
-        </div-->
-    </div>
-    <div class="row">
-        <!--div class="col-lg-7" >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="globalel" > labels on egdes
-                    <form ng-submit="drawGraph()">
-                        algo :
-                        <select ng-model="layoutChoice">
-                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
-                        </select>
-                        <input type="submit" value="go" />
-                    </form>
-                </div>
-                <div class="panel-body">
-                    <sigma-js
-                            graph="globalGraphSigma"
-                            width="100%" height="600px"
-                            edge-labels="globalel"
-                            threshold=20
-                            event-catcher="eventCatcher"
-                            locate="locate"
-                            time-filter="filter" >
-                    </sigma-js>
-                </div>
-            </div>
-        </div-->
-        <!--div class="col-lg-5">
-            <div class="panel panel-default">
-                <div class="panel-body"><canvas id="word_cloud" class="word_cloud" width="600px" height="400px"></canvas>
-                </div>
-            </div>
-        </div-->
-        <!--div class="col-lg-6" id="radar-chart">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Posts type of {{postType.series}}
-                </div>
                 <div class="panel-body">
                     <canvas id="area" class="chart chart-radar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
                 </div>
             </div>
-        </div-->
-        <!--div class="col-lg-6" id="bar-chart">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Posts type of {{postType.series}}
-                </div>
-                <div class="panel-body">
-                    <canvas id="bar" class="chart chart-bar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
-                </div>
-            </div>
-        </div-->
+          </div-->
+          
+        </div>
+      </div>
     </div>
-    <!-- /.row -->
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <label><i class="fa fa-commenting-o" ></i> Latest Posts</label>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Title</th>
-                                <th>Date</th>
-                                <th></th>
-                                <th>Author</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+    <!--/.col-->
+  </div>
+  <!--/.row-->
+
+  <!--div class="row">
+      <div class="col-lg-7" >
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="globalel" > labels on egdes
+                  <form ng-submit="drawGraph()">
+                      algo :
+                      <select ng-model="layoutChoice">
+                          <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                      </select>
+                      <input type="submit" value="go" />
+                  </form>
+              </div>
+              <div class="panel-body">
+                  <sigma-js
+                          graph="globalGraphSigma"
+                          width="100%" height="600px"
+                          edge-labels="globalel"
+                          threshold=20
+                          event-catcher="eventCatcher"
+                          locate="locate"
+                          time-filter="filter"
+                          default-edge-hover-color="#20a8d8"
+                          default-label-color="#20a8d8" >
+                  </sigma-js>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-5">
+          <div class="panel panel-default">
+              <div class="panel-body"><canvas id="word_cloud" class="word_cloud" width="600px" height="400px"></canvas>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-6" id="radar-chart">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <i class="fa fa-clock-o fa-fw"></i> Posts type of {{postType.series}}
+              </div>
+              <div class="panel-body">
+                  <canvas id="area" class="chart chart-radar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
+              </div>
+          </div>
+      </div>
+      <div class="col-lg-6" id="bar-chart">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <i class="fa fa-clock-o fa-fw"></i> Posts type of {{postType.series}}
+              </div>
+              <div class="panel-body">
+                  <canvas id="bar" class="chart chart-bar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
+              </div>
+          </div>
+      </div>
+  </div-->
+
+
+  <div class="row">
+    <div class="col-lg-6 col-md-12">
+        <div class="card bg-gray-800">
+            <div class="card-header">
+                Latest Posts
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Author</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                             <tr ng-repeat="post in latest_posts" >
-                                <td>
-                                    <button class="btn btn-success" ng-click="openInfoPanel('post', post.post_id)" ><i class="fa fa-commenting"></i></button>
-                                </td>
-                                <td>{{ post.post_label }}</td>
+                                <td><a ng-click="openInfoPanel('post', post.post_id)" >{{ post.post_label }}</a></td>
                                 <td>{{ getDate(post.timestamp) }}</td>
-                                <td>
-                                    <button class="btn btn-primary" ng-click="openInfoPanel('user', post.user_id)" ><i class="fa fa-user"></i></button>
-                                </td>
-                                <td>{{ post.user_label }}</td>
+                                <td><a ng-click="openInfoPanel('user', post.user_id)">{{ post.user_label }}</a></td>
                             </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <label><i class="fa fa-comments-o" ></i> Latest Comments</label>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Title</th>
-                                <th>Date</th>
-                                <th></th>
-                                <th>Author</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="comment in latest_comments" >
-                                <td>
-                                    <button class="btn btn-warning" ng-click="openInfoPanel('comment', comment.comment_id)" ><i class="fa fa-comments-o"></i></button>
-                                </td>
-                                <td>{{ comment.comment_label }}</td>
-                                <td>{{ getDate(comment.timestamp) }}</td>
-                                <td>
-                                    <button class="btn btn-primary" ng-click="openInfoPanel('user', comment.user_id)" ><i class="fa fa-user"></i></button>
-                                </td>
-                                <td>{{ comment.user_label }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+    <div class="col-lg-6 col-md-12">
+        <div class="card bg-gray-800">
+            <div class="card-header">
+                Latest Comments
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Author</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="comment in latest_comments" >
+                                <td><a ng-click="openInfoPanel('comment', comment.comment_id)">{{ comment.comment_label }}</a></td>
+                                <td>{{ getDate(comment.timestamp) }}</td>
+                                <td><a ng-click="openInfoPanel('user', comment.user_id)">{{ comment.user_label }}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
 </div>

@@ -1,75 +1,89 @@
+<div class="animated fadeIn">
+  <!--div class="row">
+      <div class="col-lg-12">
+          <h5> Color code:
+              <button class="btn btn-primary" style="opacity: 1;" ng-click="openInfoPanel('all users', 0)">Users</button>
+              <button class="btn btn-success" style="opacity: 1;" ng-click="openInfoPanel('all posts', 0)">Posts</button>
+              <button class="btn btn-warning" style="opacity: 1;" ng-click="openInfoPanel('all comments', 0)">Comments</button>
+              <button class="btn btn-danger" style="opacity: 1;" ng-click="openInfoPanel('all tags', 0)">Tags</button>
+          </h5>
+      </div>
+  </div-->
+  <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="row">
+        <div class="col">
+            <div class="card bg-gray-800">
+                <div class="card-header card-header-compact">
+                    <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
+                    <button id="interactorInformation" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" data-title="Show details about the elements" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
+                    <button id="interactorNeighbourhood" class="btn btn-default" title="Show direct neighbourhood of the element" data-title="Show direct neighbourhood of the element (reset with <i class='fa fa-trash'></i>)" ng-click="setInteractorNeighbourhood()"><i class="fa fa-compass"></i></button>
+                    <button id="interactorDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorDragNode()"><i class="fa fa-arrows"></i></button>
 
-
-    <!--div class="row">
-        <div class="col-lg-12">
-            <h5> Color code:
-                <button class="btn btn-primary" style="opacity: 1;" ng-click="openInfoPanel('all users', 0)">Users</button>
-                <button class="btn btn-success" style="opacity: 1;" ng-click="openInfoPanel('all posts', 0)">Posts</button>
-                <button class="btn btn-warning" style="opacity: 1;" ng-click="openInfoPanel('all comments', 0)">Comments</button>
-                <button class="btn btn-danger" style="opacity: 1;" ng-click="openInfoPanel('all tags', 0)">Tags</button>
-            </h5>
-        </div>
-    </div-->
-    <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
-    &nbsp;
-    <div class="row">
-        <div class="col-lg-12" >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <!--<i class="fa fa-clock-o fa-fw" ></i> Global view &nbsp;&nbsp; <input type="checkbox" ng-model="tagnl" ng-click="switchForceNodeLabel()"> &nbsp;+<input type="range" value="10" max="10" style="width: 80px; display: inline-block;" ng-model="nodelabelthreshold">
-- &nbsp; labels on nodes &nbsp;&nbsp;  <input type="checkbox" ng-model="tagel" > labels on edges -->
-<div>Display label on nodes: None &nbsp;  <div id="node-label-intensity-slider" style="width: 100px; display: inline-block;"></div> &nbsp; All</div>
-<div>Co-occurrence intensity: Weak &nbsp; <div id="cooccurrence-intensity-slider-range" style="width: 100px; display: inline-block;"></div> &nbsp; Strong</div>
-                    <div>
-                        <button id="interactorNavigate" class="btn btn-primary" title="Navigate the graph" data-title="Navigate the graph" ng-click="setInteractorNavigate()"><i class="fa fa-mouse-pointer"></i></button>
-                        <button id="interactorInformation" class="btn btn-default" title="Show details about the elements (Ctrl + Click on element)" data-title="Show details about the elements" ng-click="setInteractorInformation()"><i class="fa fa-eye"></i></button>
-                        <button id="interactorNeighbourhood" class="btn btn-default" title="Show direct neighbourhood of the element" data-title="Show direct neighbourhood of the element (reset with <i class='fa fa-trash'></i>)" ng-click="setInteractorNeighbourhood()"><i class="fa fa-compass"></i></button>
-                        <button id="interactorDragNode" class="btn btn-default" title="Manually move nodes" data-title="Manually move nodes" ng-click="setInteractorDragNode()"><i class="fa fa-arrows"></i></button>
-                        <label id="interactorDescriptionLabel">Navigate the graph</label>
-                        <button id="operationCleanRefresh" class="btn btn-default pull-right" title="Discard neighbourhood visual changes" ng-click="cleanRefreshSigmaDecorator()" ng-model="clean_refresh_sigma_decorator"><i class="fa fa-trash"></i></button>
-<div class="dropdown pull-right">
- <button id="" class="btn btn-default pull-right dropdown-toggle"  data-toggle="dropdown" title="" ><i class="fa fa-cog"></i> <span class="caret"></span></button>
-    <ul class="dropdown-menu pull-right">
-      <li><form ng-submit="generateGraph()">
-                        Redraw using:
-                        <select ng-model="layoutChoice">
-                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
-                        </select>
-                        Filter by number of co-occurrences:
-                        <input id="cooccurrence-draw-graph-spinner" style="width: 50px; display: inline-block;" value="2">
-                        <input type="submit" value="Go" />
-                    </form></li>
-      <li class="divider"></li>
-      <li>Display labels on edges <input type="checkbox" ng-model="tagel" ></li>
-      <li class="divider"></li>
-      <li><button class="btn btn-default" title="Download file" ng-click="generateDownloadLink()">Download Graph</button><div id="download_link_dialog" title="Download a copy of the graph"></div></li>
-    </ul>
-</div>
+                    <button id="operationCleanRefresh" class="btn btn-default pull-right" title="Discard neighbourhood visual changes" ng-click="cleanRefreshSigmaDecorator()" ng-model="clean_refresh_sigma_decorator"><i class="fa fa-trash"></i></button>
+                    <div class="dropdown pull-right">
+                      <button id="" class="btn btn-default pull-right" data-toggle="dropdown" title="" aria-expanded="false"><i class="fa fa-cog"></i> <span class="caret"></span></button>
+                      <ul class="dropdown-menu pull-right">
+                        <li><form ng-submit="generateGraph()">
+                              <div class="form-group">
+                                <label for="layout-choice">Redraw using:</label>
+                                <select ng-model="layoutChoice" id="layout-choice" class="form-control form-control-sm" >
+                                  <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <label for="layout-choice">Filter by number of co-occurrences:</label>
+                                <input id="cooccurrence-draw-graph-spinner" class="form-control form-control-sm" value="2">
+                              </div>
+                              <div class="form-group form-actions">
+                                <button type="submit" class="btn btn-sm btn-primary">Go</button>
+                              </div>
+                            </form>
+                        </li>
+                        <li><button class="btn btn-primary" title="Download file" ng-click="generateDownloadLink()">Download Graph</button><div id="download_link_dialog" title="Download a copy of the graph"></div></li>
+                      </ul>
                     </div>
                 </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <sigma-js
-                            sigma-instance = {{sigma_instance}}
-                            graph="tagGraphSigma"
-                            width="100%" height="800px"
-                            edge-labels="tagel"
-                            threshold={{nodelabelthreshold}}
-                            metric-filter="occ"
-                            metric-min-filter={{filter_occurrence_min}}
-                            metric-max-filter={{filter_occurrence_max}}
-                            event-catcher="eventCatcher"
-                            locate="locate"
-                            time-filter="filter"
-                            interactor={{interactor}}
-                            clean-refresh={{clean_refresh_sigma_decorator}} >
-                    </sigma-js>
+                <div class="card-body">
+                  <sigma-js
+                    sigma-instance = {{sigma_instance}}
+                    graph="tagGraphSigma"
+                    width="100%" height="800px"
+                    edge-labels="tagel"
+                    threshold={{nodelabelthreshold}}
+                    metric-filter="occ"
+                    metric-min-filter={{filter_occurrence_min}}
+                    metric-max-filter={{filter_occurrence_max}}
+                    event-catcher="eventCatcher"
+                    locate="locate"
+                    time-filter="filter"
+                    interactor={{interactor}}
+                    clean-refresh={{clean_refresh_sigma_decorator}},
+                    default-edge-hover-color="#20a8d8",
+                    default-label-color="#20a8d8" >
+                  </sigma-js>
                 </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
+                <div class="card-footer">
+                    <!--<div><i class="fa fa-clock-o fa-fw" ></i> Global view &nbsp;&nbsp; <input type="checkbox" ng-model="tagnl" ng-click="switchForceNodeLabel()"> &nbsp;+<input type="range" value="10" max="10" style="width: 80px; display: inline-block;" ng-model="nodelabelthreshold">
+- &nbsp; labels on nodes &nbsp;&nbsp;  <input type="checkbox" ng-model="tagel" > labels on edges </div>-->
+                  <div>Display label on nodes: None &nbsp; <div id="node-label-intensity-slider" class="inline-slider"><input type="text" class="slider range-1"></div> &nbsp; All</div>
+                  <div>Co-occurrence intensity: Weak &nbsp;  <div id="cooccurrence-intensity-slider-range" class="inline-slider"><input type="text" class="slider range-2"></div> &nbsp; Strong</div>
+                  <div class="switcher">Complete tag-tag graph (slower) 
+                    <label class="switch switch-text switch-pill switch-success switch-sm">
+                      <input type="checkbox" class="switch-input" checked="">
+                      <span class="switch-label" data-on="On" data-off="Off"></span>
+                      <span class="switch-handle"></span>
+                    </label>
+                  </div>
+                </div>
+            </div>                    
         </div>
+      </div>
     </div>
+  </div>
+</div>
+
     <!-- /.row -->
     <div class="row">
         <!--div class="col-lg-6">
@@ -83,42 +97,33 @@
             </div>
         </div>
         <!-- /.col-lg-6 -->
-        <div class="col-lg-6" ng-show="showTagCommonContent">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <div class="pull-left" ng-show="showTagCommonContent">Content about <button class="btn btn-danger" ng-click="openInfoPanel('tag', tag_src.id)" ><i class="fa fa-tag"></i></button> <label>{{ tag_src.label }}</label> and <button  class="btn btn-danger" ng-click="openInfoPanel('tag', tag_dst.id)" ><i class="fa fa-tag"></i></button> <label>{{ tag_dst.label }}</label>.</div> <div class="pull-right"><button class="btn btn-default" ng-click="showTagCommonContent=false" >Clear</button></div>
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Content</th>
-                                <th>Date</th>
-                                <th></th>
-                                <th>Author</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="elem in content" >
-                                <td>
-                                    <button ng-show="elem.entity_type=='comment'" class="btn btn-warning" ng-click="openInfoPanel('comment', elem.id)" ><i class="fa fa-comments-o"></i></button>
-                                    <button ng-show="elem.entity_type=='post'" class="btn btn-success" ng-click="openInfoPanel('post', elem.id)" ><i class="fa fa-commenting"></i></button>
-                                </td>
-                                <td>{{ elem.label }}</td>
-                                <td>{{ getDate(elem.timestamp) }}</td>
-                                <td>
-                                    <button class="btn btn-primary" ng-click="openInfoPanel('user', elem.user_id)" ><i class="fa fa-user"></i></button>
-                                </td>
-                                <td>{{ elem.user_label }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
+
+      <div class="card bg-gray-800 small" ng-show="showTagCommonContent">
+        <div class="card-body">
+          <table class="table table-dark table-responsive-sm">
+            <thead>
+              <tr>
+                <th>Content</th>
+                <th>Date</th>
+                <th>Author</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="elem in content" >
+                <td>
+                    <a ng-show="elem.entity_type=='comment'" class="btn btn-warning" ng-click="openInfoPanel('comment', elem.id)" >{{ elem.label }}</a>
+                    <a ng-show="elem.entity_type=='post'" class="btn btn-success" ng-click="openInfoPanel('post', elem.id)" >{{ elem.label }}</a>
+                </td>
+                <td>{{ getDate(elem.timestamp) }}</td>
+                <td><a ng-click="openInfoPanel('user', elem.user_id)">{{ elem.user_label }}</a></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+        <div class="card-footer-table">
+          <div class="pull-left" ng-show="showTagCommonContent">Content about <label  ng-click="openInfoPanel('tag', tag_src.id)" class="text-danger">{{ tag_src.label }}</label> and  <label ng-click="openInfoPanel('tag', tag_dst.id)" class="text-danger">{{ tag_dst.label }}</label>.</div> <div class="pull-right"><button class="btn btn-primary btn-sm" ng-click="showTagCommonContent=false" >Clear</button></div>
+        </div>
+      </div>
     </div>
     <!-- /.row -->
 </div>

@@ -1,0 +1,186 @@
+// Bootstrap overrides
+
+//
+// Color system
+//
+
+$white:                           #fff;
+$gray-100:                        #f0f3f5;
+$gray-200:                        #c2cfd6;
+$gray-300:                        #a4b7c1;
+$gray-400:                        #869fac;
+$gray-500:                        #666666;
+$gray-600:                        #444444;
+$gray-700:                        #333333;
+$gray-800:                        #222222;
+$gray-900:                        #151b1e;
+$black:                           #000 !default;
+
+$blue:                            #1dafec;
+$indigo:                          #6610f2 !default;
+$purple:                          #6f42c1 !default;
+$pink:                            #e83e8c !default;
+$red:                             #f86c6b;
+$orange:                          #ef5d3c;
+$yellow:                          #e4e16a !default;
+$green:                           #8dc878;
+$teal:                            #20c997 !default;
+$cyan:                            #63c2de;
+$slate:                           #718296;
+$cadmium:                         #ee7e31;
+
+$colors: (
+  blue:                           $blue,
+  indigo:                         $indigo,
+  purple:                         $purple,
+  pink:                           $pink,
+  red:                            $red,
+  orange:                         $orange,
+  yellow:                         $yellow,
+  green:                          $green,
+  teal:                           $teal,
+  cyan:                           $cyan,
+  white:                          $white,
+  gray:                           $slate,
+  gray-dark:                      $gray-800
+);
+
+$theme-colors: (
+  primary:                        $blue,
+  secondary:                      $gray-300,
+  success:                        $green,
+  info:                           $cyan,
+  warning:                        $yellow,
+  danger:                         $cadmium,
+  light:                          $gray-100,
+  dark:                           $gray-800,
+
+  blue:                           $blue,
+  indigo:                         $indigo,
+  purple:                         $purple,
+  pink:                           $pink,
+  red:                            $red,
+  orange:                         $orange,
+  yellow:                         $yellow,
+  green:                          $green,
+  teal:                           $teal,
+  cyan:                           $cyan,
+
+  gray-100:                       $gray-100,
+  gray-200:                       $gray-200,
+  gray-300:                       $gray-300,
+  gray-400:                       $gray-400,
+  gray-500:                       $gray-500,
+  gray-600:                       $gray-600,
+  gray-700:                       $gray-700,
+  gray-800:                       $gray-800,
+  gray-900:                       $gray-900
+);
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-transitions:              true;
+$enable-rounded:                  false;
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg:                   $gray-700;
+$body-color:                $gray-100;
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i');
+$font-family-sans-serif:          'Source Sans Pro', Roboto, sans-serif;
+$font-size-base:                  0.875rem;
+$text-muted:                      $gray-400;
+
+// Breadcrumbs
+
+$breadcrumb-bg:                   $gray-600;
+$breadcrumb-margin-bottom:        1.5rem;
+
+// Cards
+
+$card-border-color:               $gray-200;
+$card-cap-bg:                     $gray-100;
+
+// Dropdowns
+
+$dropdown-padding-y:              0;
+$dropdown-border-color:           lighten($gray-700, 7.5%) !default;
+$dropdown-divider-bg:             $gray-100;
+$dropdown-bg:                     $gray-700;
+$dropdown-divider-bg:             $gray-200 !default;
+$dropdown-link-color:             $gray-900 !default;
+$dropdown-link-hover-color:       darken($gray-900, 5%) !default;
+$dropdown-link-hover-bg:          $gray-100 !default;
+//$dropdown-link-active-color:      $component-active-color !default;
+//$dropdown-link-active-bg:         $component-active-bg !default;
+$dropdown-link-disabled-color:    $gray-600 !default;
+$dropdown-header-color:           $gray-600 !default;
+
+
+// Buttons
+
+$btn-secondary-border:            $gray-300;
+
+// Progress bars
+
+$progress-bg:                     $gray-100;
+
+// Tables
+
+$table-bg-accent:                 $gray-100;
+$table-bg-hover:                  $gray-100;
+
+$table-dark-bg:                   $gray-900 !default;
+$table-dark-accent-bg:            rgba($white, .05) !default;
+$table-dark-hover-bg:             rgba($white, .075) !default;
+$table-dark-border-color:         lighten($gray-900, 7.5%) !default;
+$table-dark-color:                $body-color !default;
+
+// Forms
+
+$input-group-addon-bg:            $gray-100;
+$input-border-color:              $gray-400;
+$input-group-addon-border-color:  $gray-400;
+
+$input-bg:                        $gray-500;
+$input-disabled-bg:               $gray-700;
+$input-color:                     $gray-100;
+$input-border-color:              $gray-400;
+$input-box-shadow:                inset 0 1px 1px rgba($black, .075);
+$input-focus-bg:                  $gray-100;
+$input-focus-color:               $gray-900;
+$input-placeholder-color:         $gray-100;
+
+
+// Navbar
+
+$navbar-bg:                       $gray-600;
+$navbar-border:                   0;
+$navbar-brand-border:             0;
+$navbar-brand-bg:                 $navbar-bg;
+$sidebar-nav-link-active-bg:      $gray-700;
+$sidebar-nav-link-hover-bg:       lighten($navbar-bg, 5%);
+
+// Aside
+
+$aside-menu-color:                #fff !default;
+$aside-menu-bg:                   $gray-800 !default;
+$aside-menu-borders:              0;
+
+// Tabs
+
+$nav-tabs-border-color:             $gray-300 !default;
+$nav-tabs-link-hover-border-color:  $gray-200 $gray-200 $nav-tabs-border-color !default;
+$nav-tabs-link-active-color:        $gray-700 !default;
+$nav-tabs-link-active-bg:           $gray-800;
+$nav-tabs-link-active-border-color: $gray-300 $gray-300 $nav-tabs-link-active-bg !default;
+

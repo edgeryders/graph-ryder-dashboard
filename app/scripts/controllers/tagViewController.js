@@ -2,6 +2,7 @@
  * Created by nferon on 17/06/16.
  */
 'use strict';
+
 /**
  * @ngdoc function
  * @name sbAdminApp.controller:GlobalCtrl
@@ -25,7 +26,7 @@ angular.module('sbAdminApp')
         $scope.tag_dst = {id: -1, label:""};
         $scope.requestFullTagGraph = false;
         $scope.showTagCommonContent = false;
-        $scope.tableSizeChoice = '10';
+        $scope.tableSizeChoice = 10;
         $scope.interactor = "navigate";
         $scope.infoPanelParent = "infoPanelParent";
         $("#download_link_dialog").dialog({ autoOpen: false });
@@ -46,26 +47,34 @@ angular.module('sbAdminApp')
                 });
             }
         });
-        $( "#node-label-intensity-slider" ).slider({
-            min: 0,
-            max: $scope.nodelabelthreshold-1,
-            value: 10-$scope.nodelabelthreshold,
-            slide: function( event, ui ) {
-                $scope.nodelabelthreshold = 10-ui.value;
-                $scope.$apply();
-            }
+        
+        $("#node-label-intensity-slider input").ionRangeSlider({
+          min: 0,
+          max: $scope.nodelabelthreshold-1,
+          from: 0,
+          hide_min_max: true,
+          hide_from_to: true,
+          grid: false,
+          onChange: function(val) {
+            $scope.nodelabelthreshold = 10-val.from;
+            $scope.$apply();
+          }
         });
-
-        $( "#coocurrence-intensity-slider-range" ).slider({
-            range: true,
-            min: 1,
-            max: $scope.filter_occurence_max,
-            values: [ $scope.filter_occurence_min, $scope.filter_occurence_max ],
-            slide: function( event, ui ) {
-                $scope.filter_occurence_min = ui.values[0];
-                $scope.filter_occurence_max = ui.values[1];
-                $scope.$apply();
-            }
+        
+        $("#coocurrence-intensity-slider-range input").ionRangeSlider({
+          type: "double",
+          min: 1,
+          max: $scope.filter_occurence_max,
+          from: $scope.filter_occurence_min,
+          to: $scope.filter_occurence_max,
+          hide_min_max: true,
+          hide_from_to: true,
+          grid: false,
+          onChange: function(val) {
+            $scope.filter_occurence_min = val.from;
+            $scope.filter_occurence_max = val.to;
+            $scope.$apply();
+          }
         });
 
         $scope.switchForceNodeLabel = function() {
@@ -104,8 +113,6 @@ angular.module('sbAdminApp')
         $scope.switchTagGraph = function() {
             $scope.generateGraph($scope.tag_id);
         };
-
-
 
         $scope.generateDownloadLink = function () {
             $("#download_link_dialog").html($rootScope.generateDownloadLinkForSigma( $scope.tagGraphSigma.nodes, $scope.tagGraphSigma.edges, 'tag_view'));
@@ -155,14 +162,12 @@ angular.module('sbAdminApp')
                     $scope.tags = result;
                     if($scope.tags[0])
                         $scope.generateGraph($scope.tag_id);
-                });
-                $scope.$apply();
+                });                
             } else {
                 $scope.selected.start = start;
                 $scope.selected.end = end;
                 // Update sigma filter
                 $scope.filter = {"start": start.getTime(), "end": end.getTime()};
-                $scope.$apply();
             }
         };
 
@@ -173,13 +178,14 @@ angular.module('sbAdminApp')
             });
         };
 
-        $scope.updateTagTable = function () {
-            //$scope.tags = $scope.getTagTable($scope.selected.start.getTime(), $scope.selected.end.getTime(), $scope.tableSizeChoice);
-            var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+ $scope.selected.end.getTime()+"/"+$scope.tableSizeChoice).query().$promise;
-            Tags.then(function (result) {
-                $scope.tags = result;
-            });
-            //$scope.$apply();
+        $scope.updateTagTable = function (sizeChoice) {
+          $scope.tableSizeChoice = sizeChoice;
+          //$scope.tags = $scope.getTagTable($scope.selected.start.getTime(), $scope.selected.end.getTime(), $scope.tableSizeChoice);
+          var Tags = $resource(config.apiUrl + "tags/"+$scope.selected.start.getTime()+"/"+ $scope.selected.end.getTime()+"/"+$scope.tableSizeChoice).query().$promise;
+          Tags.then(function (result) {
+              $scope.tags = result;
+          });
+          //$scope.$apply();
         };
 
         $scope.getDate = function(timestamp) {
@@ -298,35 +304,30 @@ angular.module('sbAdminApp')
             document.getElementById("interactorInformation").className="btn btn-default";
             document.getElementById("interactorFocus").className="btn btn-default";
             document.getElementById("interactorDragNode").className="btn btn-default";
-            document.getElementById("interactorDescriptionLabel").innerHTML = "";
         }
 
         $scope.setInteractorNavigate = function () {
             $scope.clearInteractor();
             $scope.interactor="navigate";
             document.getElementById("interactorNavigate").className="btn btn-primary";
-            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorNavigate").attr("data-title");
         }
 
         $scope.setInteractorInformation = function () {
             $scope.clearInteractor();
             $scope.interactor="information";
             document.getElementById("interactorInformation").className="btn btn-primary";
-            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorInformation").attr("data-title");
         }
 
         $scope.setInteractorFocus = function () {
             $scope.clearInteractor();
             $scope.interactor="focus";
             document.getElementById("interactorFocus").className="btn btn-primary";
-            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorFocus").attr("data-title");
         }
 
         $scope.setInteractorDragNode = function () {
             $scope.clearInteractor();
             $scope.interactor="dragNode";
             document.getElementById("interactorDragNode").className="btn btn-primary";
-            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorDragNode").attr("data-title");
         }
 
         /*** Search Bar Catcher *****/

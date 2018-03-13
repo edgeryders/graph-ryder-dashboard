@@ -27,12 +27,24 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: appConfig,
 
+  	sass: {
+  		options: {
+				sourceMap: false,
+				outputStyle: 'expanded' //'compressed'
+  		},
+  		dist: {
+  			files: {
+  				'<%= yeoman.app %>/styles/style.css': '<%= yeoman.app %>/scss/style.scss'
+  			}
+  		}
+  	},
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
-      bower: {
-        files: ['bower.json'],
-        tasks: ['wiredep']
-      },
+      // bower: {
+      //   files: ['bower.json'],
+      //   tasks: ['wiredep']
+      // },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
@@ -40,10 +52,10 @@ module.exports = function (grunt) {
           livereload: '<%= connect.options.livereload %>'
         }
       },
-      jsTest: {
-        files: ['test/spec/{,*/}*.js'],
-        tasks: ['newer:jshint:test', 'karma']
-      },
+      sass: {
+				files: ['<%= yeoman.app %>/scss/**/*.scss'],
+				tasks: ['sass:dist']
+      },      
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
@@ -86,22 +98,6 @@ module.exports = function (grunt) {
           }
         }
       },
-      test: {
-        options: {
-          port: 9001,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect.static('test'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect.static(appConfig.app)
-            ];
-          }
-        }
-      },
       dist: {
         options: {
           open: true,
@@ -121,12 +117,6 @@ module.exports = function (grunt) {
           'Gruntfile.js',
           '<%= yeoman.app %>/scripts/{,*/}*.js'
         ]
-      },
-      test: {
-        options: {
-          jshintrc: 'test/.jshintrc'
-        },
-        src: ['test/spec/{,*/}*.js']
       }
     },
 
@@ -160,17 +150,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Automatically inject Bower components into the app
-/*    wiredep: {
-      options: {
-        cwd: '<%= yeoman.app %>'
-      },
-      app: {
-        src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//
-      }
-    },
-*/
     // Renames files for browser caching purposes
     filerev: {
       dist: {
@@ -225,6 +204,7 @@ module.exports = function (grunt) {
         }]
       }
     },
+
     uglify: {
       build: {
         files: [{
@@ -237,31 +217,6 @@ module.exports = function (grunt) {
       options: {
         mangle:false
       },
-    },
-    // concat: {
-    //   dist: {}
-    // },
-
-    imagemin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.{png,jpg,jpeg,gif}',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
-
-    svgmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.svg',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
     },
 
     htmlmin: {
@@ -311,21 +266,35 @@ module.exports = function (grunt) {
           dot: true,
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
-          src: [ '**']
-        },{
-
+          src: '*',
+          filter: 'isFile'
+        },
+        {
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '<%= yeoman.dist %>',
+          src: ['js/**', 'scripts/**', 'views/**', 'images/**']
+        },
+        {
           expand:true,
           cwd:'bower_components',
           dest:'<%= yeoman.dist %>/bower_components',
           src:['**']
-        } ,
-
+        },
         {
           expand: true,
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
-        }, {
+        }, 
+        {
+          expand: true,
+          cwd: '.tmp/styles',
+          dest: '<%= yeoman.dist %>/styles',
+          src: ['**/*.css']
+        }, 
+        {
           expand: true,
           cwd: 'bower_components/bootstrap/dist',
           src: 'fonts/*',
@@ -336,7 +305,7 @@ module.exports = function (grunt) {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
-        src: '{,*/}*.css'
+        src: '**/*.css'
       }
     },
 
@@ -349,11 +318,18 @@ module.exports = function (grunt) {
         'copy:styles'
       ],
       dist: [
-        'copy:styles',
-        'imagemin',
-        'svgmin'
+        'copy:styles'
       ]
     },
+
+
+    "git-describe": {
+      options: {
+      },
+      dist: {
+      },
+    },
+
   });
 
 
@@ -364,6 +340,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'sass:dist',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -371,24 +348,29 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve:' + target]);
+  grunt.registerTask('writeRevision', 'Write the git revision to dist', function (target) {
+    grunt.event.once('git-describe', function (rev) {
+        grunt.file.write('dist/REVISION', grunt.template.today('isoUtcDateTime')+'@'+rev.tag);
+    });    
+    grunt.task.run('git-describe');
   });
 
   grunt.registerTask('build', [
+    'sass:dist',
     'clean:dist',
     'concurrent:dist',
     'copy:dist',
     'cssmin',
     'ngAnnotate',
-    'uglify',
-    'htmlmin'
+    'writeRevision'//,
+    // 'uglify', //TODO: fix uglify errors
+    // 'htmlmin' //TODO: fix htmlmin errors
   ]);
 
   grunt.registerTask('default', [
     'newer:jshint',
-    'test',
     'build'
   ]);
+  
+  grunt.registerTask('mkcss', ['sass']);
 };

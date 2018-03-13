@@ -96,13 +96,13 @@ return {
             mod.className = "panel panel-default";
             mod.id = scope.type+"_"+scope.id;
             scope.panelViewCrtZindex =  document.getElementById(scope.parent).style.zIndex;
-            mod.style = "position: absolute; z-index: "+scope.panelViewCrtZindex+"; width: 530px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
+            mod.style = "position: absolute; z-index: "+scope.panelViewCrtZindex+"; width: 560px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
             mod.innerHTML='<div class="panel-heading" ng-mousedown="bringInfoPanelUpward(\''+mod.id+'\')" >'+
                     '        <button type="button" class="close" aria-hidden="true" ng-click="closeInfoPanel(\''+mod.id+'\')" >&times;</button>'+
                     '        <div id="panel-heading-content"><h4 class="modal-title" >Loading...</h4></div>'+
                     '    </div>';
             var footer ='<div id="footer" class="panel-footer">'+
-                    '    <button class="btn btn-default" ng-click="closeInfoPanel(\''+mod.id+'\')" >Close</button>'+
+                    '    <button class="btn btn-primary" ng-click="closeInfoPanel(\''+mod.id+'\')" >Close</button>'+
                     '</div>';
             jQuery("#"+scope.parent).append(mod);
             $("#"+mod.id).draggable({
@@ -122,6 +122,7 @@ return {
                     $compile($("#"+mod.id).find(".panel-body"))(scope);
                     $compile($("#"+mod.id).find(".panel-footer"))(scope);
                     $("#"+mod.id).resizable({maxHeight: 900, maxWidth: 1000, minHeight: 300, minWidth:300, alsoResize: ".tab_"+mod.id});
+                    $('html,body').animate({scrollTop:0},0);
                   }
                 });
               }

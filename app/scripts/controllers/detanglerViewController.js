@@ -863,52 +863,65 @@
          });
 
 
+
          //Jquery handle user sliders
-         $( "#node-label-user-intensity-slider" ).slider({
-             min: 0,
-             max: $scope.nodeUserelThresholdMax-1,
-             value: $scope.nodeUserelThresholdMax-$scope.nodeUserelThreshold ,
-             slide: function( event, ui ) {
-                 $scope.nodeUserelThreshold = $scope.nodeUserelThresholdMax-ui.value;
-                 $scope.$apply();
-             }
+         $("#node-label-user-intensity-slider input").ionRangeSlider({
+           min: 0,
+           max: $scope.nodeUserelThresholdMax-1,
+           from: $scope.nodeUserelThresholdMax-$scope.nodeUserelThreshold,
+           hide_min_max: true,
+           hide_from_to: true,
+           grid: false,
+           onChange: function(val) {
+             $scope.nodeUserelThreshold = $scope.nodeUserelThresholdMax-val.from;
+             $scope.$apply();
+           }
          });
+    
 
          //Jquery handle tag sliders
-         $( "#node-label-tag-intensity-slider" ).slider({
-             min: 0,
-             max: $scope.nodeTagelThresholdMax-1,
-             value: $scope.nodeTagelThresholdMax-$scope.nodeTagelThreshold ,
-             slide: function( event, ui ) {
-                 $scope.nodeTagelThreshold = $scope.nodeTagelThresholdMax-ui.value;
-                 $scope.$apply();
-             }
+         $("#node-label-tag-intensity-slider input").ionRangeSlider({
+           min: 0,
+           max: $scope.nodeTagelThresholdMax-1,
+           from: $scope.nodeTagelThresholdMax-$scope.nodeTagelThreshold,
+           hide_min_max: true,
+           hide_from_to: true,
+           grid: false,
+           onChange: function(val) {
+             $scope.nodeTagelThreshold = $scope.nodeTagelThresholdMax-val.from;
+             $scope.$apply();
+           }
          });
 
          //Jquery handle post sliders
-         $( "#node-label-post-intensity-slider" ).slider({
-             min: 0,
-             max: $scope.nodePostelThresholdMax-1,
-             value: $scope.nodePostelThresholdMax-$scope.nodePostelThreshold ,
-             slide: function( event, ui ) {
-                 $scope.nodePostelThreshold = $scope.nodePostelThresholdMax-ui.value;
-                 $scope.$apply();
-             }
+         $("#node-label-post-intensity-slider input").ionRangeSlider({
+           min: 0,
+           max: $scope.nodePostelThresholdMax-1,
+           from: $scope.nodePostelThresholdMax-$scope.nodePostelThreshold,
+           hide_min_max: true,
+           hide_from_to: true,
+           grid: false,
+           onChange: function(val) {
+             $scope.nodePostelThreshold = $scope.nodePostelThresholdMax-val.from;
+             $scope.$apply();
+           }
          });
 
-         $( "#coocurrence-intensity-slider-range" ).slider({
-             range: true,
-             min: 1,
-             max: $scope.filter_occurence_tag_max,
-             values: [ $scope.filter_occurence_tag_min, $scope.filter_occurence_tag_max ],
-             slide: function( event, ui ) {
-                 $scope.filter_occurence_tag_min = ui.values[0];
-                 $scope.filter_occurence_tag_max = ui.values[1];
-                 $scope.searchWhatToDisplay();
-             }
+         $("#coocurrence-intensity-slider-range input").ionRangeSlider({
+           type: "double",
+           min: 1,
+           max: $scope.filter_occurence_tag_max,
+           from: $scope.filter_occurence_tag_min,
+           to: $scope.filter_occurence_tag_max,
+           hide_min_max: true,
+           hide_from_to: true,
+           grid: false,
+           onChange: function(val) {
+             $scope.filter_occurence_tag_min = val.from;
+             $scope.filter_occurence_tag_max = val.to;
+             $scope.searchWhatToDisplay();
+           }
          });
-
-
 
          /*** Graphes ***/
 
@@ -968,14 +981,12 @@
              document.getElementById("interactorUserDragNode").className="btn btn-default";
              document.getElementById("interactorUserLasso").className="btn btn-default";
              document.getElementById("interactorUserInfo").className="btn btn-default";
-             document.getElementById("interactorUserDescriptionLabel").innerHTML = "";
          }
 
          $scope.setInteractorUserNavigate = function () {
              $scope.clearUserInteractor();
              $scope.userinteractor="navigate";
              document.getElementById("interactorUserNavigate").className="btn btn-primary";
-             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserNavigate").attr("data-title");
          }
 
 
@@ -983,20 +994,17 @@
              $scope.clearUserInteractor();
              $scope.userinteractor="dragNode";
              document.getElementById("interactorUserDragNode").className="btn btn-primary";
-             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserDragNode").attr("data-title");
          }
 
          $scope.setInteractorUserLasso = function () {
              $scope.clearUserInteractor();
              $scope.userinteractor="lasso";
              document.getElementById("interactorUserLasso").className="btn btn-primary";
-             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserLasso").attr("data-title");
          }
          $scope.setInteractorUserInfo = function () {
              $scope.clearUserInteractor();
              $scope.userinteractor="information";
              document.getElementById("interactorUserInfo").className="btn btn-primary";
-             document.getElementById("interactorUserDescriptionLabel").innerHTML = $("#interactorUserInfo").attr("data-title");
          }
 
 
@@ -1030,14 +1038,12 @@
              document.getElementById("interactorTagDragNode").className="btn btn-default";
              document.getElementById("interactorTagLasso").className="btn btn-default";
              document.getElementById("interactorTagInfo").className="btn btn-default";
-             document.getElementById("interactorTagDescriptionLabel").innerHTML = "";
          }
 
          $scope.setInteractorTagNavigate = function () {
              $scope.clearTagInteractor();
              $scope.taginteractor="navigate";
              document.getElementById("interactorTagNavigate").className="btn btn-primary";
-             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagNavigate").attr("data-title");
          }
 
 
@@ -1045,21 +1051,18 @@
              $scope.clearTagInteractor();
              $scope.taginteractor="dragNode";
              document.getElementById("interactorTagDragNode").className="btn btn-primary";
-             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagDragNode").attr("data-title");
          }
 
          $scope.setInteractorTagLasso = function () {
              $scope.clearTagInteractor();
              $scope.taginteractor="lasso";
              document.getElementById("interactorTagLasso").className="btn btn-primary";
-             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagLasso").attr("data-title");
          }
 
          $scope.setInteractorTagInfo = function () {
              $scope.clearTagInteractor();
              $scope.taginteractor="information";
              document.getElementById("interactorTagInfo").className="btn btn-primary";
-             document.getElementById("interactorTagDescriptionLabel").innerHTML = $("#interactorTagInfo").attr("data-title");
          }
 
          $scope.clearTagVennInteractor = function() {
@@ -1086,14 +1089,12 @@
              document.getElementById("interactorPostDragNode").className="btn btn-default";
              document.getElementById("interactorPostLasso").className="btn btn-default";
              document.getElementById("interactorPostInfo").className="btn btn-default";
-             document.getElementById("interactorPostDescriptionLabel").innerHTML = "";
          }
 
          $scope.setInteractorPostNavigate = function () {
              $scope.clearPostInteractor();
              $scope.postinteractor="navigate";
              document.getElementById("interactorPostNavigate").className="btn btn-primary";
-             document.getElementById("interactorPostDescriptionLabel").innerHTML = $("#interactorPostNavigate").attr("data-title");
          }
 
 
@@ -1101,21 +1102,18 @@
              $scope.clearPostInteractor();
              $scope.postinteractor="dragNode";
              document.getElementById("interactorPostDragNode").className="btn btn-primary";
-             document.getElementById("interactorPostDescriptionLabel").innerHTML = $("#interactorPostDragNode").attr("data-title");
          }
 
          $scope.setInteractorPostLasso = function () {
              $scope.clearPostInteractor();
              $scope.postinteractor="lasso";
              document.getElementById("interactorPostLasso").className="btn btn-primary";
-             document.getElementById("interactorPostDescriptionLabel").innerHTML = $("#interactorPostLasso").attr("data-title");
          }
 
          $scope.setInteractorPostInfo = function () {
              $scope.clearPostInteractor();
              $scope.postinteractor="information";
              document.getElementById("interactorPostInfo").className="btn btn-primary";
-             document.getElementById("interactorPostDescriptionLabel").innerHTML = $("#interactorTagInfo").attr("data-title");
          }
 
          $scope.clearPostVennInteractor = function() {

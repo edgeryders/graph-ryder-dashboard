@@ -1,0 +1,116 @@
+<div class="">
+  <div class="p-3" id="settings" role="tabpanel">
+    <h6>API <i class="fa fa-refresh fa-fw" ng-click="refresh()"></i></h6>
+    
+    <div class="alert alert-danger" ng-show="style.version == danger" >
+        Data is more than one month old.
+    </div>
+    
+    <div class="text-uppercase mb-1 mt-2">
+      <small><b>URL</b></small>
+    </div>
+    <small class="text-muted"> {{api.url}}</small>
+
+    <div class="text-uppercase mb-1 mt-2">
+      <small><b>Status</b></small>
+    </div>
+    <small ng-class="className.status">{{api.status}}</small>
+
+    <div class="text-uppercase mb-1 mt-2">
+      <small><b>Version</b></small>
+    </div>
+    <small class="text-muted"><span ng-class="className.version">{{api.version}}</span> (based on latest timestamp)</small>
+
+    <div class="text-uppercase mb-1 mt-4">
+      <small><b>RAM Load</b></small>
+    </div>
+    <div class="progress progress-xs">
+      <div class="progress-bar" ng-class="className.ram" role="progressbar" style="width: {{api.ramLoad}}%" aria-valuenow="{{api.ramLoad}}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <small class="text-muted">{{api.ramLoad}} %</small>
+
+    <div class="text-uppercase mb-1 mt-2">
+      <small><b>Disk Usage</b></small>
+    </div>
+    <div class="progress progress-xs">
+      <div class="progress-bar"  ng-class="className.disk" role="progressbar" style="width: {{api.diskLoad}}%" aria-valuenow="{api.diskLoad}}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <small class="text-muted">{{api.diskLoad}} %</small>
+    
+    <hr/>
+
+    <h6>Generate Graph</h6>
+    <form ng-submit="regenerate()">
+      <div class="alert alert-info" ng-show="regen.generated == 'load'" >
+          Loading...
+      </div>
+      <div class="alert alert-success" ng-show="regen.generated == 'done'" >
+          <button type="button" class="close" ng-click="regen.generated = false" aria-hidden="true">&times;</button>
+          Graph have been generated.
+      </div>
+      <div class="alert alert-danger" ng-show="regen.generated == 'error'" >
+          <button type="button" class="close" ng-click="regen.generated = false" aria-hidden="true">&times;</button>
+          Fail to generate graph.
+      </div>
+      
+      <div class="aside-options">
+        <div class="clearfix mt-4">
+                  
+          <small><b>Complete Graph</b></small>
+          <label class="switch switch-text switch-pill switch-success switch-sm float-right">
+            <input type="checkbox" class="switch-input" ng-model="regen.complete">
+            <span class="switch-label" data-on="On" data-off="Off"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </div>
+        <!-- <div>
+          <small class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</small>
+        </div> -->
+      </div>
+
+      <div class="aside-options">
+        <div class="clearfix mt-3">
+          <small><b>UsersToUsers Graph</b></small>
+          <label class="switch switch-text switch-pill switch-success switch-sm float-right">
+            <input type="checkbox" class="switch-input" ng-model="regen.users">
+            <span class="switch-label" data-on="On" data-off="Off"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </div>
+        <!-- <div>
+          <small class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</small>
+        </div> -->
+      </div>
+
+      <div class="aside-options">
+        <div class="clearfix mt-3">
+          <small><b>CommentsAndPosts Graph</b></small>
+          <label class="switch switch-text switch-pill switch-success switch-sm float-right">
+            <input type="checkbox" class="switch-input" ng-model="regen.commentsAndPosts">
+            <span class="switch-label" data-on="On" data-off="Off"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="aside-options">
+        <div class="clearfix mt-3">
+          <small><b>TagToTag Graph</b></small>
+          <label class="switch switch-text switch-pill switch-success switch-sm float-right">
+            <input type="checkbox" class="switch-input" ng-model="regen.TagToTag">
+            <span class="switch-label" data-on="On" data-off="Off"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </div>
+      </div>
+    
+      <div class="clearfix mt-3">
+        <button type="submit" class="btn btn-sm btn-primary">Regenerate Graphs</button>            
+      </div>
+    </form>
+
+    <!-- hr/> 
+      <button class="btn btn-sm btn-primary" ng-click="UpdateFromEdgeryders()" >Update from Edgeryders</button>(use with moderation as it can takes several minutes)
+    <br-->
+  </div>
+</div>

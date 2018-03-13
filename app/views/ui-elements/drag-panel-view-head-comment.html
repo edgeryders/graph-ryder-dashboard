@@ -1,8 +1,10 @@
 <!-- panel for comment -->
 <div class="panel-title">
-    <h4 class="modal-title" ><button class="btn btn-warning" data-click-id="{{::content.comment_id}}" ng-click="openInfoPanel('comment', $event)"><i class="fa fa-comments-o" data-click-id="{{::content.comment_id}}" aria-hidden="true"></i></button>&nbsp;&nbsp;{{::content.title}}</h4>
-    {{ getDate(content.timestamp) }} &ndash; <button class="btn btn-primary btn-sm" data-click-id="{{::content.author.user_id}}" ng-click="openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{::content.author.user_id}}" aria-hidden="true"></i> </button> {{::content.author.user_name}}<br>
-    <button class="btn btn-success btn-sm" data-click-id="{{::content.post.post_id}}" ng-click="openInfoPanel('post', $event)"><i class="fa fa-commenting-o" data-click-id="{{::content.post.post_id}}" aria-hidden="true"></i></button> {{::content.post.post_title}}<br>
+    <h4 class="modal-title" >
+      <button class="btn btn-transparent" data-click-id="{{::content.comment_id}}" ng-click="openInfoPanel('comment', $event)"><i class="fa fa-comments-o" data-click-id="{{::content.comment_id}}" aria-hidden="true"></i></button>&nbsp;&nbsp;{{::content.title}}
+    </h4>
+    {{ getDate(content.timestamp) }} &ndash; <button class="btn btn-transparent btn-sm" data-click-id="{{::content.author.user_id}}" ng-click="openInfoPanel('user', $event)"><i class="fa fa-user" data-click-id="{{::content.author.user_id}}" aria-hidden="true"></i> </button> {{::content.author.user_name}}<br>
+    <button class="btn btn-transparent btn-sm" data-click-id="{{::content.post.post_id}}" ng-click="openInfoPanel('post', $event)"><i class="fa fa-commenting-o" data-click-id="{{::content.post.post_id}}" aria-hidden="true"></i></button> {{::content.post.post_title}}<br>
     <a href="{{::content.url}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i> Original content on Edgeryders</a>
 </div>
 <!-- /.panel-content -->

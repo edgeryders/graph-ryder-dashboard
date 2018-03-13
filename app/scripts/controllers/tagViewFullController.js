@@ -36,32 +36,39 @@ angular.module('sbAdminApp')
             }
         });
 
-    $( "#node-label-intensity-slider" ).slider({
-      min: 0,
-      max: $scope.nodelabelthreshold-1,
-      value: 10-$scope.nodelabelthreshold,
-      slide: function( event, ui ) {
-        $scope.nodelabelthreshold = 10-ui.value;
-        $scope.$apply();
-      }
-    });
+        $("#node-label-intensity-slider input").ionRangeSlider({
+          min: 0,
+          max: $scope.nodelabelthreshold-1,
+          from: 0,
+          hide_min_max: true,
+          hide_from_to: true,
+          grid: false,
+          onChange: function(val) {
+            $scope.nodelabelthreshold = 10-val.from;
+            $scope.$apply();
+          }
+        });
+    
+        $("#cooccurrence-intensity-slider-range input").ionRangeSlider({
+          type: "double",
+          min: 1,
+          max: $scope.filter_occurrence_max,
+          from: $scope.filter_occurrence_min,
+          to: $scope.filter_occurrence_max,
+          hide_min_max: true,
+          hide_from_to: true,
+          grid: false,
+          onChange: function(val) {
+            $scope.filter_occurrence_min = val.from;
+            $scope.filter_occurrence_max = val.to;
+            $scope.$apply();
+          }
+        });
 
-    $( "#cooccurrence-intensity-slider-range" ).slider({
-      range: true,
-      min: 1,
-      max: $scope.filter_occurrence_max,
-      values: [ $scope.filter_occurrence_min, $scope.filter_occurrence_max ],
-      slide: function( event, ui ) {
-        $scope.filter_occurrence_min = ui.values[0];
-        $scope.filter_occurrence_max = ui.values[1];
-        $scope.$apply();
-      }
-    });
-
-    $("#cooccurrence-draw-graph-spinner").spinner({
-        min: 1,
-        value: $scope.filter_occurrence_request
-    });
+        $("#cooccurrence-draw-graph-spinner").spinner({
+            min: 1,
+            value: $scope.filter_occurrence_request
+        });
 
         $scope.switchForceNodeLabel = function() {
             if ($scope.tagnl) {
@@ -142,13 +149,11 @@ angular.module('sbAdminApp')
                     if($scope.tags[0])
                         $scope.generateGraph($scope.tag_id);
                 });
-                $scope.$apply();
             } else {
                 $scope.selected.start = start;
                 $scope.selected.end = end;
                 // Update sigma filter
                 $scope.filter = {"start": start.getTime(), "end": end.getTime()};
-                $scope.$apply();
             }
         };
 
@@ -227,35 +232,30 @@ angular.module('sbAdminApp')
             document.getElementById("interactorInformation").className="btn btn-default";
             document.getElementById("interactorNeighbourhood").className="btn btn-default";
             document.getElementById("interactorDragNode").className="btn btn-default";
-            document.getElementById("interactorDescriptionLabel").innerHTML = "";
         }
 
         $scope.setInteractorNavigate = function () {
             $scope.clearInteractor();
             $scope.interactor="navigate";
             document.getElementById("interactorNavigate").className="btn btn-primary";
-            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorNavigate").attr("data-title");
         }
 
         $scope.setInteractorInformation = function () {
             $scope.clearInteractor();
             $scope.interactor="information";
             document.getElementById("interactorInformation").className="btn btn-primary";
-            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorInformation").attr("data-title");
         }
 
         $scope.setInteractorNeighbourhood = function () {
             $scope.clearInteractor();
             $scope.interactor="neighbourhood";
             document.getElementById("interactorNeighbourhood").className="btn btn-primary";
-            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorNeighbourhood").attr("data-title");
         }
 
         $scope.setInteractorDragNode = function () {
             $scope.clearInteractor();
             $scope.interactor="dragNode";
             document.getElementById("interactorDragNode").className="btn btn-primary";
-            document.getElementById("interactorDescriptionLabel").innerHTML = $("#interactorDragNode").attr("data-title");
         }
 
         $scope.cleanRefreshSigmaDecorator = function () {

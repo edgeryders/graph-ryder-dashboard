@@ -1,110 +1,56 @@
-<div class="navbar-default sidebar" role="navigation">
-    <div class="sidebar-nav navbar-collapse">
-        <ul class="nav in" id="side-menu">
-          <general-search
-            template-url="scripts/directives/search/sidebar-search.html"
-            sugest = "suggestions"
-            >
-          </general-search>
-            <li ui-sref-active="active">
-                <a ui-sref="dashboard.globalView"><i class="fa fa-globe fa-fw"></i> Conversation</a>
-            </li>
-            <li ui-sref-active="active">
-                <a ui-sref="dashboard.doi"><i class="fa fa-dashboard fa-fw"></i> Degree of Interest</a>
-            </li>
-            <!--li ui-sref-active="active">
-                <a ui-sref="dashboard.multiView"><i class="fa fa-clone fa-fw"></i> Multi Views</a>
-            </li-->
-            <li ui-sref-active="active">
-                <a ui-sref="dashboard.tagView"><i class="fa fa-tag fa-fw"></i> Code View</a>
-            </li>
-            <li ui-sref-active="active">
-                <a ui-sref="dashboard.tagViewFull"><i class="fa fa-sitemap fa-fw"></i> Code View Full</a>
-            </li>
-            <li ui-sref-active="active">
-                <a ui-sref="dashboard.detanglerView"><i class="fa fa-exchange fa-fw"></i> Detangler View</a>
-            </li>
-            <li ui-sref-active="active">
-                <a ui-sref="dashboard.settings"><i class="fa fa-cogs fa-fw"></i> Settings</a>
-            </li>
-            <!--
-            <li ui-sref-active="active">
-                <a ui-sref="dashboard.form"><i class="fa fa-edit fa-fw"></i> Forms</a>
-            </li>
-            <li ng-class="{active: collapseVar==1}">{{dropDown}}
-                <a href="" ng-click="check(1)"><i class="fa fa-wrench fa-fw"></i> UI Elements<span
-                        class="fa arrow"></span></a>
-                <ul class="nav nav-second-level" collapse="collapseVar!=1">
-                    <li ui-sref-active="active">
-                        <a ui-sref="dashboard.panels-wells">Panels and Wells</a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="dashboard.buttons">Buttons</a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="dashboard.notifications">Notifications</a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="dashboard.typography">Typography</a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="dashboard.icons"> Icons</a>
-                    </li>
-                    <li ui-sref-active="active">
-                        <a ui-sref="dashboard.grid">Grid</a>
-                    </li>
-                </ul>
-                &lt;!&ndash; /.nav-second-level &ndash;&gt;
-            </li>
-            <li ng-class="{active: collapseVar==2}">
-                <a href="" ng-click="check(2)"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span
-                        class="fa arrow"></span></a>
-                <ul class="nav nav-second-level" collapse="collapseVar!=2">
-                    <li>
-                        <a href="">Second Level Item</a>
-                    </li>
-                    <li>
-                        <a href="">Second Level Item</a>
-                    </li>
-                    <li ng-init="third=!third" ng-class="{active: multiCollapseVar==3}">
-                        <a href="" ng-click="multiCheck(3)">Third Level <span class="fa arrow"></span></a>
-                        <ul class="nav nav-third-level" collapse="multiCollapseVar!=3">
-                            <li>
-                                <a href="">Third Level Item</a>
-                            </li>
-                            <li>
-                                <a href="">Third Level Item</a>
-                            </li>
-                            <li>
-                                <a href="">Third Level Item</a>
-                            </li>
-                            <li>
-                                <a href="">Third Level Item</a>
-                            </li>
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <ul class="nav">
+      
+      <li class="nav-item">
+        <a class="nav-link" ui-sref-active="active" ui-sref="dashboard.globalView">
+          <i class="icon-globe"></i> Conversation
+        </a>
+      </li>
 
-                        </ul>
-                        &lt;!&ndash; /.nav-third-level &ndash;&gt;
-                    </li>
-                </ul>
-                &lt;!&ndash; /.nav-second-level &ndash;&gt;
-            </li>
-            <li ng-class="{active:collapseVar==4}">
-                <a href="" ng-click="check(4)"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span
-                        class="fa arrow"></span></a>
-                <ul class="nav nav-second-level" collapse="collapseVar!=4">
-                    <li ng-class="{active: selectedMenu=='blank'}">
-                        <a ui-sref="dashboard.blank" ng-click="selectedMenu='blank'">Blank Page</a>
-                    </li>
-                    <li>
-                        <a ui-sref="login">Login Page</a>
-                    </li>
-                </ul>
-                &lt;!&ndash; /.nav-second-level &ndash;&gt;
-            </li>-->
-            <li ui-sref-active="active">
-                <a ui-sref="dashboard.about"><i class="fa fa-question-circle fa-fw"></i> About</a>
-            </li>
-        </ul>
-    </div>
-    <!-- /.sidebar-collapse -->
+      <li class="nav-item">
+        <a class="nav-link" ui-sref-active="active" ui-sref="dashboard.doi">
+          <i class="icon-speedometer"></i> Degree of Interest
+        </a>
+      </li>
+
+      <!--li class="nav-item">
+        <a class="nav-link" ui-sref-active="active" ui-sref="dashboard.multiView">
+          <i class="icon-layers"></i> Multi Views
+        </a>
+      </li-->
+
+      <li class="nav-item">
+        <a class="nav-link" ui-sref-active="active" ui-sref="dashboard.tagView">
+          <i class="icon-tag"></i> Code View
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" ui-sref-active="active" ui-sref="dashboard.tagViewFull">
+          <i class="icon-layers"></i> Code View Full
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" ui-sref-active="active" ui-sref="dashboard.detanglerView">
+          <i class="icon-refresh"></i> Detangler View
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" ui-sref-active="active" ui-sref="dashboard.elementsNotTagged">
+          <i class="icon-eye"></i> Elements not tagged
+        </a>
+      </li>
+
+      <li class="nav-item mt-auto">
+        <a class="nav-link nav-link-about" ui-sref="dashboard.about">
+          <i class="icon-question"></i> About
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+  <button class="sidebar-minimizer brand-minimizer" type="button" ng-click="brandMinimize()"></button>
 </div>
