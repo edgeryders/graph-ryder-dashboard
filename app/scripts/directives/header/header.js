@@ -14,7 +14,7 @@ angular.module('sbAdminApp')
         replace: true,
         scope: {
         },
-        controller: ['$scope', '$rootScope', 'resizeBroadcast', function HeaderController($scope, $rootScope, resizeBroadcast) {
+        controller: ['$scope', '$rootScope', 'resizeBroadcast', 'hotkeys', function HeaderController($scope, $rootScope, resizeBroadcast, hotkeys) {
 
           $scope.toggleMobileSidebar = function() {
             $('body').toggleClass('sidebar-mobile-show');
@@ -26,6 +26,17 @@ angular.module('sbAdminApp')
             $rootScope.$broadcast('aside-menu:show');
             resizeBroadcast();
           };
+
+          hotkeys.add({
+            combo: 'ctrl+0',
+            description: 'Open Settings',
+            callback: function() { $scope.toggleAside(); }
+          });
+          hotkeys.add({
+            combo: 'ctrl+s',
+            description: 'Focus on Search Field',
+            callback: function() { angular.element('#header-search-field').focus() }
+          });
 
         }],      
     	}

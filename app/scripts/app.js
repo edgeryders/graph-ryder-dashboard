@@ -24,7 +24,8 @@ angular
     'ui.bootstrap',
     'angular-loading-bar',
     'ngSanitize',
-    'ngTable'
+    'ngTable',
+    'cfp.hotkeys'
   ])
   .constant('config', conf)
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider', function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
@@ -230,5 +231,6 @@ angular
                 })
             }
         }
-    })
+    });
+
   }]);

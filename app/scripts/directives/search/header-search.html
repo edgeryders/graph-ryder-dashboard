@@ -2,7 +2,7 @@
   <div class="form-group custom-search-form">
     <form ng-submit="submit()" >
       <div class="input-group">
-        <input type="text" class="form-control form-control-sm" 
+        <input type="text" id="header-search-field" class="form-control form-control-sm" 
             placeholder="Search..."
             uib-typeahead="sugess as sugess.label for sugess in suggestions | filter:{label:$viewValue} | limitTo:20"
             ng-model="search" 
