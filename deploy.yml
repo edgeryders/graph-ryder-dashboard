@@ -10,6 +10,7 @@
   vars:
     base_path: "~"
     release_path: "releases"
+    api_url: "http://localhost:5000/"
 
   tasks:
 
@@ -28,6 +29,11 @@
       src: dist/
       dest: "{{ base_path }}/{{ release_path }}/{{ timestamp.stdout }}"
 
+  - name: Copy configuration to remote
+    template:
+      src: config.j2
+      dest: "{{ base_path }}/{{ release_path }}/{{ timestamp.stdout }}/config.js"
+    
   # Link the current directory and restart
   - name: Create the new current link
     shell: ln -s {{ base_path }}/{{ release_path }}/{{ timestamp.stdout }} {{ base_path }}/{{ release_path }}/current
