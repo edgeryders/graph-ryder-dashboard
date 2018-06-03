@@ -294,16 +294,19 @@ html [type="button"],
   }
 }
 
+.ui-dialog,
 .panel {
   background-color:$gray-600;
   color:$body-color;
   border: 1px solid $gray-900;
 
+  .ui-dialog-titlebar,
   .panel-heading {
       padding: 10px 15px;
       border-bottom: 1px solid $gray-900;
   }
-
+  
+  .ui-dialog-titlebar-close,
   button.close {
       -webkit-appearance: none;
       padding: 0;
@@ -323,6 +326,7 @@ html [type="button"],
       opacity: .2;
   }
 
+  .ui-dialog-content,
   .panel-body {
     padding: 15px;
   }
@@ -332,6 +336,37 @@ html [type="button"],
       border-top: 1px solid $gray-900;
   } 
    
+}
+
+.ui-dialog {
+  .ui-dialog-titlebar {
+    position:relative;
+  }
+  .ui-dialog-titlebar-close {
+      position: absolute;
+      right: .3em;
+      top: 50%;
+      width: 20px;
+      margin: -10px 0 0 0;
+      padding: 1px;
+      height: 20px;
+      font-size:0;
+  }
+  .ui-button-icon-only {
+    .ui-icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-top: -12px;
+          margin-left: -8px;
+          &:before {
+            content: "\00d7";
+            display: block;
+            font-size: 18px;
+            font-weight:bold;
+          }
+    } 
+  } 
 }
 
 .dropdown-menu {

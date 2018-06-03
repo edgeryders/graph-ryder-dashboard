@@ -17672,17 +17672,24 @@ html [type="button"],
   background-color: transparent;
 }
 
+.ui-dialog,
 .panel {
   background-color: #444444;
   color: #f0f3f5;
   border: 1px solid #151b1e;
 }
 
+.ui-dialog .ui-dialog-titlebar,
+.ui-dialog .panel-heading,
+.panel .ui-dialog-titlebar,
 .panel .panel-heading {
   padding: 10px 15px;
   border-bottom: 1px solid #151b1e;
 }
 
+.ui-dialog .ui-dialog-titlebar-close,
+.ui-dialog button.close,
+.panel .ui-dialog-titlebar-close,
 .panel button.close {
   -webkit-appearance: none;
   padding: 0;
@@ -17691,6 +17698,7 @@ html [type="button"],
   border: 0;
 }
 
+.ui-dialog .close,
 .panel .close {
   float: right;
   font-size: 21px;
@@ -17702,13 +17710,47 @@ html [type="button"],
   opacity: .2;
 }
 
+.ui-dialog .ui-dialog-content,
+.ui-dialog .panel-body,
+.panel .ui-dialog-content,
 .panel .panel-body {
   padding: 15px;
 }
 
+.ui-dialog .panel-footer,
 .panel .panel-footer {
   padding: 10px 15px;
   border-top: 1px solid #151b1e;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+  position: relative;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+  position: absolute;
+  right: .3em;
+  top: 50%;
+  width: 20px;
+  margin: -10px 0 0 0;
+  padding: 1px;
+  height: 20px;
+  font-size: 0;
+}
+
+.ui-dialog .ui-button-icon-only .ui-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -12px;
+  margin-left: -8px;
+}
+
+.ui-dialog .ui-button-icon-only .ui-icon:before {
+  content: "\00d7";
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .dropdown-menu {
