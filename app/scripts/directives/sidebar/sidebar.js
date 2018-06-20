@@ -53,28 +53,28 @@ angular.module('sbAdminApp')
           description: 'Open Conversation',
           callback: function() { navigateTo('globalView'); }
         });
+        // hotkeys.add({
+        //   combo: 'ctrl+6',
+        //   description: 'Open Degree of Interest',
+        //   callback: function() { navigateTo('doi'); }
+        // });
         hotkeys.add({
           combo: 'ctrl+2',
-          description: 'Open Degree of Interest',
-          callback: function() { navigateTo('doi'); }
-        });
-        hotkeys.add({
-          combo: 'ctrl+3',
           description: 'Open Code View',
           callback: function() { navigateTo('tagView'); }
         });
         hotkeys.add({
-          combo: 'ctrl+4',
+          combo: 'ctrl+3',
           description: 'Open Code View Full',
           callback: function() { navigateTo('tagViewFull'); }
         });
         hotkeys.add({
-          combo: 'ctrl+5',
+          combo: 'ctrl+4',
           description: 'Open Detangler View',
           callback: function() { navigateTo('detanglerView'); }
         });
         hotkeys.add({
-          combo: 'ctrl+6',
+          combo: 'ctrl+5',
           description: 'Open Elements not Tagged',
           callback: function() { navigateTo('elementsNotTagged'); }
         });

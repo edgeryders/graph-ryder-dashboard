@@ -13,7 +13,7 @@
   <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
   <div class="row">
     <div class="col-lg-8 col-md-12">
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-12">
           <div class="card bg-gray-800">
             <div class="card-body">
@@ -36,9 +36,7 @@
             </div>
           </div>
         </div>
-        <!--/.col-->
-      </div>
-      <!--/.row-->
+      </div> -->
       <div class="row">
         <div class="col">
             <div class="card bg-gray-800">
@@ -121,8 +119,8 @@
             <tbody>
               <tr ng-repeat="elem in content" >
                 <td>
-                    <a ng-show="elem.entity_type=='comment'" class="btn btn-warning" ng-click="openInfoPanel('comment', elem.id)" >{{ elem.label }}</a>
-                    <a ng-show="elem.entity_type=='post'" class="btn btn-success" ng-click="openInfoPanel('post', elem.id)" >{{ elem.label }}</a>
+                    <a ng-show="elem.entity_type=='comment'" class="btn btn-warning" ng-click="openInfoPanel('comment', elem.id)" >{{ elem.label | limitTo : 30 }}{{elem.label.length > 30 ? '...' : ''}}</a>
+                    <a ng-show="elem.entity_type=='post'" class="btn btn-success" ng-click="openInfoPanel('post', elem.id)" >{{ elem.label | limitTo : 30  }}{{elem.label.length > 30 ? '...' : ''}}</a>
                 </td>
                 <td>{{ getDate(elem.timestamp) }}</td>
                 <td><a ng-click="openInfoPanel('user', elem.user_id)">{{ elem.user_label }}</a></td>

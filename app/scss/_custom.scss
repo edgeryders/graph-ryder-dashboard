@@ -292,6 +292,13 @@ html [type="button"],
   &.btn-transparent {
     background-color:transparent;    
   }
+  &.btn-warning {
+    color:$gray-900 !important;    
+  }
+  &.btn-success {
+    color:$gray-900 !important;
+  }
+  
 }
 
 .ui-dialog,
