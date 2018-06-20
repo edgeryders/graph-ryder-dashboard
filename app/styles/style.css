@@ -17672,6 +17672,14 @@ html [type="button"],
   background-color: transparent;
 }
 
+.btn.btn-warning {
+  color: #151b1e !important;
+}
+
+.btn.btn-success {
+  color: #151b1e !important;
+}
+
 .ui-dialog,
 .panel {
   background-color: #444444;
