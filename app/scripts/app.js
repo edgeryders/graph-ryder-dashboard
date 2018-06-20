@@ -1,4 +1,14 @@
 'use strict';
+
+var conf = {
+    apiUrl: 'http://localhost:5000/'
+};
+
+// Import variables if present (from env.js)
+if(window){  
+  Object.assign(conf, window.__config);
+}
+
 /**
  * @ngdoc overview
  * @name sbAdminApp
@@ -13,18 +23,19 @@ angular
     'ui.router',
     'ui.bootstrap',
     'angular-loading-bar',
-    'ngSanitize'
+    'ngSanitize',
+    'ngTable',
+    'cfp.hotkeys'
   ])
-  .constant('config', {
-        apiUrl: 'http://164.132.58.138:5000/'
-    })
-  .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
+  .constant('config', conf)
+  .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider', function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
 
     $ocLazyLoadProvider.config({
       debug:false,
       events:true
     });
 
+        
     $urlRouterProvider.otherwise('/dashboard/globalView');
 
     $stateProvider
@@ -37,7 +48,9 @@ angular
               var prom1 = $ocLazyLoad.load({
                   name: 'sbAdminApp',
                   files: [
+                      'scripts/services.js',
                       'scripts/directives/header/header.js',
+                      'scripts/directives/settings/settings.js',
                       'scripts/directives/header/header-notification/header-notification.js',
                       'scripts/directives/sidebar/sidebar.js',
                       'scripts/directives/search/search_directive.js',
@@ -77,7 +90,7 @@ angular
               });
 
               var promArray = [prom1, prom2, prom3, prom4, prom5, prom6, prom7];
-              return $q.all(promArray);
+              return $q.all(promArray)
           }
         }
     })
@@ -168,22 +181,6 @@ angular
             }
         }
     })
-    .state('dashboard.settings',{
-        url:'/settings',
-        controller: 'SettingsCtrl',
-        templateUrl:'views/dashboard/settings.html',
-        resolve: {
-            loadMyFiles:function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name:'sbAdminApp',
-                    files:[
-                        'scripts/controllers/main.js',
-                        'scripts/controllers/settingsController.js'
-                    ]
-                })
-            }
-        }
-    })
     .state('dashboard.about',{
         url:'/about',
         controller: 'AboutCtrl',
@@ -218,4 +215,22 @@ angular
             }
         }
     })
+    .state('dashboard.elementsNotTagged',{
+        url:'/elementsNotTagged',
+        controller: 'ElementsNotTaggedCtrl',
+        templateUrl:'views/dashboard/elements-not-tagged.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/elementsNotTaggedController.js',
+                        'scripts/controllers/modalInstanceController.js'
+                    ]
+                })
+            }
+        }
+    });
+
   }]);

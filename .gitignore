@@ -5,3 +5,7 @@ dist
 .sass-cache
 bower_components
 .idea
+app/styles
+app/config.js
+deploy.retry
+deploy-to-server.sh

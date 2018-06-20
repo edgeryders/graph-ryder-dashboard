@@ -1,0 +1,32 @@
+<div class="animated fadeIn">
+  <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
+  <div class="row">
+    <div class="col">
+        <uib-tabset>
+            
+            <uib-tab index="0" heading="Posts ({{content.posts.length}})" disable="content.posts.length == 0">
+              <table ng-table="postsTable" class="table table-dark table-striped">
+                <tr ng-repeat="row in $data">
+                  <td data-title="'Name'" >{{row.label}}</td>
+                  <td data-title="'Age'" >{{ getDate(row.timestamp) }}</td>
+                  <td data-title="''"><button data-click-id="{{row.post_id}}" class="btn btn-primary btn-sm" ng-click="openInfoPanel('post', row.post_id)" ><i class="fa fa-search" data-click-id="{{row.post_id}}" aria-hidden="true"></i></button></td>
+                </tr>
+              </table>
+            </uib-tab>
+            
+            <uib-tab index="1" heading="Comments ({{content.comments.length}})" disable="content.comments.length == 0" >
+              <table ng-table="commentsTable" class="table table-dark table-striped">
+                <tr ng-repeat="row in $data">
+                  <td data-title="'Title'" >{{row.label}}</td>
+                  <td data-title="'Age'" >{{ getDate(row.timestamp) }}</td>
+                  <td data-title="''"><button data-click-id="{{row.comment_id}}" class="btn btn-primary btn-sm" ng-click="openInfoPanel('comment', row.comment_id)" ><i class="fa fa-search" data-click-id="{{row.comment_id}}" aria-hidden="true"></i></button></td>
+                </tr>
+              </table>
+            </uib-tab>
+            
+        </uib-tabset>
+
+    </div>
+    </div>
+  </div>
+</div>

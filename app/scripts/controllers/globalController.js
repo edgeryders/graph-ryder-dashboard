@@ -54,8 +54,74 @@ angular.module('sbAdminApp')
                     if (list.length < 1) {
                         list.push(["none", 50, -1])
                     }
+
+                    // devicePixelRatio
+                    var devicePixelRatio = 1;
+                    if (('devicePixelRatio' in window) &&
+                        window.devicePixelRatio !== 1) {
+                      devicePixelRatio = window.devicePixelRatio;
+                    }
+                      
+                    var canvas = $('#word_cloud');
+                    // Set the width and height
+                    var width = $('#word_cloud_container').width();
+                    var height = Math.floor(width * 0.4);
+                    var pixelWidth = width;
+                    var pixelHeight = height;
+
+                    if (devicePixelRatio !== 1) {
+                      canvas.css({'width': width + 'px', 'height': height + 'px'});
+
+                      pixelWidth *= devicePixelRatio;
+                      pixelHeight *= devicePixelRatio;
+                    } else {
+                      canvas.css({'width': '', 'height': '' });
+                    }
+
+                    canvas.attr('width', pixelWidth);
+                    canvas.attr('height', pixelHeight);
+
+                    var wordcloudOptions = {
+                      list: list,
+                      gridSize: Math.round(16 * canvas.width() / 1024),
+                      weightFactor: 0.6,
+                      // rotateRatio: 0.5,
+                      // rotationSteps: 2,
+                      backgroundColor: '#1a1a1a',
+                      click: function(item) { $scope.openInfoPanel('tag', item[2]);}
+                    }
+
+                    // Set devicePixelRatio options
+                    if (devicePixelRatio !== 1) {
+                      if (!('gridSize' in wordcloudOptions)) {
+                        wordcloudOptions.gridSize = 8;
+                      }
+                      wordcloudOptions.gridSize *= devicePixelRatio;
+
+                      if (wordcloudOptions.origin) {
+                        if (typeof wordcloudOptions.origin[0] == 'number')
+                          wordcloudOptions.origin[0] *= devicePixelRatio;
+                        if (typeof wordcloudOptions.origin[1] == 'number')
+                          wordcloudOptions.origin[1] *= devicePixelRatio;
+                      }
+
+                      if (!('weightFactor' in wordcloudOptions)) {
+                        wordcloudOptions.weightFactor = 1;
+                      }
+                      if (typeof wordcloudOptions.weightFactor == 'function') {
+                        var origWeightFactor = wordcloudOptions.weightFactor;
+                        wordcloudOptions.weightFactor =
+                          function weightFactorDevicePixelRatioWrap() {
+                            return origWeightFactor.apply(this, arguments) * devicePixelRatio;
+                          };
+                      } else {
+                        wordcloudOptions.weightFactor *= devicePixelRatio;
+                      }
+                    }
+
+
                     WordCloud.minFontSize = "10px"
-                    WordCloud(document.getElementById('word_cloud'), {list:list, gridSize: 5, weightFactor: 0.6,   click: function(item) { $scope.openInfoPanel('tag', item[2]);}});
+                    WordCloud(canvas[0], wordcloudOptions);
                 });
             }
         };

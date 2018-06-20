@@ -1,52 +1,69 @@
-<div>
-    <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
-    <div class="row">
-        <div class="col-lg-12">
-<h5>Example of interaction without api call, click on Edges to view the content</h5>
-        </div>
-        <!-- /.col-lg-12 -->
+<div class="animated fadeIn">
+  <div id="{{infoPanelParent}}" style="z-index:1000" ></div>
+  <div class="row">
+    <div class="col-lg-12">
+      <h5>Example of interaction without api call, click on Edges to view the content</h5>
     </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Users view <input type="checkbox" ng-model="userel" > labels on egdes
-                    <form ng-submit="drawUserGraph()">
-                    algo :
-                    <select ng-model="layoutChoice">
-                        <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
-                    </select>
-                    <input type="submit" value="go" />
-                    </form>
+  </div>
+  <div class="row">
+    <div class="col-lg-6 col-md-6">
+      <div class="row">
+        <div class="col">
+            <div class="card bg-gray-800">
+                <div class="card-header card-header-compact">
+                  <i class="fa fa-clock-o fa-fw"></i> Users view 
+                  <label class="switch switch-text switch-pill switch-success switch-sm">
+                    <input type="checkbox" class="switch-input" ng-model="userel" >
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label> labels on egdes
+                    
+                  <form class="form-group pull-right" ng-submit="drawUserGraph()">
+                    <div class="input-group">
+                      <select class="form-control form-control-sm" ng-model="layoutChoice">
+                          <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                      </select>&nbsp;
+                      <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-play"></i></button>
+                    </div>
+                  </form>
                 </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
+                <div class="card-body">
                     <sigma-js
                             graph="usersGraphSigma"
                             id="user-graph"
                             width="100%" height="400px"
                             edge-labels="userel"
-                            event-catcher="eventCatcherUsers" >
+                            event-catcher="eventCatcherUsers"
+                            default-edge-hover-color="#20a8d8"
+                            default-label-color="#20a8d8" >
                     </sigma-js>
                 </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
+            </div>                    
         </div>
-        <div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Comments and Posts view <input type="checkbox" ng-model="commentel" > labels on egdes
-                    <form ng-submit="drawPostGraph()">
-                        algo :
-                        <select ng-model="layoutChoiceComments">
-                            <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
-                        </select>
-                        <input type="submit" value="go" />
-                    </form>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <div class="row">
+        <div class="col">
+            <div class="card bg-gray-800">
+                <div class="card-header card-header-compact">
+                  <i class="fa fa-clock-o fa-fw"></i> Comments and Posts view 
+                  <label class="switch switch-text switch-pill switch-success switch-sm">
+                    <input type="checkbox" class="switch-input" ng-model="commentel" >
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label> labels on egdes
+                     
+                  <form class="form-group pull-right" ng-submit="drawPostGraph()">
+                    <div class="input-group">
+                      <select class="form-control form-control-sm" ng-model="layoutChoiceComments">
+                          <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
+                      </select>&nbsp;
+                      <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-play"></i></button>
+                    </div>
+                  </form>
                 </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
+                <div class="card-body">
                     <sigma-js
                             graph="commentsGraphSigma"
                             locate="locate"
@@ -54,54 +71,52 @@
                             width="100%" height="400px"
                             threshold=10
                             edge-labels="commentel"
-                            event-catcher="eventCatcherComment" >
-
+                            event-catcher="eventCatcherComment"
+                            default-edge-hover-color="#20a8d8"
+                            default-label-color="#20a8d8" >
                     </sigma-js>
                 </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
+            </div>                    
         </div>
-        <div class="col-lg-12"  >
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i> Posts / Comments view
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Comment</th>
-                                <th>Subject</th>
-                                <th></th>
-                                <th>Parent (post/comment)</th>
-                                <th>Title</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="comment in comments" >
-                                <td>
-                                    <button class="btn btn-warning" ng-click="openInfoPanel('comment', comment.from_id)" >{{ comment.from_id }}</button>
-                                </td>
-                                <td>{{ comment.from_subject }}</td>
-                                <td> --> </td>
-                                <td>
-                                    <button ng-show="comment.to_type=='comment'" class="btn btn-warning" ng-click="openInfoPanel('comment', comment.from_id)" >{{ comment.to_id }}</button>
-                                    <button ng-show="comment.to_type=='post'" class="btn btn-success" ng-click="openInfoPanel('post', comment.to_id)" >{{ comment.to_id }}</button>
-                                </td>
-                                <td>{{ comment.to_subject }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-
+      </div>
     </div>
-    <!-- /.row -->
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="card bg-gray-800 small">
+        <div class="card-header card-header-compact">
+          <i class="fa fa-clock-o fa-fw"></i> Posts / Comments view
+        </div>
+        <div class="card-body">
+          <table class="table table-dark table-responsive-sm">
+            <thead>
+              <tr>
+                  <th>Comment</th>
+                  <th>Subject</th>
+                  <th></th>
+                  <th>Parent (post/comment)</th>
+                  <th>Title</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="comment in comments" >
+                  <td>
+                      <a class="text-warning" ng-click="openInfoPanel('comment', comment.from_id)" >{{ comment.from_id }}</a>
+                  </td>
+                  <td>{{ comment.from_subject }}</td>
+                  <td> &rarr; </td>
+                  <td>
+                      <a ng-show="comment.to_type=='comment'" class="text-warning" ng-click="openInfoPanel('comment', comment.from_id)" >{{ comment.to_id }}</a>
+                      <a ng-show="comment.to_type=='post'" class="text-success" ng-click="openInfoPanel('post', comment.to_id)" >{{ comment.to_id }}</a>
+                  </td>
+                  <td>{{ comment.to_subject }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+

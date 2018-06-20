@@ -24,7 +24,10 @@ angular.module('sbAdminApp')
             cleanRefresh: '@?',
             s: '=?',
             lasso: '=?',
-            maxNodeSize: '=?'
+            maxNodeSize: '=?',
+            defaultEdgeHoverColor: '@?',
+            defaultLabelColor: '@?',
+            edgeColor: '@?'
         },
         link: function (scope, element) {
             // default values
@@ -38,6 +41,12 @@ angular.module('sbAdminApp')
                 scope.metricMaxFilter = 10;
             if (scope.metricNeutralFilter == undefined)
                 scope.metricNeutralFilter = -1;
+            if (scope.defaultEdgeHoverColor == undefined)
+                scope.defaultEdgeHoverColor = '#000';
+            if (scope.defaultLabelColor == undefined)
+                scope.defaultLabelColor = '#000';
+            if (scope.edgeColor == undefined)
+                scope.edgeColor = 'rgba(204,204,204,.5)';
             var neighbourhood = {}
             neighbourhood.adjacentNodes = [];
             neighbourhood.adjacentEdges = [];
@@ -56,14 +65,17 @@ angular.module('sbAdminApp')
                     drawEdgeLabels: scope.edgeLabels,
                     minArrowSize: 5,
                     enableEdgeHovering: true,
-                    edgeHoverColor: '#000',
-                    defaultEdgeHoverColor: '#000',
+                    edgeHoverColor: 'default',
+                    defaultEdgeHoverColor: scope.defaultEdgeHoverColor,
                     edgeHoverSizeRatio: 2,
                     edgeHoverExtremities: true,
-                    maxNodeSize: scope.maxNodeSize
+                    maxNodeSize: scope.maxNodeSize,
+                    defaultLabelColor: scope.defaultLabelColor,
+                    defaultEdgeLabelColor:  scope.defaultLabelColor
                 }
             });
             scope.s = s;
+            
             /**** Plugins ****/
 
             /**** Interactions ****/
@@ -231,6 +243,13 @@ angular.module('sbAdminApp')
                 if (scope.graph != undefined && scope.graph != []){
                   s.graph.clear();
                   s.graph.read(scope.graph);
+                  var edges = s.graph.edges(); 
+
+                  //Using for loop
+                  for (var i = 0; i < edges.length; i += 1){
+                      edges[i].color = scope.edgeColor;
+                  }
+                  
                   if (s.graph.nodes().length > 0){
                     s.ready = true;
                   }
@@ -275,7 +294,7 @@ angular.module('sbAdminApp')
 
 
             var lasso = new sigma.plugins.lasso(s, s.renderers[0], {
-              'strokeStyle': 'black',
+              'strokeStyle': 'white',
               'lineWidth': 2,
               'fillWhileDrawing': true,
               'fillStyle': 'rgba(41, 41, 41, 0.2)',

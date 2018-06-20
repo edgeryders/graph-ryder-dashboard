@@ -1,0 +1,42 @@
+# ansible-playbook -l live -i hosts deploy.yml
+
+# install nginx
+# create/check release folder
+# copy public to remote folder
+# update nginx config
+# restart nginx
+
+- hosts: all
+  vars:
+    base_path: "~"
+    release_path: "releases"
+    api_url: "http://localhost:5000/"
+
+  tasks:
+
+  - name: Get time
+    shell: "date +%s"
+    register: timestamp
+
+  - name: Releases dir exists
+    file: state=directory path={{ base_path }}/{{ release_path }}
+
+  - name: Release path exists
+    file: state=directory path={{ base_path }}/{{ release_path }}/{{ timestamp.stdout }}/
+
+  - name: Copy local to remote
+    synchronize:
+      src: dist/
+      dest: "{{ base_path }}/{{ release_path }}/{{ timestamp.stdout }}"
+
+  - name: Copy configuration to remote
+    template:
+      src: config.j2
+      dest: "{{ base_path }}/{{ release_path }}/{{ timestamp.stdout }}/config.js"
+    
+  # Link the current directory and restart
+  - name: Create the new current link
+    shell: ln -s {{ base_path }}/{{ release_path }}/{{ timestamp.stdout }} {{ base_path }}/{{ release_path }}/current
+
+  - name: Make the new current dir active
+    shell: mv {{ base_path }}/{{ release_path }}/current {{ base_path }}

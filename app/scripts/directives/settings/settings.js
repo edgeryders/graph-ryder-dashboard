@@ -9,20 +9,24 @@
  * # MainCtrl
  * Controller of the sbAdminApp
  */
-angular.module('sbAdminApp')
-    .controller('SettingsCtrl', function ($scope, $rootScope, $resource, config, $q, $compile) {
 
-        $scope.warning = {color: 'orange'};
-        $scope.danger = {color: 'red'};
-        $scope.success = {color: '#39b500'};
-        $scope.infoPanelParent = "infoPanelParent";
+angular.module('sbAdminApp')
+  .directive('settings', function() {
+    return {
+      templateUrl:'scripts/directives/settings/settings.html',
+      restrict: 'E',
+      replace: true,
+      scope: {
+      },
+      controller: function ($scope, $rootScope, $resource, config, $q, $compile) {
+
         $rootScope.resetSuggestions(false, false, false, false);
 
         /***** Load api infos *****/
         $scope.refresh = function () {
 
             $scope.api = {"url": config.apiUrl, "status": "unknown", "version": "unknown"};
-            $scope.style = {"status": $scope.warning, "version": $scope.warning, "ram": $scope.warning, "disk": $scope.warning};
+            $scope.className = {"status": 'text-muted', "version": 'text-muted', "ram": 'bg-info', "disk": 'bg-info'};
             $scope.regen = {"complete": false, "users": false, "commentsAndPosts": false, "generated": false, "ramLoad": "unknown", "diskLoad": "unknown"};
 
             var Info = $resource(config.apiUrl + 'info');
@@ -31,37 +35,43 @@ angular.module('sbAdminApp')
                 // status
                 $scope.api.status = result.status;
                 if ($scope.api.status) // color
-                    $scope.style.status = $scope.success;
+                    $scope.className.status = 'text-success';
+ 
                 // version
                 var d = new Date();
                 d.setTime(result.version);
                 $scope.api.version = d.toString();
                 if (new Date().getTime() - d.getTime() > 2628000000) {
-                    $scope.style.version = $scope.danger;
+                    $scope.className.version = 'text-danger';
                 }
                 if (new Date().getTime() - d.getTime() < 604800000) {
-                    $scope.style.version = $scope.success;
+                    $scope.className.version = 'text-success';
                 }
+                
                 // ram usage
                 $scope.api.ramLoad = result.percentRamUsage;
                 if ($scope.api.ramLoad < 50.00) // color
-                    $scope.style.ram = $scope.success;
+                    $scope.className.ram = 'bg-success';
                 else if ($scope.api.ramLoad < 80.00)
-                    $scope.style.ram = $scope.warning;
+                    $scope.className.ram = 'bg-warning';
                 else
-                    $scope.style.ram = $scope.danger;
+                    $scope.className.ram = 'bg-danger';
+                
                 // Disk usage
                 $scope.api.diskLoad = result.percentDiskUsage;
                 if ($scope.api.diskLoad < 50.00) // color
-                    $scope.style.disk = $scope.success;
+                    $scope.className.disk = 'bg-success';
                 else if ($scope.api.diskLoad < 80.00)
-                    $scope.style.disk = $scope.warning;
+                    $scope.className.disk = 'bg-warning';
                 else
-                    $scope.style.disk = $scope.danger;
+                    $scope.className.disk = 'bg-danger';
             });
         };
-
-        $scope.refresh();
+        
+        /***** refresh whan this is opened only *****/
+        $scope.$on('aside-menu:show', function(evt, data){
+          $scope.refresh();
+        });
 
         /***** regenerate Graphs *****/
         $scope.regenerate = function () {
@@ -101,19 +111,11 @@ angular.module('sbAdminApp')
             console.log("hello");
         };
 
-        /********* Info Panel ***************/
-        $scope.openInfoPanel = function(elementType, elementId) {
-            var mod = document.createElement("panel-info");
-            mod.setAttribute("type", elementType);
-            mod.setAttribute("id", elementId);
-            mod.setAttribute("parent", $scope.infoPanelParent);
-            jQuery("#"+ $scope.infoPanelParent).append(mod);
-            $compile(mod)($scope);
-        };
-
         /***** Upload and Update *****/
         $scope.upload = function () {
             $scope.regen = {"complete": true, "users": true, "commentsAndPosts": true, "generated": false};
             $scope.regenerate();
         };
-});
+      }    
+    }
+  });

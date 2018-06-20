@@ -1,17 +1,27 @@
-<div id="wrapper">
+<header></header>
 
-        <!-- Navigation -->
-            
-        <header></header>
-        <!-- /.navbar-top-links -->
-        
-               
-        <!-- /.navbar-static-side -->
+<div class="app-body">
+  <sidebar></sidebar>
+    
+  <!-- Main content -->
+  <main class="main">
 
-            <div id="page-wrapper" style="min-height: 561px;">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb row d-block d-lg-none">
+        <general-search
+          template-url="scripts/directives/search/header-mobile-search.html"
+          sugest = "suggestions"
+        ></general-search>       
+      </div>
+      
+      <div class="container-fluid">
+        <div ui-view></div>
+      </div>
+  </main> 
+  
+  <!-- TODO: LM replace with settings page  -->
+  <aside class="aside-menu">
+    <settings></settings>
+  </aside>
 
-                <div ui-view></div>
-                
-            </div>
-            <!-- /#page-wrapper -->
-    </div>
+</div>

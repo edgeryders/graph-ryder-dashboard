@@ -1,10 +1,11 @@
-<!doctype html>
-<html class="no-js">
+<!DOCTYPE html>
+<html lang="en" ng-app="sbAdminApp">
   <head>
     <meta charset="utf-8">
     <title>GraphRyder Dashboard</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -12,23 +13,25 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/sb-admin-2-default.css">
-    <link rel="stylesheet" href="styles/jquery-ui.css">
-    <link rel="stylesheet" href="bower_components/metisMenu/dist/metisMenu.min.css">
-    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.min.css">
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" title="Default" />
-    <link rel="alternate stylesheet" href="styles/bootstrap.dark.min.css" title="Jet Black" />
-    <link rel="alternate stylesheet" href="styles/bootstrap.slate.min.css" title="Grey Slate" />
+    <script src="config.js"></script>
+
+    <!-- build:css(.tmp) styles/style.css -->
+    <!-- Icons -->
+    <link href="bower_components/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="bower_components/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <link href="bower_components/angular-hotkeys/build/hotkeys.min.css" rel="stylesheet">
+    <!-- Style -->
+    <link rel="stylesheet" href="styles/style.css">
     <!-- endbuild -->
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="bower_components/popper.js/dist/umd/popper.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="bower_components/angular-resource/angular-resource.min.js"></script>
@@ -38,6 +41,8 @@
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
     <script src="bower_components/Chart.js/Chart.min.js"></script>
+    <script src="bower_components/ng-table-bundle/ng-table.js"></script>
+    <script src="bower_components/angular-hotkeys/build/hotkeys.min.js"></script>
     <script src="bower_components/linkurious/build/sigma.min.js"></script>
     <script src="bower_components/linkurious/build/plugins/sigma.renderers.edgeLabels.min.js"></script>
     <script src="bower_components/linkurious/build/plugins/sigma.plugins.filter.min.js"></script>
@@ -45,7 +50,7 @@
     <script src="bower_components/linkurious/build/plugins/sigma.plugins.select.min.js"></script>
     <script src="bower_components/linkurious/build/plugins/sigma.plugins.lasso.min.js"></script>
     <script src="bower_components/linkurious/build/plugins/sigma.plugins.activeState.min.js"></script>
-<script src="bower_components/linkurious/build/plugins/sigma.renderers.halo.min.js"></script>
+    <script src="bower_components/linkurious/build/plugins/sigma.renderers.halo.min.js"></script>
     <script src="bower_components/linkurious/build/plugins/sigma.renderers.customEdgeShapes.min.js"></script>
     <script src="bower_components/linkurious/build/plugins/sigma.plugins.locate.min.js"></script>
     <script src="bower_components/linkurious/build/plugins/sigma.layouts.forceAtlas2.min.js"></script>
@@ -56,11 +61,10 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="js/sb-admin-2.js"></script>
         <script src="js/wordcloud2.js"></script>
+        <script src="scripts/app.js"></script>
     <!-- endbuild -->
-    <script src="js/jquery-1.12.4.js"></script>
+<!-- TODO: LM remove these below? -->
     <script src="js/jquery-ui.js"></script>
 
     <!--script>
@@ -78,16 +82,12 @@
     <!-- Morris Charts CSS -->
     <!-- <link href="styles/morrisjs/morris.css" rel="stylesheet"> -->
 
-      <link rel="icon" href="favicon.png" type="image/png" sizes="32x32">
+      <link rel="icon" href="data:image/png;base64,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">
     </head>
 
-    <body>
+    <body class="header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
 
-    <div ng-app="sbAdminApp">
-
-        <div ui-view></div>
-
-    </div>
+      <ui-view class="app"></ui-view>
 
     </body>
 
