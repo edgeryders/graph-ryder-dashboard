@@ -247,7 +247,7 @@ angular.module('sbAdminApp')
 
                   //Using for loop
                   for (var i = 0; i < edges.length; i += 1){
-                      edges[i].color = scope.edgeColor;
+                      edges[i].color = edges[i].color.substring(0, edges[i].color.length - 1) + ',.5)';
                   }
                   
                   if (s.graph.nodes().length > 0){

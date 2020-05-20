@@ -64,84 +64,14 @@
               </div>
             </div>
           </div>
-          <!--/.row-->
           <br>
           <div id="word_cloud_container" class="wordcloud">
             <canvas id="word_cloud" class="word_cloud"></canvas>
           </div>
-          
-          <!--br>
-          <div id="radar-chart">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <canvas id="area" class="chart chart-radar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
-                </div>
-            </div>
-          </div-->
-          
         </div>
       </div>
     </div>
-    <!--/.col-->
   </div>
-  <!--/.row-->
-
-  <!--div class="row">
-      <div class="col-lg-7" >
-          <div class="panel panel-default">
-              <div class="panel-heading">
-                  <i class="fa fa-clock-o fa-fw" ></i> Global view <input type="checkbox" ng-model="globalel" > labels on egdes
-                  <form ng-submit="drawGraph()">
-                      algo :
-                      <select ng-model="layoutChoice">
-                          <option ng-repeat="option in layout" value="{{option}}">{{option}}</option>
-                      </select>
-                      <input type="submit" value="go" />
-                  </form>
-              </div>
-              <div class="panel-body">
-                  <sigma-js
-                          graph="globalGraphSigma"
-                          width="100%" height="600px"
-                          edge-labels="globalel"
-                          threshold=20
-                          event-catcher="eventCatcher"
-                          locate="locate"
-                          time-filter="filter"
-                          default-edge-hover-color="#20a8d8"
-                          default-label-color="#20a8d8" >
-                  </sigma-js>
-              </div>
-          </div>
-      </div>
-      <div class="col-lg-5">
-          <div class="panel panel-default">
-              <div class="panel-body"><canvas id="word_cloud" class="word_cloud" width="600px" height="400px"></canvas>
-              </div>
-          </div>
-      </div>
-      <div class="col-lg-6" id="radar-chart">
-          <div class="panel panel-default">
-              <div class="panel-heading">
-                  <i class="fa fa-clock-o fa-fw"></i> Posts type of {{postType.series}}
-              </div>
-              <div class="panel-body">
-                  <canvas id="area" class="chart chart-radar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
-              </div>
-          </div>
-      </div>
-      <div class="col-lg-6" id="bar-chart">
-          <div class="panel panel-default">
-              <div class="panel-heading">
-                  <i class="fa fa-clock-o fa-fw"></i> Posts type of {{postType.series}}
-              </div>
-              <div class="panel-body">
-                  <canvas id="bar" class="chart chart-bar" data="postType.data" labels="postType.labels" series="postType.series" legend="true" ></canvas>
-              </div>
-          </div>
-      </div>
-  </div-->
-
 
   <div class="row">
     <div class="col-lg-6 col-md-12">

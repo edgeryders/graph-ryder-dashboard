@@ -94,24 +94,6 @@ angular
           }
         }
     })
-    // .state('dashboard.doi',{
-    //     url:'/doi',
-    //     controller: 'DoiCtrl',
-    //     templateUrl:'views/dashboard/doi.html',
-    //     resolve: {
-    //       loadMyFiles:function($ocLazyLoad) {
-    //         return $ocLazyLoad.load({
-    //           name:'sbAdminApp',
-    //           files:[
-    //           'scripts/controllers/main.js',
-    //           'scripts/controllers/doiController.js',
-    //               'scripts/controllers/modalInstanceController.js'
-    //
-    //           ]
-    //         })
-    //       }
-    //     }
-    // })
     .state('dashboard.globalView',{
         url:'/globalView',
         controller: 'GlobalCtrl',
@@ -175,6 +157,23 @@ angular
                     files:[
                         'scripts/controllers/main.js',
                         'scripts/controllers/tagViewFullController.js',
+                        'scripts/controllers/modalInstanceController.js'
+                    ]
+                })
+            }
+        }
+    })
+    .state('dashboard.tagCharacterViewFull',{
+        url:'/tagCharacterViewFull',
+        controller: 'TagCharacterViewFullCtrl',
+        templateUrl:'views/dashboard/tag-character-view-full.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/tagCharacterViewFullController.js',
                         'scripts/controllers/modalInstanceController.js'
                     ]
                 })

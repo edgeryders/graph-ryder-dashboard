@@ -53,11 +53,11 @@ angular.module('sbAdminApp')
           description: 'Open Conversation',
           callback: function() { navigateTo('globalView'); }
         });
-        // hotkeys.add({
-        //   combo: 'ctrl+6',
-        //   description: 'Open Degree of Interest',
-        //   callback: function() { navigateTo('doi'); }
-        // });
+        hotkeys.add({
+          combo: 'ctrl+6',
+          description: 'Open Code Character View Full',
+          callback: function() { navigateTo('tagCharacterViewFull'); }
+        });
         hotkeys.add({
           combo: 'ctrl+2',
           description: 'Open Code View',

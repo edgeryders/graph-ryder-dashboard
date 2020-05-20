@@ -88,6 +88,10 @@ angular.module('sbAdminApp')
             if($scope.regen.TagToTag)
                 collectPromises.push($resource(config.apiUrl + 'generateTagFullGraph/1/0/' + new Date(Date.now()).getTime()+"/1").query().$promise);
 
+            if($scope.regen.TagToTagChar)
+                collectPromises.push($resource(config.apiUrl + 'generateTagCharFullGraph/1/0/' + new Date(Date.now()).getTime()+"/1").query().$promise);
+
+
             $q.all(collectPromises).then(function(results) {
                 var value = true;
                 angular.forEach(results, function(result) {
