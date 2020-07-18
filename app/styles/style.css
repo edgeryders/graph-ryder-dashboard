@@ -87,7 +87,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 @-ms-viewport {
@@ -5019,8 +5019,8 @@ tbody.collapse.show {
 
 .nav-tabs .nav-link.active, .nav-tabs .navbar .active.dropdown-toggle, .navbar .nav-tabs .active.dropdown-toggle,
 .nav-tabs .nav-item.show .nav-link,
-.nav-tabs .nav-item.show .navbar .dropdown-toggle, .navbar
-.nav-tabs .nav-item.show .dropdown-toggle {
+.nav-tabs .nav-item.show .navbar .dropdown-toggle,
+.navbar .nav-tabs .nav-item.show .dropdown-toggle {
   color: #333333;
   background-color: #222222;
   border-color: #a4b7c1 #a4b7c1 #222222;
@@ -5032,8 +5032,8 @@ tbody.collapse.show {
 
 .nav-pills .nav-link.active, .nav-pills .navbar .active.dropdown-toggle, .navbar .nav-pills .active.dropdown-toggle,
 .nav-pills .show > .nav-link,
-.nav-pills .navbar .show > .dropdown-toggle, .navbar
-.nav-pills .show > .dropdown-toggle {
+.nav-pills .navbar .show > .dropdown-toggle,
+.navbar .nav-pills .show > .dropdown-toggle {
   color: #fff;
   background-color: #1dafec;
 }
@@ -5390,14 +5390,14 @@ tbody.collapse.show {
 
 .navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .navbar .show > .dropdown-toggle, .navbar .navbar-light .navbar-nav .show > .dropdown-toggle,
 .navbar-light .navbar-nav .active > .nav-link,
-.navbar-light .navbar-nav .navbar .active > .dropdown-toggle, .navbar
-.navbar-light .navbar-nav .active > .dropdown-toggle,
+.navbar-light .navbar-nav .navbar .active > .dropdown-toggle,
+.navbar .navbar-light .navbar-nav .active > .dropdown-toggle,
 .navbar-light .navbar-nav .nav-link.show,
-.navbar-light .navbar-nav .navbar .show.dropdown-toggle, .navbar
-.navbar-light .navbar-nav .show.dropdown-toggle,
+.navbar-light .navbar-nav .navbar .show.dropdown-toggle,
+.navbar .navbar-light .navbar-nav .show.dropdown-toggle,
 .navbar-light .navbar-nav .nav-link.active,
-.navbar-light .navbar-nav .navbar .active.dropdown-toggle, .navbar
-.navbar-light .navbar-nav .active.dropdown-toggle {
+.navbar-light .navbar-nav .navbar .active.dropdown-toggle,
+.navbar .navbar-light .navbar-nav .active.dropdown-toggle {
   color: rgba(0, 0, 0, 0.9);
 }
 
@@ -5444,14 +5444,14 @@ tbody.collapse.show {
 
 .navbar-dark .navbar-nav .show > .nav-link, .navbar-dark .navbar-nav .navbar .show > .dropdown-toggle, .navbar .navbar-dark .navbar-nav .show > .dropdown-toggle,
 .navbar-dark .navbar-nav .active > .nav-link,
-.navbar-dark .navbar-nav .navbar .active > .dropdown-toggle, .navbar
-.navbar-dark .navbar-nav .active > .dropdown-toggle,
+.navbar-dark .navbar-nav .navbar .active > .dropdown-toggle,
+.navbar .navbar-dark .navbar-nav .active > .dropdown-toggle,
 .navbar-dark .navbar-nav .nav-link.show,
-.navbar-dark .navbar-nav .navbar .show.dropdown-toggle, .navbar
-.navbar-dark .navbar-nav .show.dropdown-toggle,
+.navbar-dark .navbar-nav .navbar .show.dropdown-toggle,
+.navbar .navbar-dark .navbar-nav .show.dropdown-toggle,
 .navbar-dark .navbar-nav .nav-link.active,
-.navbar-dark .navbar-nav .navbar .active.dropdown-toggle, .navbar
-.navbar-dark .navbar-nav .active.dropdown-toggle {
+.navbar-dark .navbar-nav .navbar .active.dropdown-toggle,
+.navbar .navbar-dark .navbar-nav .active.dropdown-toggle {
   color: #fff;
 }
 
@@ -7343,7 +7343,8 @@ button.close {
 }
 
 .bs-popover-top .arrow::before, .bs-popover-auto[x-placement^="top"] .arrow::before,
-.bs-popover-top .arrow::after, .bs-popover-auto[x-placement^="top"] .arrow::after {
+.bs-popover-top .arrow::after,
+.bs-popover-auto[x-placement^="top"] .arrow::after {
   border-width: 0.5rem 0.5rem 0;
 }
 
@@ -7352,7 +7353,9 @@ button.close {
   border-top-color: rgba(0, 0, 0, 0.25);
 }
 
-.bs-popover-top .arrow::after, .bs-popover-auto[x-placement^="top"] .arrow::after {
+
+.bs-popover-top .arrow::after,
+.bs-popover-auto[x-placement^="top"] .arrow::after {
   bottom: 1px;
   border-top-color: #fff;
 }
@@ -7369,7 +7372,8 @@ button.close {
 }
 
 .bs-popover-right .arrow::before, .bs-popover-auto[x-placement^="right"] .arrow::before,
-.bs-popover-right .arrow::after, .bs-popover-auto[x-placement^="right"] .arrow::after {
+.bs-popover-right .arrow::after,
+.bs-popover-auto[x-placement^="right"] .arrow::after {
   border-width: 0.5rem 0.5rem 0.5rem 0;
 }
 
@@ -7378,7 +7382,9 @@ button.close {
   border-right-color: rgba(0, 0, 0, 0.25);
 }
 
-.bs-popover-right .arrow::after, .bs-popover-auto[x-placement^="right"] .arrow::after {
+
+.bs-popover-right .arrow::after,
+.bs-popover-auto[x-placement^="right"] .arrow::after {
   left: 1px;
   border-right-color: #fff;
 }
@@ -7392,7 +7398,8 @@ button.close {
 }
 
 .bs-popover-bottom .arrow::before, .bs-popover-auto[x-placement^="bottom"] .arrow::before,
-.bs-popover-bottom .arrow::after, .bs-popover-auto[x-placement^="bottom"] .arrow::after {
+.bs-popover-bottom .arrow::after,
+.bs-popover-auto[x-placement^="bottom"] .arrow::after {
   border-width: 0 0.5rem 0.5rem 0.5rem;
 }
 
@@ -7401,7 +7408,9 @@ button.close {
   border-bottom-color: rgba(0, 0, 0, 0.25);
 }
 
-.bs-popover-bottom .arrow::after, .bs-popover-auto[x-placement^="bottom"] .arrow::after {
+
+.bs-popover-bottom .arrow::after,
+.bs-popover-auto[x-placement^="bottom"] .arrow::after {
   top: 1px;
   border-bottom-color: #fff;
 }
@@ -7429,7 +7438,8 @@ button.close {
 }
 
 .bs-popover-left .arrow::before, .bs-popover-auto[x-placement^="left"] .arrow::before,
-.bs-popover-left .arrow::after, .bs-popover-auto[x-placement^="left"] .arrow::after {
+.bs-popover-left .arrow::after,
+.bs-popover-auto[x-placement^="left"] .arrow::after {
   border-width: 0.5rem 0 0.5rem 0.5rem;
 }
 
@@ -7438,7 +7448,9 @@ button.close {
   border-left-color: rgba(0, 0, 0, 0.25);
 }
 
-.bs-popover-left .arrow::after, .bs-popover-auto[x-placement^="left"] .arrow::after {
+
+.bs-popover-left .arrow::after,
+.bs-popover-auto[x-placement^="left"] .arrow::after {
   right: 1px;
   border-left-color: #fff;
 }
@@ -11391,30 +11403,54 @@ button {
 }
 
 .btn-facebook.btn-lg span, .btn-group-lg > .btn-facebook.btn span,
-.btn-twitter.btn-lg span, .btn-group-lg > .btn-twitter.btn span,
-.btn-linkedin.btn-lg span, .btn-group-lg > .btn-linkedin.btn span,
-.btn-flickr.btn-lg span, .btn-group-lg > .btn-flickr.btn span,
-.btn-tumblr.btn-lg span, .btn-group-lg > .btn-tumblr.btn span,
-.btn-xing.btn-lg span, .btn-group-lg > .btn-xing.btn span,
-.btn-github.btn-lg span, .btn-group-lg > .btn-github.btn span,
-.btn-html5.btn-lg span, .btn-group-lg > .btn-html5.btn span,
-.btn-openid.btn-lg span, .btn-group-lg > .btn-openid.btn span,
-.btn-stack-overflow.btn-lg span, .btn-group-lg > .btn-stack-overflow.btn span,
-.btn-youtube.btn-lg span, .btn-group-lg > .btn-youtube.btn span,
-.btn-css3.btn-lg span, .btn-group-lg > .btn-css3.btn span,
-.btn-dribbble.btn-lg span, .btn-group-lg > .btn-dribbble.btn span,
-.btn-google-plus.btn-lg span, .btn-group-lg > .btn-google-plus.btn span,
-.btn-instagram.btn-lg span, .btn-group-lg > .btn-instagram.btn span,
-.btn-pinterest.btn-lg span, .btn-group-lg > .btn-pinterest.btn span,
-.btn-vk.btn-lg span, .btn-group-lg > .btn-vk.btn span,
-.btn-yahoo.btn-lg span, .btn-group-lg > .btn-yahoo.btn span,
-.btn-behance.btn-lg span, .btn-group-lg > .btn-behance.btn span,
-.btn-dropbox.btn-lg span, .btn-group-lg > .btn-dropbox.btn span,
-.btn-reddit.btn-lg span, .btn-group-lg > .btn-reddit.btn span,
-.btn-spotify.btn-lg span, .btn-group-lg > .btn-spotify.btn span,
-.btn-vine.btn-lg span, .btn-group-lg > .btn-vine.btn span,
-.btn-foursquare.btn-lg span, .btn-group-lg > .btn-foursquare.btn span,
-.btn-vimeo.btn-lg span, .btn-group-lg > .btn-vimeo.btn span {
+.btn-twitter.btn-lg span,
+.btn-group-lg > .btn-twitter.btn span,
+.btn-linkedin.btn-lg span,
+.btn-group-lg > .btn-linkedin.btn span,
+.btn-flickr.btn-lg span,
+.btn-group-lg > .btn-flickr.btn span,
+.btn-tumblr.btn-lg span,
+.btn-group-lg > .btn-tumblr.btn span,
+.btn-xing.btn-lg span,
+.btn-group-lg > .btn-xing.btn span,
+.btn-github.btn-lg span,
+.btn-group-lg > .btn-github.btn span,
+.btn-html5.btn-lg span,
+.btn-group-lg > .btn-html5.btn span,
+.btn-openid.btn-lg span,
+.btn-group-lg > .btn-openid.btn span,
+.btn-stack-overflow.btn-lg span,
+.btn-group-lg > .btn-stack-overflow.btn span,
+.btn-youtube.btn-lg span,
+.btn-group-lg > .btn-youtube.btn span,
+.btn-css3.btn-lg span,
+.btn-group-lg > .btn-css3.btn span,
+.btn-dribbble.btn-lg span,
+.btn-group-lg > .btn-dribbble.btn span,
+.btn-google-plus.btn-lg span,
+.btn-group-lg > .btn-google-plus.btn span,
+.btn-instagram.btn-lg span,
+.btn-group-lg > .btn-instagram.btn span,
+.btn-pinterest.btn-lg span,
+.btn-group-lg > .btn-pinterest.btn span,
+.btn-vk.btn-lg span,
+.btn-group-lg > .btn-vk.btn span,
+.btn-yahoo.btn-lg span,
+.btn-group-lg > .btn-yahoo.btn span,
+.btn-behance.btn-lg span,
+.btn-group-lg > .btn-behance.btn span,
+.btn-dropbox.btn-lg span,
+.btn-group-lg > .btn-dropbox.btn span,
+.btn-reddit.btn-lg span,
+.btn-group-lg > .btn-reddit.btn span,
+.btn-spotify.btn-lg span,
+.btn-group-lg > .btn-spotify.btn span,
+.btn-vine.btn-lg span,
+.btn-group-lg > .btn-vine.btn span,
+.btn-foursquare.btn-lg span,
+.btn-group-lg > .btn-foursquare.btn span,
+.btn-vimeo.btn-lg span,
+.btn-group-lg > .btn-vimeo.btn span {
   margin-left: 2.640625rem;
 }
 
@@ -11583,30 +11619,54 @@ button {
 }
 
 .btn-facebook.btn-sm span, .btn-group-sm > .btn-facebook.btn span,
-.btn-twitter.btn-sm span, .btn-group-sm > .btn-twitter.btn span,
-.btn-linkedin.btn-sm span, .btn-group-sm > .btn-linkedin.btn span,
-.btn-flickr.btn-sm span, .btn-group-sm > .btn-flickr.btn span,
-.btn-tumblr.btn-sm span, .btn-group-sm > .btn-tumblr.btn span,
-.btn-xing.btn-sm span, .btn-group-sm > .btn-xing.btn span,
-.btn-github.btn-sm span, .btn-group-sm > .btn-github.btn span,
-.btn-html5.btn-sm span, .btn-group-sm > .btn-html5.btn span,
-.btn-openid.btn-sm span, .btn-group-sm > .btn-openid.btn span,
-.btn-stack-overflow.btn-sm span, .btn-group-sm > .btn-stack-overflow.btn span,
-.btn-youtube.btn-sm span, .btn-group-sm > .btn-youtube.btn span,
-.btn-css3.btn-sm span, .btn-group-sm > .btn-css3.btn span,
-.btn-dribbble.btn-sm span, .btn-group-sm > .btn-dribbble.btn span,
-.btn-google-plus.btn-sm span, .btn-group-sm > .btn-google-plus.btn span,
-.btn-instagram.btn-sm span, .btn-group-sm > .btn-instagram.btn span,
-.btn-pinterest.btn-sm span, .btn-group-sm > .btn-pinterest.btn span,
-.btn-vk.btn-sm span, .btn-group-sm > .btn-vk.btn span,
-.btn-yahoo.btn-sm span, .btn-group-sm > .btn-yahoo.btn span,
-.btn-behance.btn-sm span, .btn-group-sm > .btn-behance.btn span,
-.btn-dropbox.btn-sm span, .btn-group-sm > .btn-dropbox.btn span,
-.btn-reddit.btn-sm span, .btn-group-sm > .btn-reddit.btn span,
-.btn-spotify.btn-sm span, .btn-group-sm > .btn-spotify.btn span,
-.btn-vine.btn-sm span, .btn-group-sm > .btn-vine.btn span,
-.btn-foursquare.btn-sm span, .btn-group-sm > .btn-foursquare.btn span,
-.btn-vimeo.btn-sm span, .btn-group-sm > .btn-vimeo.btn span {
+.btn-twitter.btn-sm span,
+.btn-group-sm > .btn-twitter.btn span,
+.btn-linkedin.btn-sm span,
+.btn-group-sm > .btn-linkedin.btn span,
+.btn-flickr.btn-sm span,
+.btn-group-sm > .btn-flickr.btn span,
+.btn-tumblr.btn-sm span,
+.btn-group-sm > .btn-tumblr.btn span,
+.btn-xing.btn-sm span,
+.btn-group-sm > .btn-xing.btn span,
+.btn-github.btn-sm span,
+.btn-group-sm > .btn-github.btn span,
+.btn-html5.btn-sm span,
+.btn-group-sm > .btn-html5.btn span,
+.btn-openid.btn-sm span,
+.btn-group-sm > .btn-openid.btn span,
+.btn-stack-overflow.btn-sm span,
+.btn-group-sm > .btn-stack-overflow.btn span,
+.btn-youtube.btn-sm span,
+.btn-group-sm > .btn-youtube.btn span,
+.btn-css3.btn-sm span,
+.btn-group-sm > .btn-css3.btn span,
+.btn-dribbble.btn-sm span,
+.btn-group-sm > .btn-dribbble.btn span,
+.btn-google-plus.btn-sm span,
+.btn-group-sm > .btn-google-plus.btn span,
+.btn-instagram.btn-sm span,
+.btn-group-sm > .btn-instagram.btn span,
+.btn-pinterest.btn-sm span,
+.btn-group-sm > .btn-pinterest.btn span,
+.btn-vk.btn-sm span,
+.btn-group-sm > .btn-vk.btn span,
+.btn-yahoo.btn-sm span,
+.btn-group-sm > .btn-yahoo.btn span,
+.btn-behance.btn-sm span,
+.btn-group-sm > .btn-behance.btn span,
+.btn-dropbox.btn-sm span,
+.btn-group-sm > .btn-dropbox.btn span,
+.btn-reddit.btn-sm span,
+.btn-group-sm > .btn-reddit.btn span,
+.btn-spotify.btn-sm span,
+.btn-group-sm > .btn-spotify.btn span,
+.btn-vine.btn-sm span,
+.btn-group-sm > .btn-vine.btn span,
+.btn-foursquare.btn-sm span,
+.btn-group-sm > .btn-foursquare.btn span,
+.btn-vimeo.btn-sm span,
+.btn-group-sm > .btn-vimeo.btn span {
   margin-left: 1.6484375rem;
 }
 
@@ -13525,32 +13585,32 @@ base-chart.chart {
 
 .navbar-nav .open > .nav-link, .navbar-nav .navbar .open > .dropdown-toggle, .navbar .navbar-nav .open > .dropdown-toggle, .navbar-nav .open > .nav-link:hover, .navbar-nav .navbar .open > .dropdown-toggle:hover, .navbar .navbar-nav .open > .dropdown-toggle:hover, .navbar-nav .open > .nav-link:focus, .navbar-nav .navbar .open > .dropdown-toggle:focus, .navbar .navbar-nav .open > .dropdown-toggle:focus,
 .navbar-nav .active > .nav-link,
-.navbar-nav .navbar .active > .dropdown-toggle, .navbar
-.navbar-nav .active > .dropdown-toggle,
+.navbar-nav .navbar .active > .dropdown-toggle,
+.navbar .navbar-nav .active > .dropdown-toggle,
 .navbar-nav .active > .nav-link:hover,
-.navbar-nav .navbar .active > .dropdown-toggle:hover, .navbar
-.navbar-nav .active > .dropdown-toggle:hover,
+.navbar-nav .navbar .active > .dropdown-toggle:hover,
+.navbar .navbar-nav .active > .dropdown-toggle:hover,
 .navbar-nav .active > .nav-link:focus,
-.navbar-nav .navbar .active > .dropdown-toggle:focus, .navbar
-.navbar-nav .active > .dropdown-toggle:focus,
+.navbar-nav .navbar .active > .dropdown-toggle:focus,
+.navbar .navbar-nav .active > .dropdown-toggle:focus,
 .navbar-nav .nav-link.open,
-.navbar-nav .navbar .open.dropdown-toggle, .navbar
-.navbar-nav .open.dropdown-toggle,
+.navbar-nav .navbar .open.dropdown-toggle,
+.navbar .navbar-nav .open.dropdown-toggle,
 .navbar-nav .nav-link.open:hover,
-.navbar-nav .navbar .open.dropdown-toggle:hover, .navbar
-.navbar-nav .open.dropdown-toggle:hover,
+.navbar-nav .navbar .open.dropdown-toggle:hover,
+.navbar .navbar-nav .open.dropdown-toggle:hover,
 .navbar-nav .nav-link.open:focus,
-.navbar-nav .navbar .open.dropdown-toggle:focus, .navbar
-.navbar-nav .open.dropdown-toggle:focus,
+.navbar-nav .navbar .open.dropdown-toggle:focus,
+.navbar .navbar-nav .open.dropdown-toggle:focus,
 .navbar-nav .nav-link.active,
-.navbar-nav .navbar .active.dropdown-toggle, .navbar
-.navbar-nav .active.dropdown-toggle,
+.navbar-nav .navbar .active.dropdown-toggle,
+.navbar .navbar-nav .active.dropdown-toggle,
 .navbar-nav .nav-link.active:hover,
-.navbar-nav .navbar .active.dropdown-toggle:hover, .navbar
-.navbar-nav .active.dropdown-toggle:hover,
+.navbar-nav .navbar .active.dropdown-toggle:hover,
+.navbar .navbar-nav .active.dropdown-toggle:hover,
 .navbar-nav .nav-link.active:focus,
-.navbar-nav .navbar .active.dropdown-toggle:focus, .navbar
-.navbar-nav .active.dropdown-toggle:focus {
+.navbar-nav .navbar .active.dropdown-toggle:focus,
+.navbar .navbar-nav .active.dropdown-toggle:focus {
   color: #222222;
 }
 
@@ -14877,7 +14937,8 @@ base-chart.chart {
 }
 
 .switch-pill .switch-label, .switch.switch-3d .switch-label,
-.switch-pill .switch-handle, .switch.switch-3d .switch-handle {
+.switch-pill .switch-handle,
+.switch.switch-3d .switch-handle {
   border-radius: 50em !important;
 }
 
@@ -16960,7 +17021,7 @@ hr.transparent {
   width: 102%;
   height: 100%;
   cursor: default;
-  background: transparent;
+  background: rgba(0, 0, 0, 0);
   z-index: 2;
 }
 

@@ -1,7 +1,7 @@
 'use strict';
 
 var conf = {
-    apiUrl: 'http://localhost:5000/'
+    apiUrl: 'https://api.bbu.world/'
 };
 
 // Import variables if present (from env.js)

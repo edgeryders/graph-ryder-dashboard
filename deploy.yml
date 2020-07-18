@@ -10,7 +10,7 @@
   vars:
     base_path: "~"
     release_path: "releases"
-    api_url: "http://localhost:5000/"
+    api_url: "https://api.bbu.world/"
 
   tasks:
 

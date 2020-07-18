@@ -20,7 +20,7 @@ angular.module('sbAdminApp')
         $scope.requestFullTagGraph = false;
         $scope.filter_occurrence_min = "2";
         $scope.filter_occurrence_max = "100";
-        $scope.filter_occurrence_request = "2";
+        $scope.filter_occurrence_request = "3";
         $scope.interactor = "navigate";
         $scope.infoPanelParent = "infoPanelParent";
         $("#download_link_dialog").dialog({ autoOpen: false });
@@ -82,8 +82,11 @@ angular.module('sbAdminApp')
         $scope.tagGraphSigma = [];
 
         $scope.drawGraph = function (result) {
+            console.log(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice)
             var drawGraph = $resource(config.apiUrl + 'draw/tagToTags/'+ $scope.layoutChoice);
+            console.log(drawgraph)
             var drawgraph = drawGraph.get();
+            console.log(drawgraph)
             drawgraph.$promise.then(function (result) {
                 $scope.tagGraphSigma = result;
             });

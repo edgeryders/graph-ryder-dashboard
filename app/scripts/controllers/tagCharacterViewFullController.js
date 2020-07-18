@@ -20,7 +20,7 @@ angular.module('sbAdminApp')
         $scope.requestFullTagGraph = false;
         $scope.filter_occurrence_min = "2";
         $scope.filter_occurrence_max = "100";
-        $scope.filter_occurrence_request = "2";
+        $scope.filter_occurrence_request = "3";
         $scope.interactor = "navigate";
         $scope.infoPanelParent = "infoPanelParent";
         $("#download_link_dialog").dialog({ autoOpen: false });

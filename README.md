@@ -9,7 +9,7 @@ with this content (custyomize the URL):
   window.__config = window.__config || {};
 
   // API url
-  window.__config.apiUrl = 'http://localhost:5000/';
+  window.__config.apiUrl = 'https://api.bbu.world/';
 
 }(this));
 ```
