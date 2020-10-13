@@ -60,13 +60,21 @@ $ cd /your/app/path
 $ bower link linkurious
 ```
 
-#### 5. On the command prompt run the following commands
+#### 5. To serve the dashboard in development mode
 
 - a shortcut for `grunt serve`
 
 ```sh
 $ npm start
 ```
+
+#### 6. To build static files for production without Docker
+
+```sh
+$ npm run build
+```
+
+This creates a static directory in /dist that is served by the web server.
 
 ## Docker Installation
 
